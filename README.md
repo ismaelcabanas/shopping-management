@@ -27,7 +27,8 @@ Shopping Manager es una aplicación web que te permite:
 - **Frontend**: React 18 + TypeScript + Vite 7.1.9
 - **Styling**: Tailwind CSS 3.4.0 + PostCSS 8.4.0
 - **Desarrollo**: VS Code con extensiones configuradas
-- **Arquitectura**: Clean Architecture / Hexagonal Architecture preparada
+- **Arquitectura**: Clean Architecture / Hexagonal Architecture **implementada**
+- **Patrones**: Domain-Driven Design, Repository Pattern, Use Cases
 
 ## 🛠 Instalación y Desarrollo
 
@@ -58,20 +59,29 @@ La aplicación estará disponible en: `http://localhost:5173/`
 
 ```
 shopping-management/
-├── frontend/                 # Aplicación React
+├── frontend/                 # Aplicación React con Clean Architecture
 │   ├── src/
-│   │   ├── components/      # Componentes React
-│   │   │   ├── ShoppingList.tsx
-│   │   │   └── ShoppingListItem.tsx
-│   │   ├── types/          # Definiciones TypeScript
-│   │   ├── services/       # Datos mock y servicios
-│   │   └── hooks/          # Custom hooks (preparado)
-│   ├── tailwind.config.js  # Configuración Tailwind
-│   ├── postcss.config.js   # Configuración PostCSS
+│   │   ├── domain/          # 🧠 Lógica de negocio pura
+│   │   │   ├── entities/    # ShoppingListItem, Product
+│   │   │   ├── value-objects/ # ItemStatus, Quantity, Unit
+│   │   │   └── repositories/  # Interfaces
+│   │   ├── application/     # ⚙️ Casos de uso y servicios
+│   │   │   ├── use-cases/   # UpdateQuantity, ToggleStatus
+│   │   │   └── services/    # ShoppingListService
+│   │   ├── infrastructure/  # 🔧 Detalles técnicos
+│   │   │   ├── repositories/ # MockShoppingListRepository
+│   │   │   ├── adapters/    # ShoppingListAdapter
+│   │   │   └── storage/     # Datos mock
+│   │   └── presentation/    # 🎨 UI Layer
+│   │       ├── components/  # ShoppingList, ShoppingListItem
+│   │       └── hooks/       # useShoppingList
+│   ├── tailwind.config.js   # Configuración Tailwind
+│   ├── postcss.config.js    # Configuración PostCSS
 │   └── package.json
 ├── design/                  # Mockups y documentación de diseño
 ├── CLAUDE.md               # Especificaciones del proyecto
 ├── SETUP_LOG.md            # Log detallado del setup
+├── CLEAN_ARCHITECTURE_GUIDE.md # Guía de desarrollo
 └── README.md               # Este archivo
 ```
 
@@ -178,14 +188,37 @@ Para contribuir:
 - **PostCSS**: Autoprefixer configurado para compatibilidad de navegadores
 - **Vite**: Hot Module Replacement (HMR) configurado
 
+## 🏛 Arquitectura Clean Implementada
+
+El proyecto implementa **Clean Architecture** con **Domain-Driven Design**:
+
+### **🧠 Domain Layer**
+- **Value Objects**: `ItemStatus`, `Quantity`, `Unit` con validaciones ricas
+- **Entities**: `ShoppingListItem`, `Product` con lógica de negocio
+- **Repository Interfaces**: Contratos para persistencia
+
+### **⚙️ Application Layer**
+- **Use Cases**: `UpdateQuantityUseCase`, `ToggleItemStatusUseCase`
+- **Services**: `ShoppingListService` como facade para React
+
+### **🔧 Infrastructure Layer**
+- **Repositories**: `MockShoppingListRepository` (implementación actual)
+- **Adapters**: `ShoppingListAdapter` para integración
+- **Storage**: Datos mock organizados
+
+### **🎨 Presentation Layer**
+- **Custom Hooks**: `useShoppingList` conecta React con Clean Architecture
+- **Components**: UI pura sin lógica de negocio
+
 ## 📚 Documentación Adicional
 
 - [CLAUDE.md](./CLAUDE.md) - Especificaciones completas del proyecto
 - [SETUP_LOG.md](./SETUP_LOG.md) - Log detallado del proceso de configuración
+- [CLEAN_ARCHITECTURE_GUIDE.md](./CLEAN_ARCHITECTURE_GUIDE.md) - **Guía de desarrollo con Clean Architecture**
 - [design/mockups/](./design/mockups/) - Wireframes y mockups de diseño
 
 ---
 
-**Versión actual**: MVP v1.0 - Lista de Compras Básica
+**Versión actual**: MVP v1.5 - Clean Architecture implementada
 **Última actualización**: 2025-10-10
-**Estado**: ✅ Funcional y listo para desarrollo iterativo
+**Estado**: ✅ Arquitectura empresarial funcional y documentada

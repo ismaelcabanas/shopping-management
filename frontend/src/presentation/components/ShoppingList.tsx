@@ -1,57 +1,28 @@
-import React, { useState } from "react";
-import { initialShoppingList } from "../services/mockData";
-import type { ShoppingListItem } from "../types";
+import React from "react";
+import { useShoppingList } from "../hooks/useShoppingList";
 import ShoppingListItemComponent from "./ShoppingListItem";
 
 const ShoppingList: React.FC = () => {
-  const [items, setItems] = useState<ShoppingListItem[]>(initialShoppingList);
+  const {
+    neededItems,
+    boughtItems,
+    loading,
+    updateItemQuantity,
+    toggleItemStatus,
+    markAllAsBought,
+    clearList
+  } = useShoppingList();
 
-  const updateItemQuantity = (id: string, newQuantity: number) => {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id
-          ? { ...item, quantity: newQuantity, updatedAt: new Date() }
-          : item
-      )
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto p-6 bg-white min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-2xl">🔄</div>
+          <p className="text-gray-500 mt-2">Cargando lista de compras...</p>
+        </div>
+      </div>
     );
-  };
-
-  const toggleItemStatus = (id: string) => {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              status: item.status === "needed" ? "bought" : "needed",
-              updatedAt: new Date(),
-            }
-          : item
-      )
-    );
-  };
-
-  const markAllAsBought = () => {
-    setItems((prevItems) =>
-      prevItems.map((item) => ({
-        ...item,
-        status: "bought" as const,
-        updatedAt: new Date(),
-      }))
-    );
-  };
-
-  const clearList = () => {
-    setItems((prevItems) =>
-      prevItems.map((item) => ({
-        ...item,
-        status: "needed" as const,
-        updatedAt: new Date(),
-      }))
-    );
-  };
-
-  const neededItems = items.filter((item) => item.status === "needed");
-  const boughtItems = items.filter((item) => item.status === "bought");
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white min-h-screen">
