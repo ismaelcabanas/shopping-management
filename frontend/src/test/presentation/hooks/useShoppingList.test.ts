@@ -1,76 +1,166 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor, act } from '@testing-library/react'
-import { useShoppingList } from '../../../presentation/hooks/useShoppingList'
 
-// Mock the dependencies
-vi.mock('../../../infrastructure/repositories/MockShoppingListRepository')
-vi.mock('../../../application/services/ShoppingListService')
+// Create hoisted mocks
+const { mockGetAllItems, mockUpdateQuantity, mockToggleItemStatus, mockMarkAllAsBought, mockClearList } = vi.hoisted(() => ({
+  mockGetAllItems: vi.fn(),
+  mockUpdateQuantity: vi.fn(),
+  mockToggleItemStatus: vi.fn(),
+  mockMarkAllAsBought: vi.fn(),
+  mockClearList: vi.fn()
+}))
+
+// Mock the ShoppingListService
+vi.mock('../../../application/services/ShoppingListService', () => ({
+  ShoppingListService: vi.fn(() => ({
+    getAllItems: mockGetAllItems,
+    updateQuantity: mockUpdateQuantity,
+    toggleItemStatus: mockToggleItemStatus,
+    markAllAsBought: mockMarkAllAsBought,
+    clearList: mockClearList
+  }))
+}))
+
+// Mock the MockShoppingListRepository
+vi.mock('../../../infrastructure/repositories/MockShoppingListRepository', () => ({
+  MockShoppingListRepository: vi.fn()
+}))
+
+// Import after mocking
+import { useShoppingList } from '../../../presentation/hooks/useShoppingList'
 
 describe('useShoppingList Hook', () => {
   beforeEach(() => {
-    // Reset all mocks before each test
     vi.clearAllMocks()
-  })
 
-  afterEach(() => {
-    vi.restoreAllMocks()
+    // Default successful mock responses
+    mockGetAllItems.mockResolvedValue([])
+    mockUpdateQuantity.mockResolvedValue(undefined)
+    mockToggleItemStatus.mockResolvedValue(undefined)
+    mockMarkAllAsBought.mockResolvedValue(undefined)
+    mockClearList.mockResolvedValue(undefined)
   })
 
   describe('Initial State', () => {
-    it('should initialize with empty items and loading state', () => {
+    it('should initialize with correct initial state', async () => {
       const { result } = renderHook(() => useShoppingList())
 
+      // Initial state should be loading
+      expect(result.current.loading).toBe(true)
       expect(result.current.items).toEqual([])
       expect(result.current.neededItems).toEqual([])
       expect(result.current.boughtItems).toEqual([])
-      expect(result.current.loading).toBe(true)
+
+      // Wait for loading to complete
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
     })
 
-    it('should provide all expected methods', () => {
-      const { result } = renderHook(() => useShoppingList())
+    it('should provide all expected methods', async () => {
+      let result: any
+
+      await act(async () => {
+        const hookResult = renderHook(() => useShoppingList())
+        result = hookResult.result
+      })
 
       expect(typeof result.current.updateItemQuantity).toBe('function')
       expect(typeof result.current.toggleItemStatus).toBe('function')
       expect(typeof result.current.markAllAsBought).toBe('function')
       expect(typeof result.current.clearList).toBe('function')
       expect(typeof result.current.refresh).toBe('function')
+
+      // Wait for any async effects to complete
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
     })
   })
 
   describe('Data Loading', () => {
     it('should load items on mount', async () => {
       const mockItems = [
-        { id: '1', productName: 'Test Item', quantity: 1, unit: 'ud', status: 'needed' as const, createdAt: new Date(), updatedAt: new Date() }
+        {
+          id: '1',
+          productName: 'Test Item',
+          quantity: 1,
+          unit: 'ud',
+          status: 'needed' as const,
+          createdAt: new Date('2024-01-01'),
+          updatedAt: new Date('2024-01-01')
+        }
       ]
 
-      // Mock the service response
-      const mockService = {
-        getAllItems: vi.fn().mockResolvedValue(mockItems)
-      }
+      mockGetAllItems.mockResolvedValue(mockItems)
+
+      const { result } = renderHook(() => useShoppingList())
+
+      // Should call getAllItems on mount
+      expect(mockGetAllItems).toHaveBeenCalledTimes(1)
+
+      // Wait for data to load
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
+
+      await waitFor(() => {
+        expect(result.current.items).toEqual(mockItems)
+      })
+    })
+
+    it('should handle empty items list', async () => {
+      mockGetAllItems.mockResolvedValue([])
 
       const { result } = renderHook(() => useShoppingList())
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false)
       })
-    })
 
+      expect(result.current.items).toEqual([])
+      expect(result.current.neededItems).toEqual([])
+      expect(result.current.boughtItems).toEqual([])
+    })
+  })
+
+  describe('Item Filtering', () => {
     it('should filter needed and bought items correctly', async () => {
       const mockItems = [
-        { id: '1', productName: 'Needed Item', quantity: 1, unit: 'ud', status: 'needed' as const, createdAt: new Date(), updatedAt: new Date() },
-        { id: '2', productName: 'Bought Item', quantity: 2, unit: 'ud', status: 'bought' as const, createdAt: new Date(), updatedAt: new Date() }
+        {
+          id: '1',
+          productName: 'Needed Item',
+          quantity: 1,
+          unit: 'ud',
+          status: 'needed' as const,
+          createdAt: new Date('2024-01-01'),
+          updatedAt: new Date('2024-01-01')
+        },
+        {
+          id: '2',
+          productName: 'Bought Item',
+          quantity: 2,
+          unit: 'kg',
+          status: 'bought' as const,
+          createdAt: new Date('2024-01-01'),
+          updatedAt: new Date('2024-01-01')
+        }
       ]
+
+      mockGetAllItems.mockResolvedValue(mockItems)
 
       const { result } = renderHook(() => useShoppingList())
 
-      // Simulate successful loading
-      act(() => {
-        // This would be populated after the async load
-        result.current.items = mockItems
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
       })
 
-      expect(result.current.neededItems).toHaveLength(1)
-      expect(result.current.boughtItems).toHaveLength(1)
+      await waitFor(() => {
+        expect(result.current.items).toHaveLength(2)
+        expect(result.current.neededItems).toHaveLength(1)
+        expect(result.current.boughtItems).toHaveLength(1)
+      })
+
       expect(result.current.neededItems[0].productName).toBe('Needed Item')
       expect(result.current.boughtItems[0].productName).toBe('Bought Item')
     })
