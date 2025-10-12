@@ -22,57 +22,39 @@ global.console = {
   // error: vi.fn(),
 }
 
-// Fix for CI environment - ensure proper global setup
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: vi.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: vi.fn(), // deprecated
-    removeListener: vi.fn(), // deprecated
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  })),
-});
+// Browser API polyfills - only applied when using jsdom environment
+if (typeof window !== 'undefined') {
+  // Fix for CI environment - ensure proper global setup
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: vi.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(), // deprecated
+      removeListener: vi.fn(), // deprecated
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  });
 
-// Fix for ResizeObserver in tests
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
+  // Fix for ResizeObserver in tests
+  global.ResizeObserver = vi.fn().mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  }));
 
-// Fix for IntersectionObserver in tests
-global.IntersectionObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
+  // Fix for IntersectionObserver in tests
+  global.IntersectionObserver = vi.fn().mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  }));
+}
 
-// Essential polyfills for CI environment compatibility
+// Essential polyfills for all environments
 if (typeof globalThis.structuredClone === 'undefined') {
   globalThis.structuredClone = <T>(val: T): T => JSON.parse(JSON.stringify(val));
-}
-
-// Fix for webidl-conversions in CI environment - targeted polyfills
-// Use type assertions to avoid TypeScript interface conflicts
-if (typeof globalThis.DOMException === 'undefined') {
-  // @ts-expect-error - Minimal DOMException polyfill for CI environment
-  globalThis.DOMException = class extends Error {
-    constructor(message?: string, name?: string) {
-      super(message);
-      this.name = name || 'DOMException';
-    }
-  };
-}
-
-// Ensure Node.js built-in URL/URLSearchParams are available globally
-if (typeof globalThis.URL === 'undefined') {
-  globalThis.URL = URL;
-}
-
-if (typeof globalThis.URLSearchParams === 'undefined') {
-  globalThis.URLSearchParams = URLSearchParams;
 }
