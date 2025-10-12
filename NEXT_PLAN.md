@@ -1,173 +1,116 @@
-📋 PLAN DE TESTING ESTRATÉGICO
+📋 NEXT STEPS ROADMAP
 
-🎯 Objetivos del Plan de Testing
+🚀 Phase 1: DevOps & CI/CD (Foundation)
 
-1. Demostrar ventajas de Clean Architecture - cada capa testeable independientemente
-2. Cobertura completa - desde Value Objects hasta Components
-3. Tests rápidos y confiables - sin dependencias externas
-4. Documentación viva - tests como especificación del comportamiento
+1. GitHub Actions CI Workflow
 
-🏗 Estructura de Testing por Capas
 
-📊 Cobertura Estimada por Capa:
+    - Automated testing on push/PR
+    - TypeScript compilation validation
+    - ESLint code quality checks
+    - Test coverage reporting
+    - Build validation
 
-| Capa           | Archivos a testear           | Tests estimados | Complejidad            |
-| -------------- | ---------------------------- | --------------- | ---------------------- |
-| Domain         | 3 Value Objects + 2 Entities | ~15 tests       | 🟢 Baja (sin deps)     |
-| Application    | 4 Use Cases + 1 Service      | ~12 tests       | 🟡 Media (mock repos)  |
-| Infrastructure | 1 Repository + 1 Adapter     | ~8 tests        | 🟡 Media (integration) |
-| Presentation   | 1 Hook + 2 Components        | ~10 tests       | 🔴 Alta (React/DOM)    |
-| TOTAL          | 11 archivos                  | ~45 tests       | -                      |
+2. Branch Protection & Quality Gates
 
-🧠 1. Domain Layer Tests (Empezar aquí - más fácil)
 
-Value Objects Tests:
+    - Require PR reviews
+    - Require status checks to pass
+    - No direct pushes to main
 
-// ItemStatus.test.ts - ~5 tests
-✅ should create needed status
-✅ should create bought status
-✅ should toggle from needed to bought
-✅ should validate only valid statuses
-✅ should compare statuses correctly
+🎨 Phase 2: User Interface Development (Core Features)
 
-// Quantity.test.ts - ~6 tests
-✅ should create valid quantity
-✅ should reject negative quantities
-✅ should reject non-integer quantities
-✅ should add quantities correctly
-✅ should subtract quantities correctly
-✅ should prevent subtraction resulting in negative
+1. React Components Architecture
 
-// Unit.test.ts - ~4 tests
-✅ should create valid units
-✅ should reject invalid units
-✅ should provide factory methods (units(), kilograms(), etc.)
-✅ should compare units correctly
 
-⚙️ 2. Application Layer Tests (Lógica de negocio)
+    - ShoppingList main component
+    - ShoppingListItem component
+    - AddItemForm component
+    - ItemQuantityControls component
+    - BulkActionButtons component
 
-Use Cases Tests:
+2. Pages & Routing
 
-// UpdateQuantityUseCase.test.ts - ~3 tests
-✅ should update item quantity successfully
-✅ should throw error when item not found
-✅ should validate quantity with domain rules
 
-// ToggleItemStatusUseCase.test.ts - ~3 tests
-✅ should toggle from needed to bought
-✅ should toggle from bought to needed
-✅ should throw error when item not found
+    - Main shopping list page
+    - Settings/preferences page
+    - Responsive design with Tailwind CSS
 
-// GetShoppingListUseCase.test.ts - ~3 tests
-✅ should return all items
-✅ should filter needed items correctly
-✅ should filter bought items correctly
+3. User Interactions
 
-// BulkActionsUseCase.test.ts - ~2 tests
-✅ should mark all items as bought
-✅ should mark all items as needed
 
-// ShoppingListService.test.ts - ~1 integration test
-✅ should coordinate use cases correctly
+    - Add/edit/delete items
+    - Quantity inline editing
+    - Status toggle (needed ↔ bought)
+    - Bulk operations (mark all, clear list)
 
-🔧 3. Infrastructure Layer Tests (Implementaciones)
+🧪 Phase 3: Complete Testing Strategy
 
-Repository Tests:
+1. React Component Tests
 
-// MockShoppingListRepository.test.ts - ~5 tests
-✅ should save and retrieve items
-✅ should find item by id
-✅ should update existing items
-✅ should delete items
-✅ should handle bulk operations
 
-// ShoppingListAdapter.test.ts - ~3 tests
-✅ should convert domain to legacy format
-✅ should convert legacy to domain format
-✅ should handle arrays correctly
+    - User interaction testing
+    - Form validation testing
+    - State management testing
 
-🎨 4. Presentation Layer Tests (React components)
+2. Integration Tests
 
-Hook Tests:
 
-// useShoppingList.test.ts - ~5 tests
-✅ should load items on mount
-✅ should update quantity and refresh
-✅ should toggle status and refresh
-✅ should handle loading states
-✅ should handle errors gracefully
+    - Full user workflows
+    - Component integration
 
-// Component Tests - ~5 tests
-✅ should render shopping list correctly
-✅ should display needed vs bought sections
-✅ should handle user interactions
-✅ should show loading state
-✅ should handle empty states
+3. E2E Testing (Optional)
 
-🛠 Setup y Configuración
 
-Testing Stack:
+    - Playwright for user journeys
+    - Critical path validation
 
-- Vitest - Fast test runner (compatible con Vite)
-- @testing-library/react - React component testing
-- @testing-library/jest-dom - Additional matchers
-- @testing-library/user-event - User interaction simulation
+⚡ Phase 4: Enhanced Features (Value Add)
 
-Configuración necesaria:
+1. Smart Shopping Features
 
-// vitest.config.ts
-// Test setup files
-// Mock configurations
-// Coverage settings
 
-📈 Estrategia de Implementación
+    - Price tracking per store
+    - Shopping cost estimation
+    - Store comparison recommendations
 
-Fase 1: Domain Tests (30 min)
+2. Inventory Intelligence
 
-- Value Objects tests (más fácil, sin mocks)
-- Base sólida para el resto
 
-Fase 2: Application Tests (45 min)
+    - Consumption pattern analysis
+    - Auto-suggest when items run low
+    - Purchase history tracking
 
-- Use Cases con repository mocks
-- Service integration tests
+3. UX Improvements
 
-Fase 3: Infrastructure Tests (30 min)
 
-- Repository implementation tests
-- Adapter conversion tests
+    - Drag & drop reordering
+    - Categories & filtering
+    - Search functionality
+    - Dark mode support
 
-Fase 4: Presentation Tests (45 min)
+🌐 Phase 5: Production Deployment
 
-- Custom hook tests
-- Component integration tests
+1. Environment Setup
 
-Fase 5: Coverage & CI (15 min)
 
-- Coverage reports
-- Test scripts en package.json
+    - Development/staging/production configs
+    - Environment variables management
 
-🎯 Beneficios Esperados
+2. Deployment Pipeline
 
-Demostración de Clean Architecture:
 
-- Domain tests sin dependencias externas
-- Application tests con mocks simples
-- Infrastructure tests aislados
-- Presentation tests enfocados en UI
+    - Vercel/Netlify deployment
+    - Preview deployments for PRs
+    - Automated deployment on merge
 
-Calidad de código:
+3. Monitoring & Analytics
 
-- Cobertura objetivo: >85%
-- Tests rápidos: <5 segundos total
-- Feedback inmediato durante desarrollo
-- Documentación del comportamiento esperado
 
-🔮 Plan de Ejecución
+    - Error tracking
+    - Performance monitoring
+    - Usage analytics
 
-¿Te parece bien este plan? Mi propuesta es:
+🎯 Immediate Priority Recommendation:
 
-1. Empezar con Domain Layer (más fácil, éxito rápido)
-2. Configurar Vitest mientras hacemos los primeros tests
-3. Continuar layer por layer hasta cobertura completa
-4. Documentar los resultados en el SETUP_LOG.md
+Phase 2 (UI Development) would give you the most visible progress and user value right now, since you have solid business logic foundations.
