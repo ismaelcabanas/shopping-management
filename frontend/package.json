@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:run": "vitest run",
+    "test:run": "vitest run --pool=forks",
     "test:ci": "vitest run --reporter=verbose --pool=forks",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest --watch"

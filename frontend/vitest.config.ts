@@ -12,6 +12,9 @@ export default defineConfig({
     // Fix for CI environment issues with browser APIs
     pool: 'forks',
     isolate: false,
+    // Additional environment configuration for CI stability
+    testTimeout: 30000,
+    hookTimeout: 30000,
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
