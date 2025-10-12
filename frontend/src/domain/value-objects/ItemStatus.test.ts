@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { ItemStatusVO } from '../../../domain/value-objects/ItemStatus'
+import { ItemStatusVO } from './ItemStatus'
 
 describe('ItemStatus Value Object', () => {
   describe('Factory Methods', () => {

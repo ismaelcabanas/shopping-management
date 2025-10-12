@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { Quantity } from '../../../domain/value-objects/Quantity'
+import { Quantity } from './Quantity'
 
 describe('Quantity Value Object', () => {
   describe('Creation', () => {

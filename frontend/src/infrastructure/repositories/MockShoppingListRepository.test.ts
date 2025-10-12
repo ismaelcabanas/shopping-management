@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { MockShoppingListRepository } from '../../../infrastructure/repositories/MockShoppingListRepository'
-import type { ShoppingListItem } from '../../../domain/entities/ShoppingListItem'
-import { ItemStatusVO } from '../../../domain/value-objects/ItemStatus'
-import { Quantity } from '../../../domain/value-objects/Quantity'
+import { MockShoppingListRepository } from './MockShoppingListRepository'
+import type { ShoppingListItem } from '../../domain/entities/ShoppingListItem'
+import { ItemStatusVO } from '../../domain/value-objects/ItemStatus'
+import { Quantity } from '../../domain/value-objects/Quantity'
 
 describe('MockShoppingListRepository', () => {
   let repository: MockShoppingListRepository

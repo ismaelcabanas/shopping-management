@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { UpdateQuantityUseCase } from '../../../application/use-cases/UpdateQuantityUseCase'
-import type { ShoppingListRepository } from '../../../domain/repositories/ShoppingListRepository'
-import type { ShoppingListItem } from '../../../domain/entities/ShoppingListItem'
-import { ItemStatusVO } from '../../../domain/value-objects/ItemStatus'
-import { Quantity } from '../../../domain/value-objects/Quantity'
+import { UpdateQuantityUseCase } from './UpdateQuantityUseCase'
+import type { ShoppingListRepository } from '../../domain/repositories/ShoppingListRepository'
+import type { ShoppingListItem } from '../../domain/entities/ShoppingListItem'
+import { ItemStatusVO } from '../../domain/value-objects/ItemStatus'
+import { Quantity } from '../../domain/value-objects/Quantity'
 
 describe('UpdateQuantityUseCase', () => {
   let useCase: UpdateQuantityUseCase

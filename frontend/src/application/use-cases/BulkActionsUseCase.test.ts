@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { BulkActionsUseCase } from '../../../application/use-cases/BulkActionsUseCase'
-import type { ShoppingListRepository } from '../../../domain/repositories/ShoppingListRepository'
+import { BulkActionsUseCase } from './BulkActionsUseCase'
+import type { ShoppingListRepository } from '../../domain/repositories/ShoppingListRepository'
 
 describe('BulkActionsUseCase', () => {
   let useCase: BulkActionsUseCase

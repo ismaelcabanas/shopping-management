@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ShoppingListService } from '../../../application/services/ShoppingListService'
-import type { ShoppingListRepository } from '../../../domain/repositories/ShoppingListRepository'
-import type { ShoppingListItem as DomainShoppingListItem } from '../../../domain/entities/ShoppingListItem'
-import { ItemStatusVO } from '../../../domain/value-objects/ItemStatus'
-import { Quantity } from '../../../domain/value-objects/Quantity'
+import { ShoppingListService } from './ShoppingListService'
+import type { ShoppingListRepository } from '../../domain/repositories/ShoppingListRepository'
+import type { ShoppingListItem as DomainShoppingListItem } from '../../domain/entities/ShoppingListItem'
+import { ItemStatusVO } from '../../domain/value-objects/ItemStatus'
+import { Quantity } from '../../domain/value-objects/Quantity'
 
 describe('ShoppingListService', () => {
   let service: ShoppingListService

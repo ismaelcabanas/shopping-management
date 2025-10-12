@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ToggleItemStatusUseCase } from '../../../application/use-cases/ToggleItemStatusUseCase'
-import type { ShoppingListRepository } from '../../../domain/repositories/ShoppingListRepository'
-import type { ShoppingListItem } from '../../../domain/entities/ShoppingListItem'
-import { ItemStatusVO } from '../../../domain/value-objects/ItemStatus'
-import { Quantity } from '../../../domain/value-objects/Quantity'
+import { ToggleItemStatusUseCase } from './ToggleItemStatusUseCase'
+import type { ShoppingListRepository } from '../../domain/repositories/ShoppingListRepository'
+import type { ShoppingListItem } from '../../domain/entities/ShoppingListItem'
+import { ItemStatusVO } from '../../domain/value-objects/ItemStatus'
+import { Quantity } from '../../domain/value-objects/Quantity'
 
 describe('ToggleItemStatusUseCase', () => {
   let useCase: ToggleItemStatusUseCase

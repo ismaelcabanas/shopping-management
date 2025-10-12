@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { ShoppingListAdapter } from '../../../infrastructure/adapters/ShoppingListAdapter'
-import type { ShoppingListItem as DomainShoppingListItem } from '../../../domain/entities/ShoppingListItem'
+import { ShoppingListAdapter } from './ShoppingListAdapter'
+import type { ShoppingListItem as DomainShoppingListItem } from '../../domain/entities/ShoppingListItem'
 import type { ShoppingListItem as LegacyShoppingListItem } from '../../../types'
-import { ItemStatusVO } from '../../../domain/value-objects/ItemStatus'
-import { Quantity } from '../../../domain/value-objects/Quantity'
+import { ItemStatusVO } from '../../domain/value-objects/ItemStatus'
+import { Quantity } from '../../domain/value-objects/Quantity'
 
 describe('ShoppingListAdapter', () => {
   // Test data factories
