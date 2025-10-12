@@ -1,5 +1,5 @@
 // Domain Entity: ShoppingListItem
-import type { ItemStatus } from '../value-objects/ItemStatus';
+import type { ItemStatusVO } from '../value-objects/ItemStatus';
 import type { Quantity } from '../value-objects/Quantity';
 
 export interface ShoppingListItem {
@@ -7,7 +7,7 @@ export interface ShoppingListItem {
   productName: string;
   quantity: Quantity;
   unit: string;
-  status: ItemStatus;
+  status: ItemStatusVO;
   createdAt: Date;
   updatedAt: Date;
 }

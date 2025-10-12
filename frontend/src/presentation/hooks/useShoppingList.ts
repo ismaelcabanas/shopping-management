@@ -1,6 +1,6 @@
 // Presentation Hook: Bridge between React and Clean Architecture
 import { useState, useEffect, useCallback } from 'react';
-import type { ShoppingListItem } from '../../types';
+import type { ShoppingListItem } from '../../domain/entities/ShoppingListItem';
 import { MockShoppingListRepository } from '../../infrastructure/repositories/MockShoppingListRepository';
 import { ShoppingListService } from '../../application/services/ShoppingListService';
 
@@ -71,8 +71,8 @@ export function useShoppingList() {
   }, [loadItems]);
 
   // Derived data
-  const neededItems = items.filter(item => item.status === 'needed');
-  const boughtItems = items.filter(item => item.status === 'bought');
+  const neededItems = items.filter(item => item.status.isNeeded());
+  const boughtItems = items.filter(item => item.status.isBought());
 
   return {
     // Data

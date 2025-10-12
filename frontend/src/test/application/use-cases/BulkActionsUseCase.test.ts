@@ -137,7 +137,7 @@ describe('BulkActionsUseCase', () => {
   describe('Repository Delegation', () => {
     it('should delegate markAllAsBought responsibility to repository', async () => {
       // Arrange
-      const mockImplementation = vi.fn().mockResolvedValue()
+      const mockImplementation = vi.fn().mockResolvedValue(undefined)
       vi.mocked(mockRepository.markAllAsBought).mockImplementation(mockImplementation)
 
       // Act
@@ -150,7 +150,7 @@ describe('BulkActionsUseCase', () => {
 
     it('should delegate markAllAsNeeded responsibility to repository', async () => {
       // Arrange
-      const mockImplementation = vi.fn().mockResolvedValue()
+      const mockImplementation = vi.fn().mockResolvedValue(undefined)
       vi.mocked(mockRepository.markAllAsNeeded).mockImplementation(mockImplementation)
 
       // Act

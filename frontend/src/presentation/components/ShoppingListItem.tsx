@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { ShoppingListItem } from "../types";
+import type { ShoppingListItem } from "../../domain/entities/ShoppingListItem";
 
 interface ShoppingListItemProps {
   item: ShoppingListItem;
@@ -13,11 +13,11 @@ const ShoppingListItemComponent: React.FC<ShoppingListItemProps> = ({
   onStatusToggle,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [tempQuantity, setTempQuantity] = useState(item.quantity.toString());
+  const [tempQuantity, setTempQuantity] = useState(item.quantity.getValue().toString());
 
   const handleEdit = () => {
     setIsEditing(true);
-    setTempQuantity(item.quantity.toString());
+    setTempQuantity(item.quantity.getValue().toString());
   };
 
   const handleSave = () => {
@@ -29,7 +29,7 @@ const ShoppingListItemComponent: React.FC<ShoppingListItemProps> = ({
   };
 
   const handleCancel = () => {
-    setTempQuantity(item.quantity.toString());
+    setTempQuantity(item.quantity.getValue().toString());
     setIsEditing(false);
   };
 
@@ -44,7 +44,7 @@ const ShoppingListItemComponent: React.FC<ShoppingListItemProps> = ({
   return (
     <div
       className={`p-4 border rounded-lg shadow-sm transition-all ${
-        item.status === "bought"
+        item.status.isBought()
           ? "bg-green-50 border-green-200 opacity-75"
           : "bg-white border-gray-200 hover:shadow-md"
       }`}
@@ -54,7 +54,7 @@ const ShoppingListItemComponent: React.FC<ShoppingListItemProps> = ({
           {/* Checkbox */}
           <input
             type="checkbox"
-            checked={item.status === "bought"}
+            checked={item.status.isBought()}
             onChange={() => onStatusToggle(item.id)}
             className="h-5 w-5 text-green-600 rounded border-gray-300 focus:ring-green-500"
           />
@@ -63,7 +63,7 @@ const ShoppingListItemComponent: React.FC<ShoppingListItemProps> = ({
           <div className="flex-1">
             <h3
               className={`font-medium ${
-                item.status === "bought"
+                item.status.isBought()
                   ? "line-through text-gray-500"
                   : "text-gray-900"
               }`}
@@ -72,7 +72,7 @@ const ShoppingListItemComponent: React.FC<ShoppingListItemProps> = ({
             </h3>
             <p className="text-sm text-gray-500">
               Estado:{" "}
-              {item.status === "needed" ? "⚠️ Stock bajo" : "✅ Comprado"}
+              {item.status.isNeeded() ? "⚠️ Stock bajo" : "✅ Comprado"}
             </p>
           </div>
 
@@ -107,10 +107,10 @@ const ShoppingListItemComponent: React.FC<ShoppingListItemProps> = ({
               <div className="flex items-center gap-2">
                 <span
                   className={`font-semibold ${
-                    item.status === "bought" ? "text-gray-500" : "text-gray-900"
+                    item.status.isBought() ? "text-gray-500" : "text-gray-900"
                   }`}
                 >
-                  [{item.quantity}]
+                  [{item.quantity.getValue()}]
                 </span>
                 <span className="text-sm text-gray-600">{item.unit}</span>
                 <button
