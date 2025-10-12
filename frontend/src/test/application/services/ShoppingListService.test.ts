@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ShoppingListService } from '../../../application/services/ShoppingListService'
 import type { ShoppingListRepository } from '../../../domain/repositories/ShoppingListRepository'
 import type { ShoppingListItem as DomainShoppingListItem } from '../../../domain/entities/ShoppingListItem'
-import type { ShoppingListItem as LegacyShoppingListItem } from '../../../types'
 import { ItemStatusVO } from '../../../domain/value-objects/ItemStatus'
 import { Quantity } from '../../../domain/value-objects/Quantity'
 
@@ -26,20 +25,6 @@ describe('ShoppingListService', () => {
     updatedAt: new Date('2024-01-01')
   })
 
-  const createLegacyItem = (
-    id: string = '1',
-    productName: string = 'Test Product',
-    quantity: number = 5,
-    status: 'needed' | 'bought' = 'needed'
-  ): LegacyShoppingListItem => ({
-    id,
-    productName,
-    quantity,
-    unit: 'ud',
-    status,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01')
-  })
 
   beforeEach(() => {
     mockRepository = {
@@ -63,7 +48,7 @@ describe('ShoppingListService', () => {
   })
 
   describe('Get All Items', () => {
-    it('should return all items in legacy format', async () => {
+    it('should return all items in domain format', async () => {
       // Arrange
       const domainItems = [
         createDomainItem('1', 'Apples', 5, 'needed'),
@@ -79,13 +64,13 @@ describe('ShoppingListService', () => {
       expect(mockRepository.findAll).toHaveBeenCalledTimes(1)
       expect(result).toHaveLength(2)
 
-      // Verify conversion to legacy format
-      expect(result[0]).toEqual(createLegacyItem('1', 'Apples', 5, 'needed'))
-      expect(result[1]).toEqual(createLegacyItem('2', 'Bread', 2, 'bought'))
+      // Verify domain format (not legacy format conversion)
+      expect(result[0]).toEqual(createDomainItem('1', 'Apples', 5, 'needed'))
+      expect(result[1]).toEqual(createDomainItem('2', 'Bread', 2, 'bought'))
 
-      // Verify it's plain objects (not Value Objects)
-      expect(typeof result[0].quantity).toBe('number')
-      expect(typeof result[0].status).toBe('string')
+      // Verify it's Value Objects (not plain objects)
+      expect(result[0].quantity.getValue()).toBe(5)
+      expect(result[0].status.getValue()).toBe('needed')
     })
 
     it('should return empty array when no items exist', async () => {
@@ -102,7 +87,7 @@ describe('ShoppingListService', () => {
   })
 
   describe('Get Needed Items', () => {
-    it('should return only needed items in legacy format', async () => {
+    it('should return only needed items in domain format', async () => {
       // Arrange
       const domainItems = [
         createDomainItem('1', 'Apples', 5, 'needed'),
@@ -118,18 +103,18 @@ describe('ShoppingListService', () => {
       // Assert
       expect(mockRepository.findAll).toHaveBeenCalledTimes(1)
       expect(result).toHaveLength(2)
-      expect(result[0]).toEqual(createLegacyItem('1', 'Apples', 5, 'needed'))
-      expect(result[1]).toEqual(createLegacyItem('3', 'Milk', 1, 'needed'))
+      expect(result[0]).toEqual(createDomainItem('1', 'Apples', 5, 'needed'))
+      expect(result[1]).toEqual(createDomainItem('3', 'Milk', 1, 'needed'))
 
       // Verify all returned items are needed
       result.forEach(item => {
-        expect(item.status).toBe('needed')
+        expect(item.status.getValue()).toBe('needed')
       })
     })
   })
 
   describe('Get Bought Items', () => {
-    it('should return only bought items in legacy format', async () => {
+    it('should return only bought items in domain format', async () => {
       // Arrange
       const domainItems = [
         createDomainItem('1', 'Apples', 5, 'needed'),
@@ -145,12 +130,12 @@ describe('ShoppingListService', () => {
       // Assert
       expect(mockRepository.findAll).toHaveBeenCalledTimes(1)
       expect(result).toHaveLength(2)
-      expect(result[0]).toEqual(createLegacyItem('2', 'Bread', 2, 'bought'))
-      expect(result[1]).toEqual(createLegacyItem('3', 'Cheese', 3, 'bought'))
+      expect(result[0]).toEqual(createDomainItem('2', 'Bread', 2, 'bought'))
+      expect(result[1]).toEqual(createDomainItem('3', 'Cheese', 3, 'bought'))
 
       // Verify all returned items are bought
       result.forEach(item => {
-        expect(item.status).toBe('bought')
+        expect(item.status.getValue()).toBe('bought')
       })
     })
   })
@@ -282,7 +267,7 @@ describe('ShoppingListService', () => {
       expect(mockRepository.markAllAsBought).toHaveBeenCalledTimes(1)
     })
 
-    it('should handle mixed legacy and domain conversions', async () => {
+    it('should handle domain format consistency across methods', async () => {
       // Arrange
       const domainItems = [
         createDomainItem('1', 'Mixed Test', 7, 'needed')
@@ -295,15 +280,15 @@ describe('ShoppingListService', () => {
       const boughtItems = await service.getBoughtItems()
       const allItems = await service.getAllItems()
 
-      // Assert - All should return legacy format
+      // Assert - All should return domain format
       expect(neededItems).toHaveLength(1)
       expect(boughtItems).toHaveLength(0)
       expect(allItems).toHaveLength(1)
 
       // Verify format consistency across methods
       expect(neededItems[0]).toEqual(allItems[0])
-      expect(typeof neededItems[0].quantity).toBe('number')
-      expect(typeof neededItems[0].status).toBe('string')
+      expect(neededItems[0].quantity.getValue()).toBe(7)
+      expect(neededItems[0].status.getValue()).toBe('needed')
     })
   })
 

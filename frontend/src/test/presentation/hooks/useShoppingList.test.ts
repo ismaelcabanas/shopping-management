@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderHook, waitFor, act } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 
 // Create hoisted mocks
 const { mockGetAllItems, mockUpdateQuantity, mockToggleItemStatus, mockMarkAllAsBought, mockClearList } = vi.hoisted(() => ({
@@ -28,6 +28,8 @@ vi.mock('../../../infrastructure/repositories/MockShoppingListRepository', () =>
 
 // Import after mocking
 import { useShoppingList } from '../../../presentation/hooks/useShoppingList'
+import { Quantity } from '../../../domain/value-objects/Quantity'
+import { ItemStatusVO } from '../../../domain/value-objects/ItemStatus'
 
 describe('useShoppingList Hook', () => {
   beforeEach(() => {
@@ -58,12 +60,7 @@ describe('useShoppingList Hook', () => {
     })
 
     it('should provide all expected methods', async () => {
-      let result: any
-
-      await act(async () => {
-        const hookResult = renderHook(() => useShoppingList())
-        result = hookResult.result
-      })
+      const { result } = renderHook(() => useShoppingList())
 
       expect(typeof result.current.updateItemQuantity).toBe('function')
       expect(typeof result.current.toggleItemStatus).toBe('function')
@@ -84,9 +81,9 @@ describe('useShoppingList Hook', () => {
         {
           id: '1',
           productName: 'Test Item',
-          quantity: 1,
+          quantity: Quantity.create(1),
           unit: 'ud',
-          status: 'needed' as const,
+          status: ItemStatusVO.needed(),
           createdAt: new Date('2024-01-01'),
           updatedAt: new Date('2024-01-01')
         }
@@ -130,18 +127,18 @@ describe('useShoppingList Hook', () => {
         {
           id: '1',
           productName: 'Needed Item',
-          quantity: 1,
+          quantity: Quantity.create(1),
           unit: 'ud',
-          status: 'needed' as const,
+          status: ItemStatusVO.needed(),
           createdAt: new Date('2024-01-01'),
           updatedAt: new Date('2024-01-01')
         },
         {
           id: '2',
           productName: 'Bought Item',
-          quantity: 2,
+          quantity: Quantity.create(2),
           unit: 'kg',
-          status: 'bought' as const,
+          status: ItemStatusVO.bought(),
           createdAt: new Date('2024-01-01'),
           updatedAt: new Date('2024-01-01')
         }

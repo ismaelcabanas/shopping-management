@@ -3,7 +3,7 @@ export class Unit {
   private static readonly VALID_UNITS = ['ud', 'kg', 'L', 'g', 'ml'] as const;
 
   private constructor(private readonly value: string) {
-    if (!Unit.VALID_UNITS.includes(value as any)) {
+    if (!(Unit.VALID_UNITS as readonly string[]).includes(value)) {
       throw new Error(`Invalid unit: ${value}. Valid units: ${Unit.VALID_UNITS.join(', ')}`);
     }
   }
