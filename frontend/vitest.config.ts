@@ -15,6 +15,21 @@ export default defineConfig({
     // Additional environment configuration for CI stability
     testTimeout: 30000,
     hookTimeout: 30000,
+    // Enhanced JSDOM configuration for webidl-conversions compatibility
+    environmentOptions: {
+      jsdom: {
+        url: 'http://localhost',
+        pretendToBeVisual: true,
+        resources: 'usable'
+      }
+    },
+    // Server configuration to handle module resolution issues
+    server: {
+      deps: {
+        // Force pre-bundling of problematic dependencies
+        include: ['webidl-conversions', 'whatwg-url']
+      }
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],

@@ -55,3 +55,24 @@ global.IntersectionObserver = vi.fn().mockImplementation(() => ({
 if (typeof globalThis.structuredClone === 'undefined') {
   globalThis.structuredClone = <T>(val: T): T => JSON.parse(JSON.stringify(val));
 }
+
+// Fix for webidl-conversions in CI environment - targeted polyfills
+// Use type assertions to avoid TypeScript interface conflicts
+if (typeof globalThis.DOMException === 'undefined') {
+  // @ts-expect-error - Minimal DOMException polyfill for CI environment
+  globalThis.DOMException = class extends Error {
+    constructor(message?: string, name?: string) {
+      super(message);
+      this.name = name || 'DOMException';
+    }
+  };
+}
+
+// Ensure Node.js built-in URL/URLSearchParams are available globally
+if (typeof globalThis.URL === 'undefined') {
+  globalThis.URL = URL;
+}
+
+if (typeof globalThis.URLSearchParams === 'undefined') {
+  globalThis.URLSearchParams = URLSearchParams;
+}
