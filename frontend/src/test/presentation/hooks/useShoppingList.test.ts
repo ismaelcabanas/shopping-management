@@ -1,6 +1,26 @@
 /**
  * @vitest-environment jsdom
  */
+
+// Fix webidl-conversions for this jsdom test file specifically
+if (typeof globalThis.DOMException === 'undefined') {
+  // @ts-expect-error - Polyfill for CI jsdom environment
+  globalThis.DOMException = class extends Error {
+    constructor(message?: string, name?: string) {
+      super(message);
+      this.name = name || 'DOMException';
+    }
+  };
+}
+
+if (typeof globalThis.URL === 'undefined') {
+  globalThis.URL = URL;
+}
+
+if (typeof globalThis.URLSearchParams === 'undefined') {
+  globalThis.URLSearchParams = URLSearchParams;
+}
+
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
 
