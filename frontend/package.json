@@ -10,8 +10,10 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:run": "vitest run --pool=forks",
-    "test:ci": "vitest run --reporter=verbose --pool=forks",
+    "test:unit": "vitest run --reporter=verbose --pool=forks src/test/domain src/test/application src/test/infrastructure",
+    "test:integration": "vitest run --reporter=verbose --pool=forks src/test/presentation",
+    "test:ci:unit": "npm run test:unit",
+    "test:ci:integration": "npm run test:integration",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest --watch"
   },
