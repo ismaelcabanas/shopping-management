@@ -58,5 +58,5 @@ if (typeof global.URL === 'undefined') {
 
 // Ensure proper global context for webidl-conversions
 if (typeof globalThis.structuredClone === 'undefined') {
-  globalThis.structuredClone = (val: any) => JSON.parse(JSON.stringify(val));
+  globalThis.structuredClone = <T>(val: T): T => JSON.parse(JSON.stringify(val));
 }
