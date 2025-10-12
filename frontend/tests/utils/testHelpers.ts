@@ -1,6 +1,7 @@
 import { render, RenderOptions } from '@testing-library/react'
-import { ReactElement, ReactNode } from 'react'
+import { ReactElement } from 'react'
 import userEvent from '@testing-library/user-event'
+import { vi } from 'vitest'
 
 /**
  * Test utilities and helpers for integration and e2e tests
@@ -8,7 +9,7 @@ import userEvent from '@testing-library/user-event'
 
 // Custom render function with providers (when we add Context providers later)
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
-  // Add custom options here if needed
+  initialState?: unknown // Add at least one property to avoid empty interface
 }
 
 export const renderWithProviders = (
@@ -115,11 +116,21 @@ export const checkAccessibility = async (container: HTMLElement) => {
   }
 }
 
-// Error boundary for testing
-export const TestErrorBoundary = ({ children }: { children: ReactNode }) => {
+// Error handling helpers for testing
+export const captureError = (fn: () => void): Error | null => {
   try {
-    return <>{children}</>
+    fn()
+    return null
   } catch (error) {
-    return <div data-testid="error-boundary">Test Error: {String(error)}</div>
+    return error as Error
+  }
+}
+
+export const captureAsyncError = async (fn: () => Promise<void>): Promise<Error | null> => {
+  try {
+    await fn()
+    return null
+  } catch (error) {
+    return error as Error
   }
 }
