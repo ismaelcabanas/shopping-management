@@ -1,7 +1,12 @@
 import ShoppingList from './presentation/components/ShoppingList'
+import ErrorBoundary from './presentation/components/ErrorBoundary'
 
 function App() {
-  return <ShoppingList />
+  return (
+    <ErrorBoundary>
+      <ShoppingList />
+    </ErrorBoundary>
+  )
 }
 
 export default App

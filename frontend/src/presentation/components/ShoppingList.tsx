@@ -7,6 +7,7 @@ const ShoppingList: React.FC = () => {
     neededItems,
     boughtItems,
     loading,
+    error,
     updateItemQuantity,
     toggleItemStatus,
     markAllAsBought,
@@ -19,6 +20,25 @@ const ShoppingList: React.FC = () => {
         <div className="text-center">
           <div className="text-2xl">🔄</div>
           <p className="text-gray-500 mt-2">Cargando lista de compras...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-4xl mx-auto p-6 bg-white min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-3xl">⚠️</div>
+          <p className="text-gray-700 mt-2">Hubo un problema al cargar la lista: {String(error.message)}</p>
+          <div className="mt-4">
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-blue-600 text-white rounded"
+            >
+              Reintentar
+            </button>
+          </div>
         </div>
       </div>
     );
