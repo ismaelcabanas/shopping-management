@@ -41,27 +41,27 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
     // Fallback UI
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-        <div className="max-w-xl w-full bg-white rounded-lg shadow p-6 text-center">
-          <h2 className="text-2xl font-semibold mb-2">Ha ocurrido un error</h2>
-          <p className="text-gray-600 mb-4">Lo sentimos, algo falló en la aplicación.</p>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+        <div style={{ maxWidth: '500px', width: '100%', backgroundColor: 'white', borderRadius: '8px', padding: '24px', textAlign: 'center', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+          <h2 style={{ fontSize: '24px', fontWeight: '600', marginBottom: '8px' }}>Ha ocurrido un error</h2>
+          <p style={{ color: '#666', marginBottom: '16px' }}>Lo sentimos, algo falló en la aplicación.</p>
           {error && (
-            <pre className="text-xs text-left bg-gray-100 p-3 rounded mb-4 overflow-auto">
+            <pre style={{ fontSize: '12px', textAlign: 'left', backgroundColor: '#f5f5f5', padding: '12px', borderRadius: '4px', marginBottom: '16px', overflow: 'auto' }}>
               {String(error?.message)}
             </pre>
           )}
 
-          <div className="flex justify-center gap-3">
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
             <button
               onClick={this.handleReset}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              style={{ padding: '8px 16px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
             >
               Reintentar
             </button>
 
             <button
               onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+              style={{ padding: '8px 16px', backgroundColor: '#e5e7eb', color: '#000', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
             >
               Recargar página
             </button>
