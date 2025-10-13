@@ -5,8 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   test: {
-    // Unit tests configuration
-    environment: 'node', // Default to node environment (no jsdom/webidl-conversions)
+    // Use jsdom environment by default for React components
+    environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
     css: true,
