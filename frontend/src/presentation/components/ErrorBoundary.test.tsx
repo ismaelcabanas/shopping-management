@@ -11,17 +11,6 @@ const ThrowError: React.FC<{ message?: string }> = ({ message = 'Test error' }) 
   throw new Error(message)
 }
 
-// Component that conditionally throws an error
-const ConditionalError: React.FC<{ shouldThrow: boolean; children: React.ReactNode }> = ({
-  shouldThrow,
-  children
-}) => {
-  if (shouldThrow) {
-    throw new Error('Conditional test error')
-  }
-  return <>{children}</>
-}
-
 describe('ErrorBoundary', () => {
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>
 
