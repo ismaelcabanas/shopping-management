@@ -6,10 +6,6 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import ErrorBoundary from './ErrorBoundary'
 
-const Bomb: React.FC = () => {
-  throw new Error('boom')
-}
-
 // Wrapper para forzar el error después del renderizado
 const ErrorThrower: React.FC<{ shouldThrow: boolean; children: React.ReactNode }> = ({
   shouldThrow,
