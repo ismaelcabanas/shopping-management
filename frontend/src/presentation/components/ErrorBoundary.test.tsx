@@ -6,9 +6,24 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import ErrorBoundary from './ErrorBoundary'
 
-// Simple component that throws an error immediately
-const ThrowError: React.FC<{ message?: string }> = ({ message = 'Test error' }) => {
-  throw new Error(message)
+// Component that throws error during render based on prop
+const BuggyComponent: React.FC<{ shouldThrow?: boolean }> = ({ shouldThrow = false }) => {
+  if (shouldThrow) {
+    throw new Error('Test error from BuggyComponent')
+  }
+  return <div data-testid="child-content">OK</div>
+}
+
+// Test wrapper that can trigger errors
+const TestWrapper: React.FC<{ hasError: boolean; onReset?: () => void }> = ({
+  hasError,
+  onReset
+}) => {
+  return (
+    <ErrorBoundary onReset={onReset}>
+      <BuggyComponent shouldThrow={hasError} />
+    </ErrorBoundary>
+  )
 }
 
 describe('ErrorBoundary', () => {
@@ -24,22 +39,14 @@ describe('ErrorBoundary', () => {
   })
 
   it('renders children when no error', () => {
-    render(
-      <ErrorBoundary>
-        <div data-testid="child-content">OK</div>
-      </ErrorBoundary>
-    )
+    render(<TestWrapper hasError={false} />)
 
     expect(screen.getByTestId('child-content')).toBeInTheDocument()
     expect(screen.getByText('OK')).toBeInTheDocument()
   })
 
   it('catches errors from children and shows fallback', () => {
-    render(
-      <ErrorBoundary>
-        <ThrowError />
-      </ErrorBoundary>
-    )
+    render(<TestWrapper hasError={true} />)
 
     expect(screen.getByText('Ha ocurrido un error')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Reintentar' })).toBeInTheDocument()
@@ -49,11 +56,7 @@ describe('ErrorBoundary', () => {
   it('calls onReset when Reintentar is clicked', () => {
     const onReset = vi.fn()
 
-    render(
-      <ErrorBoundary onReset={onReset}>
-        <ThrowError />
-      </ErrorBoundary>
-    )
+    render(<TestWrapper hasError={true} onReset={onReset} />)
 
     const retryButton = screen.getByRole('button', { name: 'Reintentar' })
     fireEvent.click(retryButton)
@@ -62,15 +65,38 @@ describe('ErrorBoundary', () => {
   })
 
   it('displays error message when available', () => {
-    const errorMessage = 'Custom error message'
-
-    render(
-      <ErrorBoundary>
-        <ThrowError message={errorMessage} />
-      </ErrorBoundary>
-    )
+    render(<TestWrapper hasError={true} />)
 
     expect(screen.getByText('Ha ocurrido un error')).toBeInTheDocument()
-    expect(screen.getByText(errorMessage)).toBeInTheDocument()
+    expect(screen.getByText('Test error from BuggyComponent')).toBeInTheDocument()
+  })
+
+  it('can recover from error state when reset', () => {
+    const TestRecovery: React.FC = () => {
+      const [hasError, setHasError] = React.useState(true)
+
+      const handleReset = () => {
+        setHasError(false)
+      }
+
+      return (
+        <ErrorBoundary onReset={handleReset}>
+          <BuggyComponent shouldThrow={hasError} />
+        </ErrorBoundary>
+      )
+    }
+
+    render(<TestRecovery />)
+
+    // Initially should show error
+    expect(screen.getByText('Ha ocurrido un error')).toBeInTheDocument()
+
+    // Click retry button
+    const retryButton = screen.getByRole('button', { name: 'Reintentar' })
+    fireEvent.click(retryButton)
+
+    // Should now show normal content
+    expect(screen.getByTestId('child-content')).toBeInTheDocument()
+    expect(screen.getByText('OK')).toBeInTheDocument()
   })
 })
