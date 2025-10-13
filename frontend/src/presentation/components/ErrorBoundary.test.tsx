@@ -18,7 +18,7 @@ const ErrorThrower: React.FC<{ shouldThrow: boolean; children: React.ReactNode }
 }
 
 describe('ErrorBoundary', () => {
-  let consoleErrorSpy: any
+  let consoleErrorSpy: ReturnType<typeof vi.spyOn>
 
   beforeEach(() => {
     // Mock console.error para evitar que los errores aparezcan en la consola durante los tests
