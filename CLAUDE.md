@@ -83,4 +83,92 @@ shopping-manager/  (Monorepo Root)
 |
 └── ...
 
+---
+
+## 7. Convenciones de Git y Commits (Git Conventions)
+
+Para mantener un historial de commits claro y profesional, seguiremos las **Conventional Commits** con el siguiente formato:
+
+### **Formato de Commit Messages**
+
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer]
+```
+
+### **Tipos de Commits (Types)**
+
+* **feat**: Nueva funcionalidad para el usuario
+* **fix**: Corrección de bugs
+* **docs**: Cambios en documentación
+* **style**: Cambios de formato (espacios, comas, etc.) sin afectar la lógica
+* **refactor**: Refactoring de código sin añadir funcionalidades ni corregir bugs
+* **test**: Añadir o modificar tests
+* **chore**: Cambios en el build, configuración, dependencias, etc.
+
+### **Scopes Sugeridos**
+
+* **frontend**: Cambios específicos del frontend
+* **backend**: Cambios específicos del backend
+* **ui**: Cambios relacionados con interfaz de usuario
+* **api**: Cambios en endpoints o API
+* **config**: Cambios de configuración (Vite, Tailwind, etc.)
+* **docs**: Documentación del proyecto
+
+### **Ejemplos de Commits**
+
+```bash
+# Funcionalidad nueva
+feat(frontend): add product quantity inline editing
+feat(ui): implement shopping list item component
+feat(api): add product CRUD endpoints
+
+# Corrección de bugs
+fix(frontend): resolve TypeScript import type errors
+fix(ui): correct responsive layout on mobile devices
+
+# Documentación
+docs: update README with installation instructions
+docs(setup): add Tailwind configuration troubleshooting
+
+# Configuración
+chore(config): update Tailwind CSS to v3.4.0
+chore(deps): upgrade React to v18.3.0
+
+# Tests
+test(frontend): add unit tests for ShoppingList component
+test(api): add integration tests for product endpoints
+```
+
+### **Footer Conventions**
+
+Para commits generados con asistencia de Claude:
+
+```
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
+
+### **Reglas de Commit**
+
+1. **Usar presente**: "add feature" no "added feature"
+2. **Máximo 50 caracteres** en la primera línea
+3. **Descripción clara** del cambio realizado
+4. **Body opcional** para explicar el "por qué" del cambio
+5. **Referenciar issues** cuando aplique: `Closes #123`
+
+### **Breaking Changes**
+
+Para cambios que rompen compatibilidad:
+
+```bash
+feat(api)!: change product endpoint response format
+
+BREAKING CHANGE: Product API now returns snake_case instead of camelCase
+```
+
 
