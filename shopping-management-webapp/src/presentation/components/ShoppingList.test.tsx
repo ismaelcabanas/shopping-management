@@ -28,7 +28,7 @@ describe('ShoppingList - Integration Tests', () => {
     },
   ]
 
-  it('debería renderizar todos los productos', () => {
+  it('should render all products', () => {
     render(<ShoppingList products={mockProducts} />)
 
     expect(screen.getByText('Leche')).toBeInTheDocument()
@@ -36,13 +36,13 @@ describe('ShoppingList - Integration Tests', () => {
     expect(screen.getByText('Huevos')).toBeInTheDocument()
   })
 
-  it('debería mostrar el contador de la lista en 0 inicialmente', () => {
+  it('should show cart count as 0 initially', () => {
     render(<ShoppingList products={mockProducts} />)
 
     expect(screen.getByTestId('cart-count')).toHaveTextContent('Productos en la lista: 0')
   })
 
-  it('debería agregar un producto a la lista cuando se hace click en el botón', () => {
+  it('should add a product to the list when button is clicked', () => {
     render(<ShoppingList products={mockProducts} />)
 
     // Buscar todos los botones "Agregar a la lista"
@@ -54,7 +54,7 @@ describe('ShoppingList - Integration Tests', () => {
     expect(screen.getByTestId('cart-count')).toHaveTextContent('Productos en la lista: 1')
   })
 
-  it('debería mostrar los productos agregados en la lista', () => {
+  it('should display added products in the list', () => {
     render(<ShoppingList products={mockProducts} />)
 
     const addButtons = screen.getAllByTestId('add-to-cart-button')
@@ -72,7 +72,7 @@ describe('ShoppingList - Integration Tests', () => {
     expect(cartItems).toHaveTextContent('Pan')
   })
 
-  it('debería eliminar un producto de la lista', () => {
+  it('should remove a product from the list', () => {
     render(<ShoppingList products={mockProducts} />)
 
     const addButtons = screen.getAllByTestId('add-to-cart-button')
@@ -89,7 +89,7 @@ describe('ShoppingList - Integration Tests', () => {
     expect(screen.getByTestId('cart-count')).toHaveTextContent('Productos en la lista: 0')
   })
 
-  it('debería permitir agregar el mismo producto varias veces', () => {
+  it('should allow adding the same product multiple times', () => {
     render(<ShoppingList products={mockProducts} />)
 
     const addButtons = screen.getAllByTestId('add-to-cart-button')
@@ -102,13 +102,13 @@ describe('ShoppingList - Integration Tests', () => {
     expect(screen.getByTestId('cart-count')).toHaveTextContent('Productos en la lista: 3')
   })
 
-  it('NO debería mostrar la lista de productos si el carrito está vacío', () => {
+  it('should NOT display product list if cart is empty', () => {
     render(<ShoppingList products={mockProducts} />)
 
     expect(screen.queryByTestId('cart-items')).not.toBeInTheDocument()
   })
 
-  it('debería mostrar advertencia de stock bajo para productos con stock insuficiente', () => {
+  it('should display low stock warning for products with insufficient stock', () => {
     render(<ShoppingList products={mockProducts} />)
 
     // Pan tiene stock=3 y minimumStock=5, debe mostrar advertencia
@@ -116,7 +116,7 @@ describe('ShoppingList - Integration Tests', () => {
     expect(warnings.length).toBeGreaterThan(0)
   })
 
-  it('NO debería permitir agregar productos sin stock', () => {
+  it('should NOT allow adding products with zero stock', () => {
     render(<ShoppingList products={mockProducts} />)
 
     const addButtons = screen.getAllByTestId('add-to-cart-button')

@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { DashboardPage } from './DashboardPage'
 
 describe('DashboardPage - Integration Tests', () => {
-  it('debería renderizar el título del dashboard', () => {
+  it('should render the dashboard title', () => {
     render(
       <MemoryRouter>
         <DashboardPage />
@@ -14,18 +14,17 @@ describe('DashboardPage - Integration Tests', () => {
     expect(screen.getByText('Dashboard - Mis Productos')).toBeInTheDocument()
   })
 
-  it('debería renderizar el componente ShoppingList', () => {
+  it('should render the ShoppingList component', () => {
     render(
       <MemoryRouter>
         <DashboardPage />
       </MemoryRouter>
     )
 
-    // Verificar que se muestra el header de la lista de compras
     expect(screen.getByTestId('cart-header')).toBeInTheDocument()
   })
 
-  it('debería mostrar los 4 productos de ejemplo', () => {
+  it('should display the 4 example products', () => {
     render(
       <MemoryRouter>
         <DashboardPage />
@@ -38,7 +37,7 @@ describe('DashboardPage - Integration Tests', () => {
     expect(screen.getByText('Manzanas')).toBeInTheDocument()
   })
 
-  it('debería mostrar el grid de productos', () => {
+  it('should display the products grid', () => {
     render(
       <MemoryRouter>
         <DashboardPage />
@@ -48,4 +47,3 @@ describe('DashboardPage - Integration Tests', () => {
     expect(screen.getByTestId('products-grid')).toBeInTheDocument()
   })
 })
-

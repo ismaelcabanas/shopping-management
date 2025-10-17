@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { HomePage } from './HomePage'
 
 describe('HomePage - Integration Tests', () => {
-  it('debería renderizar el título principal', () => {
+  it('should render the main title', () => {
     render(
       <MemoryRouter>
         <HomePage />
@@ -14,7 +14,7 @@ describe('HomePage - Integration Tests', () => {
     expect(screen.getByText('Bienvenido a Shopping Manager')).toBeInTheDocument()
   })
 
-  it('debería renderizar las 4 tarjetas de funcionalidades', () => {
+  it('should render the 4 feature cards', () => {
     render(
       <MemoryRouter>
         <HomePage />
@@ -27,7 +27,7 @@ describe('HomePage - Integration Tests', () => {
     expect(screen.getByText('📊 Estadísticas')).toBeInTheDocument()
   })
 
-  it('debería tener un enlace al dashboard', () => {
+  it('should have a link to dashboard', () => {
     render(
       <MemoryRouter>
         <HomePage />
@@ -38,7 +38,7 @@ describe('HomePage - Integration Tests', () => {
     expect(dashboardLink).toHaveAttribute('href', '/dashboard')
   })
 
-  it('debería mostrar 3 botones deshabilitados para funcionalidades futuras', () => {
+  it('should show 3 disabled buttons for future features', () => {
     render(
       <MemoryRouter>
         <HomePage />
@@ -52,4 +52,3 @@ describe('HomePage - Integration Tests', () => {
     })
   })
 })
-

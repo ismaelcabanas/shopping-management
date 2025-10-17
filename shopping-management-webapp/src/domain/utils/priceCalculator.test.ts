@@ -3,7 +3,7 @@ import { calculateTotal, formatPrice, needsRestock } from './priceCalculator'
 
 describe('Price Calculator - Unit Tests', () => {
   describe('calculateTotal', () => {
-    it('debería calcular el total de items correctamente', () => {
+    it('should calculate the total of items correctly', () => {
       const items = [
         { price: 10, quantity: 2 },
         { price: 5, quantity: 3 },
@@ -14,12 +14,12 @@ describe('Price Calculator - Unit Tests', () => {
       expect(result).toBe(35) // (10*2) + (5*3) = 35
     })
 
-    it('debería retornar 0 para un array vacío', () => {
+    it('should return 0 for an empty array', () => {
       const result = calculateTotal([])
       expect(result).toBe(0)
     })
 
-    it('debería manejar cantidades decimales', () => {
+    it('should handle decimal quantities', () => {
       const items = [{ price: 2.5, quantity: 1.5 }]
       const result = calculateTotal(items)
       expect(result).toBeCloseTo(3.75)
@@ -27,37 +27,36 @@ describe('Price Calculator - Unit Tests', () => {
   })
 
   describe('formatPrice', () => {
-    it('debería formatear el precio con 2 decimales y símbolo de euro por defecto', () => {
+    it('should format price with 2 decimals and euro symbol by default', () => {
       const result = formatPrice(10.5)
       expect(result).toBe('10.50 €')
     })
 
-    it('debería permitir especificar otra moneda', () => {
+    it('should allow specifying a different currency', () => {
       const result = formatPrice(25.99, '$')
       expect(result).toBe('25.99 $')
     })
 
-    it('debería redondear a 2 decimales', () => {
+    it('should round to 2 decimal places', () => {
       const result = formatPrice(10.556)
       expect(result).toBe('10.56 €')
     })
   })
 
   describe('needsRestock', () => {
-    it('debería retornar true cuando el stock actual es menor que el mínimo', () => {
+    it('should return true when current stock is less than minimum', () => {
       const result = needsRestock(5, 10)
       expect(result).toBe(true)
     })
 
-    it('debería retornar true cuando el stock actual es igual al mínimo', () => {
+    it('should return true when current stock equals minimum', () => {
       const result = needsRestock(10, 10)
       expect(result).toBe(true)
     })
 
-    it('debería retornar false cuando el stock actual es mayor que el mínimo', () => {
+    it('should return false when current stock is greater than minimum', () => {
       const result = needsRestock(15, 10)
       expect(result).toBe(false)
     })
   })
 })
-

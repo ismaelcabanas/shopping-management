@@ -10,38 +10,38 @@ describe('ProductCard - Component Tests', () => {
     minimumStock: 5,
   }
 
-  it('debería renderizar el nombre del producto', () => {
+  it('should render the product name', () => {
     render(<ProductCard {...defaultProps} />)
 
     expect(screen.getByTestId('product-name')).toHaveTextContent('Leche')
   })
 
-  it('debería mostrar el precio formateado', () => {
+  it('should display the formatted price', () => {
     render(<ProductCard {...defaultProps} />)
 
     expect(screen.getByTestId('product-price')).toHaveTextContent('1.50 €')
   })
 
-  it('debería mostrar la cantidad de stock', () => {
+  it('should display the stock quantity', () => {
     render(<ProductCard {...defaultProps} />)
 
     expect(screen.getByTestId('product-stock')).toHaveTextContent('Stock: 10')
   })
 
-  it('NO debería mostrar advertencia de stock bajo cuando hay stock suficiente', () => {
+  it('should NOT display low stock warning when stock is sufficient', () => {
     render(<ProductCard {...defaultProps} stock={15} minimumStock={5} />)
 
     expect(screen.queryByTestId('low-stock-warning')).not.toBeInTheDocument()
   })
 
-  it('debería mostrar advertencia de stock bajo cuando el stock es menor o igual al mínimo', () => {
+  it('should display low stock warning when stock is less than or equal to minimum', () => {
     render(<ProductCard {...defaultProps} stock={5} minimumStock={5} />)
 
     expect(screen.getByTestId('low-stock-warning')).toBeInTheDocument()
     expect(screen.getByTestId('low-stock-warning')).toHaveTextContent('⚠️ Stock bajo')
   })
 
-  it('debería llamar a onAddToCart cuando se hace click en el botón', () => {
+  it('should call onAddToCart when button is clicked', () => {
     const onAddToCart = vi.fn()
     render(<ProductCard {...defaultProps} onAddToCart={onAddToCart} />)
 
@@ -51,7 +51,7 @@ describe('ProductCard - Component Tests', () => {
     expect(onAddToCart).toHaveBeenCalledTimes(1)
   })
 
-  it('debería deshabilitar el botón cuando no hay stock', () => {
+  it('should disable the button when stock is zero', () => {
     render(<ProductCard {...defaultProps} stock={0} />)
 
     const button = screen.getByTestId('add-to-cart-button')
@@ -59,7 +59,7 @@ describe('ProductCard - Component Tests', () => {
     expect(button).toHaveTextContent('Sin stock')
   })
 
-  it('NO debería llamar a onAddToCart cuando el botón está deshabilitado', () => {
+  it('should NOT call onAddToCart when button is disabled', () => {
     const onAddToCart = vi.fn()
     render(<ProductCard {...defaultProps} stock={0} onAddToCart={onAddToCart} />)
 
@@ -69,18 +69,17 @@ describe('ProductCard - Component Tests', () => {
     expect(onAddToCart).not.toHaveBeenCalled()
   })
 
-  it('debería aplicar las clases CSS correctas para el botón habilitado', () => {
+  it('should apply correct CSS classes for enabled button', () => {
     render(<ProductCard {...defaultProps} />)
 
     const button = screen.getByTestId('add-to-cart-button')
     expect(button).toHaveClass('bg-blue-600')
   })
 
-  it('debería aplicar las clases CSS correctas para el botón deshabilitado', () => {
+  it('should apply correct CSS classes for disabled button', () => {
     render(<ProductCard {...defaultProps} stock={0} />)
 
     const button = screen.getByTestId('add-to-cart-button')
     expect(button).toHaveClass('bg-gray-300')
   })
 })
-
