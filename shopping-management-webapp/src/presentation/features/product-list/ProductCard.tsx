@@ -1,4 +1,4 @@
-import { formatPrice } from '../../domain/utils/priceCalculator'
+import { formatPrice } from '../../../domain/utils/priceCalculator'
 
 export interface ProductCardProps {
   name: string

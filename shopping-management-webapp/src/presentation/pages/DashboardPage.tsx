@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { ShoppingList } from '../components/ShoppingList'
-import type { Product } from '../components/ShoppingList'
+import { ShoppingList } from '../features/shopping-cart/ShoppingList'
+import type { Product } from '../features/shopping-cart/ShoppingList'
 
 export function DashboardPage() {
   const [products] = useState<Product[]>([
@@ -53,4 +53,3 @@ export function DashboardPage() {
     </div>
   )
 }
-

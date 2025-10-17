@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ProductCard } from './ProductCard'
+import { ProductCard } from '../product-list/ProductCard'
 
 export interface Product {
   id: string

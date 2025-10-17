@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
-import { Navigation } from '../components/Navigation'
+import { Navigation } from '../shared/components/Navigation'
 import { HomePage } from '../pages/HomePage'
 import { DashboardPage } from '../pages/DashboardPage'
 

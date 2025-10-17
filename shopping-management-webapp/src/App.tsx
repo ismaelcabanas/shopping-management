@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
-import { Navigation } from './presentation/components/Navigation'
+import { Navigation } from './presentation/shared/components/Navigation'
 import { HomePage } from './presentation/pages/HomePage'
 import { DashboardPage } from './presentation/pages/DashboardPage'
 
