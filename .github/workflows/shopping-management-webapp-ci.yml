@@ -1,0 +1,42 @@
+name: Frontend CI - Build and Test
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - '../../shopping-management-webapp'  # Only execute when something change here
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - '../../shopping-management-webapp'  # Only execute when something change here
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./shopping-management-webapp
+    strategy:
+      matrix:
+        node-version: [ 18.x, 20.x ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: shopping-management-webapp/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript compilation check
+        run: npm run build
+
+      - name: ESLint code quality check
+        run: npm run lint
