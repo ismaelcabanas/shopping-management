@@ -45,7 +45,7 @@ describe('calculateTotal', () => {
 ### 2. Component Tests
 **Purpose:** Test React components in isolation with user interactions.
 
-**Location:** `src/presentation/components/*.test.tsx`
+**Location:** `src/presentation/features/*/ComponentName.test.tsx`
 
 **What we test:**
 - Component rendering
@@ -57,7 +57,7 @@ describe('calculateTotal', () => {
 
 **Example:**
 ```typescript
-// ProductCard.test.tsx
+// features/product-list/ProductCard.test.tsx
 describe('ProductCard - Component Tests', () => {
   it('should call onAddToCart when button is clicked', () => {
     const onAddToCart = vi.fn()
@@ -83,7 +83,7 @@ describe('ProductCard - Component Tests', () => {
 ### 3. Integration Tests
 **Purpose:** Test how multiple components work together.
 
-**Location:** `src/presentation/components/*.test.tsx`
+**Location:** `src/presentation/features/*/FeatureName.test.tsx`
 
 **What we test:**
 - Communication between components
@@ -93,7 +93,7 @@ describe('ProductCard - Component Tests', () => {
 
 **Example:**
 ```typescript
-// ShoppingList.test.tsx
+// features/shopping-cart/ShoppingList.test.tsx
 describe('ShoppingList - Integration Tests', () => {
   it('should add a product to the list when button is clicked', () => {
     render(<ShoppingList products={mockProducts} />)
@@ -679,4 +679,3 @@ As the application grows, implement additional test types:
 
 **Philosophy:**
 Write tests that give confidence, not just coverage. Focus on testing behavior that matters to users and business logic that's critical.
-
