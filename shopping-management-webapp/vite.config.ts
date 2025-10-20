@@ -8,27 +8,29 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'icon-192x192.png', 'icon-512x512.png'],
+      includeAssets: ['favicon.svg', 'icon-192x192.svg', 'icon-512x512.svg'],
       manifest: {
         name: 'Shopping Manager',
         short_name: 'Shopping',
         description: 'Gestión inteligente de inventario y compras',
-        theme_color: '#ffffff',
+        theme_color: '#10b981',
+        background_color: '#ffffff',
+        display: 'standalone',
         icons: [
           {
-            src: 'icon-192x192.png',
+            src: 'icon-192x192.svg',
             sizes: '192x192',
-            type: 'image/png'
+            type: 'image/svg+xml'
           },
           {
-            src: 'icon-512x512.png',
+            src: 'icon-512x512.svg',
             sizes: '512x512',
-            type: 'image/png'
+            type: 'image/svg+xml'
           },
           {
-            src: 'icon-512x512.png',
+            src: 'icon-512x512.svg',
             sizes: '512x512',
-            type: 'image/png',
+            type: 'image/svg+xml',
             purpose: 'any maskable'
           }
         ]
