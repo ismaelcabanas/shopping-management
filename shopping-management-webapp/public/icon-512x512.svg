@@ -1,0 +1,22 @@
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo verde -->
+  <rect width="512" height="512" fill="#10b981" rx="85"/>
+
+  <!-- Icono carrito de compras blanco -->
+  <g fill="#ffffff">
+    <!-- Carrito -->
+    <path d="M 160 185 L 185 185 L 215 320 L 345 320 L 375 215 L 200 215" stroke="#ffffff" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Ruedas -->
+    <circle cx="240" cy="360" r="16"/>
+    <circle cx="320" cy="360" r="16"/>
+
+    <!-- Lista/líneas dentro del carrito -->
+    <line x1="225" y1="240" x2="320" y2="240" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+    <line x1="225" y1="265" x2="305" y2="265" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+    <line x1="225" y1="290" x2="295" y2="290" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+  </g>
+
+  <!-- Texto "SM" -->
+  <text x="256" y="430" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="#ffffff" text-anchor="middle">SM</text>
+</svg>
