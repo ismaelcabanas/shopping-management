@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { ProductCard } from './ProductCard'
+import { ProductCard } from '../../../../presentation/features/product-list/ProductCard'
 
 describe('ProductCard - Component Tests', () => {
   const defaultProps = {

@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
-import { Navigation } from '../shared/components/Navigation'
-import { HomePage } from '../pages/HomePage'
-import { DashboardPage } from '../pages/DashboardPage'
+import { Navigation } from '../../../presentation/shared/components/Navigation'
+import { HomePage } from '../../../presentation/pages/HomePage'
+import { DashboardPage } from '../../../presentation/pages/DashboardPage'
 
 // Helper component that simulates the complete app structure
 function AppWithRouter({ initialRoute = '/' }: { initialRoute?: string }) {

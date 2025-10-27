@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { Product } from './model/Product';
-import { InventoryItem } from './model/InventoryItem';
-import { ProductId } from './model/ProductId';
-import { UnitType } from './model/UnitType';
-import { Quantity } from './model/Quantity';
+import { Product } from '../../domain/model/Product';
+import { InventoryItem } from '../../domain/model/InventoryItem';
+import { ProductId } from '../../domain/model/ProductId';
+import { UnitType } from '../../domain/model/UnitType';
+import { Quantity } from '../../domain/model/Quantity';
 
 describe('Product Domain - Add Products Feature', () => {
   describe('Creating a new product', () => {

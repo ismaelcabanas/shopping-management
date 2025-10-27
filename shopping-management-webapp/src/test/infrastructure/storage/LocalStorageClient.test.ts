@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { LocalStorageClient } from './LocalStorageClient';
+import { LocalStorageClient } from '../../../infrastructure/storage/LocalStorageClient';
 
 describe('LocalStorageClient', () => {
   let client: LocalStorageClient;
