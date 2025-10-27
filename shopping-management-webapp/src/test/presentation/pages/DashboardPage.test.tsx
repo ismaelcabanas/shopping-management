@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { DashboardPage } from './DashboardPage'
+import { DashboardPage } from '../../../presentation/pages/DashboardPage'
 
 describe('DashboardPage - Integration Tests', () => {
   it('should render the dashboard title', () => {

@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { GetAllProducts } from './GetAllProducts';
-import type { ProductRepository } from '../../domain/repositories/ProductRepository';
-import { Product } from '../../domain/model/Product';
-import { ProductId } from '../../domain/model/ProductId';
-import { UnitType } from '../../domain/model/UnitType';
+import { GetAllProducts } from '../../../application/use-cases/GetAllProducts';
+import type { ProductRepository } from '../../../domain/repositories/ProductRepository';
+import { Product } from '../../../domain/model/Product';
+import { ProductId } from '../../../domain/model/ProductId';
+import { UnitType } from '../../../domain/model/UnitType';
 
 describe('GetAllProducts Use Case', () => {
   let getAllProducts: GetAllProducts;

@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { LocalStorageProductRepository } from './LocalStorageProductRepository';
-import { Product } from '../../domain/model/Product';
-import { ProductId } from '../../domain/model/ProductId';
-import { UnitType } from '../../domain/model/UnitType';
+import { LocalStorageProductRepository } from '../../../infrastructure/repositories/LocalStorageProductRepository';
+import { Product } from '../../../domain/model/Product';
+import { ProductId } from '../../../domain/model/ProductId';
+import { UnitType } from '../../../domain/model/UnitType';
 
 describe('LocalStorageProductRepository', () => {
   let repository: LocalStorageProductRepository;

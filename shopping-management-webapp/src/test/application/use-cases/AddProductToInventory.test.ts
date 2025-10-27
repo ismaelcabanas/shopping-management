@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { AddProductToInventory } from './AddProductToInventory';
-import type { ProductRepository } from '../../domain/repositories/ProductRepository';
-import type { InventoryRepository } from '../../domain/repositories/InventoryRepository';
-import { Product } from '../../domain/model/Product';
-import { InventoryItem } from '../../domain/model/InventoryItem';
-import { ProductId } from '../../domain/model/ProductId';
+import { AddProductToInventory } from '../../../application/use-cases/AddProductToInventory';
+import type { ProductRepository } from '../../../domain/repositories/ProductRepository';
+import type { InventoryRepository } from '../../../domain/repositories/InventoryRepository';
+import { Product } from '../../../domain/model/Product';
+import { InventoryItem } from '../../../domain/model/InventoryItem';
+import { ProductId } from '../../../domain/model/ProductId';
 
 describe('AddProductToInventory Use Case', () => {
   let addProductToInventory: AddProductToInventory;

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { calculateTotal, formatPrice, needsRestock } from './priceCalculator'
+import { calculateTotal, formatPrice, needsRestock } from '../../../domain/utils/priceCalculator'
 
 describe('Price Calculator - Unit Tests', () => {
   describe('calculateTotal', () => {

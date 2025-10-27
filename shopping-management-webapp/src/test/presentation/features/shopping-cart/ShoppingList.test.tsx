@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { ShoppingList } from './ShoppingList'
-import type { Product } from './ShoppingList'
+import { ShoppingList } from '../../../../presentation/features/shopping-cart/ShoppingList'
+import type { Product } from '../../../../presentation/features/shopping-cart/ShoppingList'
 
 describe('ShoppingList - Integration Tests', () => {
   const mockProducts: Product[] = [
