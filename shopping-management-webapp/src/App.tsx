@@ -3,6 +3,7 @@ import './App.css'
 import { Navigation } from './presentation/shared/components/Navigation'
 import { HomePage } from './presentation/pages/HomePage'
 import { DashboardPage } from './presentation/pages/DashboardPage'
+import { AddProductPage } from './presentation/pages/AddProductPage'
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/catalog/add" element={<AddProductPage />} />
       </Routes>
     </BrowserRouter>
   )
