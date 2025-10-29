@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { ProductForm, type ProductFormData } from '../components/ProductForm';
 import { AddProductToInventory } from '../../application/use-cases/AddProductToInventory';
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository';
@@ -8,8 +8,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 export function AddProductPage() {
   const navigate = useNavigate();
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
 
   // Initialize repositories
   const productRepository = new LocalStorageProductRepository();
@@ -18,10 +16,6 @@ export function AddProductPage() {
 
   const handleSubmit = async (data: ProductFormData) => {
     try {
-      // Clear previous messages
-      setSuccessMessage('');
-      setErrorMessage('');
-
       // Generate UUID for the product
       const productId = uuidv4();
 
@@ -32,23 +26,19 @@ export function AddProductPage() {
         initialQuantity: data.quantity,
       });
 
-      // Show success message
-      setSuccessMessage('Producto agregado exitosamente');
-
-      // Navigate to catalog after a short delay
-      setTimeout(() => {
-        navigate('/catalog');
-      }, 1500);
+      // Show success toast and navigate immediately
+      toast.success('Producto agregado exitosamente');
+      navigate('/catalog');
     } catch (error) {
-      // Handle errors
+      // Handle errors with toast
       if (error instanceof Error) {
         if (error.message.includes('already exists')) {
-          setErrorMessage('Ya existe un producto con ese nombre');
+          toast.error('Ya existe un producto con ese nombre');
         } else {
-          setErrorMessage(error.message);
+          toast.error(error.message);
         }
       } else {
-        setErrorMessage('Error al agregar el producto');
+        toast.error('Error al agregar el producto');
       }
     }
   };
@@ -65,26 +55,6 @@ export function AddProductPage() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Agregar Nuevo Producto</h1>
           <p className="text-gray-600">Complete el formulario para agregar un producto a su inventario</p>
         </div>
-
-        {/* Success Message */}
-        {successMessage && (
-          <div
-            className="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg"
-            role="alert"
-          >
-            <p className="font-medium">{successMessage}</p>
-          </div>
-        )}
-
-        {/* Error Message */}
-        {errorMessage && (
-          <div
-            className="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg"
-            role="alert"
-          >
-            <p className="font-medium">{errorMessage}</p>
-          </div>
-        )}
 
         {/* Form Card */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
