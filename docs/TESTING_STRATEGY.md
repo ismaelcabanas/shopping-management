@@ -520,6 +520,266 @@ test('should show error for invalid price', async () => {
 
 ---
 
+## Clean Architecture Testing Principles ⭐
+
+### Mocking Strategy for Presentation Layer
+
+**Core Principle:** Mock the **contract** (use cases), NOT the **implementation** (repositories).
+
+#### Why This Matters
+
+Following Clean Architecture, the presentation layer should ONLY know about use cases. Repositories are implementation details hidden behind the Application layer.
+
+```
+┌─────────────────────────────────────────┐
+│     Presentation Layer (Components)     │
+│                                         │
+│   ✅ Knows: Use Cases                   │
+│   ❌ Doesn't know: Repositories         │
+└─────────────┬───────────────────────────┘
+              │
+              │ Calls Use Case
+              ▼
+┌─────────────────────────────────────────┐
+│    Application Layer (Use Cases)        │
+│                                         │
+│   Uses: Repositories (interfaces)       │
+└─────────────┬───────────────────────────┘
+              │
+              │ Calls Repository
+              ▼
+┌─────────────────────────────────────────┐
+│   Infrastructure Layer (Repositories)   │
+│                                         │
+│   Implements: Repository interfaces     │
+│   Uses: localStorage, APIs, etc.        │
+└─────────────────────────────────────────┘
+```
+
+#### ✅ CORRECT: Mock Use Cases
+
+```typescript
+// ✅ Mock ONLY the use case
+const mockExecute = vi.fn();
+vi.mock('../../../application/use-cases/AddProductToInventory', () => ({
+  AddProductToInventory: vi.fn().mockImplementation(() => ({
+    execute: mockExecute,
+  })),
+}));
+
+describe('AddProductPage', () => {
+  it('should call use case when form is submitted', async () => {
+    mockExecute.mockResolvedValue(undefined);
+
+    render(<AddProductPage />);
+
+    fireEvent.change(screen.getByLabelText(/nombre/i), { target: { value: 'Leche' } });
+    fireEvent.click(screen.getByRole('button', { name: /agregar/i }));
+
+    // ✅ Verify the contract with the use case
+    await waitFor(() => {
+      expect(mockExecute).toHaveBeenCalledWith({
+        id: expect.any(String),
+        name: 'Leche',
+        initialQuantity: 10,
+      });
+    });
+  });
+
+  it('should show success message after use case succeeds', async () => {
+    mockExecute.mockResolvedValue(undefined);
+
+    render(<AddProductPage />);
+    // ... submit form ...
+
+    // ✅ Verify user-visible behavior
+    await waitFor(() => {
+      expect(screen.getByText(/producto agregado exitosamente/i)).toBeInTheDocument();
+    });
+  });
+});
+```
+
+**Benefits:**
+- ⚡ Fast tests (~30ms vs ~2000ms)
+- 🏛️ Respects Clean Architecture
+- 🔒 Encapsulation preserved
+- 🛡️ Resilient to implementation changes
+- ✅ Tests the actual contract
+
+#### ❌ INCORRECT: Mock Repositories or Test Implementation
+
+```typescript
+// ❌ WRONG: Component should not know about repositories
+const mockProductRepo = { save: vi.fn() };
+const mockInventoryRepo = { save: vi.fn() };
+
+describe('AddProductPage', () => {
+  it('should save to repository', async () => {
+    render(<AddProductPage />);
+    // ... submit form ...
+
+    // ❌ WRONG: Testing implementation details
+    expect(mockProductRepo.save).toHaveBeenCalled();
+  });
+
+  it('should save to localStorage', async () => {
+    render(<AddProductPage />);
+    // ... submit form ...
+
+    // ❌ WRONG: Verifying infrastructure layer details
+    const products = JSON.parse(localStorage.getItem('products') || '[]');
+    expect(products).toHaveLength(1);
+  });
+});
+```
+
+**Problems:**
+- ❌ Violates Clean Architecture
+- ❌ Breaks encapsulation
+- ❌ Tests are slow (needs real localStorage)
+- ❌ Fragile (breaks if we change from localStorage to IndexedDB)
+- ❌ Presentation layer knows too much
+
+### Timers in Tests
+
+**Rule:** Avoid fake timers in component tests. Use `waitFor` instead.
+
+#### ✅ CORRECT: Use waitFor
+
+```typescript
+it('should navigate after successful submission', async () => {
+  mockExecute.mockResolvedValue(undefined);
+
+  render(<AddProductPage />);
+  // ... submit form ...
+
+  // ✅ waitFor handles the wait automatically
+  await waitFor(() => {
+    expect(mockNavigate).toHaveBeenCalledWith('/catalog');
+  }, { timeout: 2000 });
+});
+```
+
+**Benefits:**
+- Simple and clear
+- No timer management
+- Focuses on behavior, not implementation
+
+#### ❌ INCORRECT: Use Fake Timers
+
+```typescript
+it('should navigate after 1500ms', async () => {
+  vi.useFakeTimers(); // ❌ Unnecessary complexity
+
+  render(<AddProductPage />);
+  // ... submit form ...
+
+  vi.advanceTimersByTime(1500); // ❌ Couples test to implementation
+
+  expect(mockNavigate).toHaveBeenCalled();
+
+  vi.useRealTimers(); // ❌ Easy to forget cleanup
+});
+```
+
+**Problems:**
+- ❌ Couples test to implementation (1500ms is a detail)
+- ❌ More complex
+- ❌ Can cause timing issues
+- ❌ Risk of forgetting cleanup
+
+**Exception:** Only use fake timers when absolutely necessary (e.g., testing debounce logic).
+
+### Real Example: AddProductPage Refactoring
+
+**Before (Anti-pattern):**
+```typescript
+// ❌ No mocking, uses localStorage directly
+describe('AddProductPage - Integration Tests', () => {
+  beforeEach(() => {
+    localStorage.clear(); // ❌ Depends on infrastructure
+  });
+
+  it('should save product to localStorage', async () => {
+    render(<AddProductPage />);
+    // ... submit form ...
+
+    // ❌ Tests infrastructure layer from presentation
+    await waitFor(() => {
+      const products = JSON.parse(localStorage.getItem('shopping_manager_products') || '[]');
+      expect(products).toHaveLength(1);
+    }, { timeout: 2000 }); // ❌ Long timeout
+  });
+});
+```
+
+**After (Correct pattern):**
+```typescript
+// ✅ Mock only the use case
+const mockExecute = vi.fn();
+vi.mock('../../../application/use-cases/AddProductToInventory', () => ({
+  AddProductToInventory: vi.fn().mockImplementation(() => ({
+    execute: mockExecute,
+  })),
+}));
+
+describe('AddProductPage - Component Tests', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockExecute.mockResolvedValue(undefined); // ✅ Default success case
+  });
+
+  it('should call use case with correct parameters', async () => {
+    render(<AddProductPage />);
+
+    fireEvent.change(screen.getByLabelText(/nombre/i), { target: { value: 'Leche' } });
+    fireEvent.change(screen.getByLabelText(/cantidad/i), { target: { value: '10' } });
+    fireEvent.click(screen.getByRole('button', { name: /agregar/i }));
+
+    // ✅ Verify contract
+    await waitFor(() => {
+      expect(mockExecute).toHaveBeenCalledWith({
+        id: expect.any(String),
+        name: 'Leche',
+        initialQuantity: 10,
+      });
+    });
+  });
+
+  it('should show error when use case fails', async () => {
+    // ✅ Mock error scenario
+    mockExecute.mockRejectedValue(new Error('Product already exists'));
+
+    render(<AddProductPage />);
+    // ... submit form ...
+
+    // ✅ Verify user-visible error handling
+    await waitFor(() => {
+      expect(screen.getByText(/ya existe un producto/i)).toBeInTheDocument();
+    });
+  });
+});
+```
+
+**Improvements:**
+- ✅ 20x faster (~30ms vs ~2000ms)
+- ✅ Respects architecture boundaries
+- ✅ Tests contract, not implementation
+- ✅ Easy to test error scenarios
+- ✅ No infrastructure dependencies
+
+### Summary: Testing by Layer
+
+| Layer | What to Mock | What to Test | Tools |
+|-------|--------------|--------------|-------|
+| **Presentation** | Use Cases | UI behavior, user interactions, contract with use cases | Vitest + RTL |
+| **Application** | Repositories (interfaces) | Business logic orchestration, data transformation | Vitest |
+| **Infrastructure** | Nothing (or external services) | Repository implementations, API calls | Vitest + MSW |
+| **Domain** | Nothing | Business rules, validations, calculations | Vitest |
+
+---
+
 ## Testing Best Practices
 
 ### 1. Test Naming Convention
