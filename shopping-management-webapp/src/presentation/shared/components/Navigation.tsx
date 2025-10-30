@@ -34,6 +34,17 @@ export function Navigation() {
               Inicio
             </Link>
             <Link
+              to="/catalog"
+              className={`px-3 py-2 rounded-md text-sm font-medium ${
+                isActive('/catalog')
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+              data-testid="nav-catalog"
+            >
+              Mi Despensa
+            </Link>
+            <Link
               to="/dashboard"
               className={`px-3 py-2 rounded-md text-sm font-medium ${
                 isActive('/dashboard')
