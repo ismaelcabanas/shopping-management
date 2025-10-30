@@ -4,6 +4,8 @@ import { ProductForm, type ProductFormData } from '../components/ProductForm';
 import { AddProductToInventory } from '../../application/use-cases/AddProductToInventory';
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository';
 import { LocalStorageInventoryRepository } from '../../infrastructure/repositories/LocalStorageInventoryRepository';
+import { Button } from '../shared/components/Button';
+import { Card } from '../shared/components/Card';
 import { v4 as uuidv4 } from 'uuid';
 
 export function AddProductPage() {
@@ -48,7 +50,7 @@ export function AddProductPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-gray-50 py-page px-4">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -57,18 +59,18 @@ export function AddProductPage() {
         </div>
 
         {/* Form Card */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <Card className="mb-6">
           <ProductForm onSubmit={handleSubmit} />
-        </div>
+        </Card>
 
         {/* Back Button */}
-        <button
+        <Button
           onClick={handleBack}
-          className="w-full bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-colors"
-          style={{ minHeight: '44px' }}
+          variant="secondary"
+          fullWidth
         >
           Volver al catálogo
-        </button>
+        </Button>
       </div>
     </div>
   );
