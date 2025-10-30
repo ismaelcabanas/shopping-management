@@ -87,7 +87,7 @@ describe('Router - Integration Tests', () => {
       render(<AppWithRouter initialRoute="/" />)
 
       const homeLink = screen.getByTestId('nav-home')
-      expect(homeLink).toHaveClass('bg-blue-600')
+      expect(homeLink).toHaveClass('bg-primary')
       expect(homeLink).toHaveClass('text-white')
     })
 
@@ -95,7 +95,7 @@ describe('Router - Integration Tests', () => {
       render(<AppWithRouter initialRoute="/dashboard" />)
 
       const dashboardLink = screen.getByTestId('nav-dashboard')
-      expect(dashboardLink).toHaveClass('bg-blue-600')
+      expect(dashboardLink).toHaveClass('bg-primary')
       expect(dashboardLink).toHaveClass('text-white')
     })
 
@@ -105,8 +105,8 @@ describe('Router - Integration Tests', () => {
       let homeLink = screen.getByTestId('nav-home')
       let dashboardLink = screen.getByTestId('nav-dashboard')
 
-      expect(homeLink).toHaveClass('bg-blue-600')
-      expect(dashboardLink).not.toHaveClass('bg-blue-600')
+      expect(homeLink).toHaveClass('bg-primary')
+      expect(dashboardLink).not.toHaveClass('bg-primary')
 
       fireEvent.click(dashboardLink)
 
@@ -114,8 +114,8 @@ describe('Router - Integration Tests', () => {
         homeLink = screen.getByTestId('nav-home')
         dashboardLink = screen.getByTestId('nav-dashboard')
 
-        expect(dashboardLink).toHaveClass('bg-blue-600')
-        expect(homeLink).not.toHaveClass('bg-blue-600')
+        expect(dashboardLink).toHaveClass('bg-primary')
+        expect(homeLink).not.toHaveClass('bg-primary')
       })
     })
   })
@@ -125,7 +125,7 @@ describe('Router - Integration Tests', () => {
       render(<AppWithRouter initialRoute="/dashboard" />)
 
       const logoLink = screen.getByTestId('nav-home-link')
-      expect(logoLink).toHaveTextContent('🛒 Shopping Manager')
+      expect(logoLink).toHaveTextContent('Shopping Manager')
     })
 
     it('should navigate to home when clicking logo from dashboard', async () => {

@@ -96,14 +96,14 @@ test.describe('Shopping Manager E2E Tests', () => {
 
     // Home should be active
     const homeLink = page.getByTestId('nav-home')
-    await expect(homeLink).toHaveClass(/bg-blue-600/)
+    await expect(homeLink).toHaveClass(/bg-primary/)
 
     // Navigate to dashboard
     await page.getByTestId('nav-dashboard').click()
 
     // Dashboard should be active now
     const dashboardLink = page.getByTestId('nav-dashboard')
-    await expect(dashboardLink).toHaveClass(/bg-blue-600/)
+    await expect(dashboardLink).toHaveClass(/bg-primary/)
   })
 
   test('should navigate to home when clicking logo', async ({ page }) => {
