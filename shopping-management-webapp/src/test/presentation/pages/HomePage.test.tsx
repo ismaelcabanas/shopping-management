@@ -21,10 +21,10 @@ describe('HomePage - Integration Tests', () => {
       </MemoryRouter>
     )
 
-    expect(screen.getByText('📦 Gestión de Inventario')).toBeInTheDocument()
-    expect(screen.getByText('🛒 Lista de Compras')).toBeInTheDocument()
-    expect(screen.getByText('💰 Optimización de Precios')).toBeInTheDocument()
-    expect(screen.getByText('📊 Estadísticas')).toBeInTheDocument()
+    expect(screen.getByText('Gestión de Inventario')).toBeInTheDocument()
+    expect(screen.getByText('Lista de Compras')).toBeInTheDocument()
+    expect(screen.getByText('Optimización de Precios')).toBeInTheDocument()
+    expect(screen.getByText('Estadísticas')).toBeInTheDocument()
   })
 
   it('should have a link to dashboard', () => {
@@ -34,8 +34,9 @@ describe('HomePage - Integration Tests', () => {
       </MemoryRouter>
     )
 
-    const dashboardLink = screen.getByTestId('go-to-dashboard')
-    expect(dashboardLink).toHaveAttribute('href', '/dashboard')
+    const dashboardButton = screen.getByTestId('go-to-dashboard')
+    expect(dashboardButton).toBeInTheDocument()
+    expect(dashboardButton.closest('a')).toHaveAttribute('href', '/dashboard')
   })
 
   it('should show 3 disabled buttons for future features', () => {
