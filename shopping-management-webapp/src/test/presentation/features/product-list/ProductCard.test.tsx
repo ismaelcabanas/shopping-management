@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { ProductCard } from '../../../../presentation/features/product-list/ProductCard'
 
 describe('ProductCard - Component Tests', () => {
@@ -41,12 +42,13 @@ describe('ProductCard - Component Tests', () => {
     expect(screen.getByTestId('low-stock-warning')).toHaveTextContent('⚠️ Stock bajo')
   })
 
-  it('should call onAddToCart when button is clicked', () => {
+  it('should call onAddToCart when button is clicked', async () => {
     const onAddToCart = vi.fn()
+    const user = userEvent.setup()
     render(<ProductCard {...defaultProps} onAddToCart={onAddToCart} />)
 
     const button = screen.getByTestId('add-to-cart-button')
-    fireEvent.click(button)
+    await user.click(button)
 
     expect(onAddToCart).toHaveBeenCalledTimes(1)
   })
@@ -59,12 +61,13 @@ describe('ProductCard - Component Tests', () => {
     expect(button).toHaveTextContent('Sin stock')
   })
 
-  it('should NOT call onAddToCart when button is disabled', () => {
+  it('should NOT call onAddToCart when button is disabled', async () => {
     const onAddToCart = vi.fn()
+    const user = userEvent.setup()
     render(<ProductCard {...defaultProps} stock={0} onAddToCart={onAddToCart} />)
 
     const button = screen.getByTestId('add-to-cart-button')
-    fireEvent.click(button)
+    await user.click(button)
 
     expect(onAddToCart).not.toHaveBeenCalled()
   })

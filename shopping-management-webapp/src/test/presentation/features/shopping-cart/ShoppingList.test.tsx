@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { ShoppingList } from '../../../../presentation/features/shopping-cart/ShoppingList'
 import type { Product } from '../../../../presentation/features/shopping-cart/ShoppingList'
 
@@ -42,28 +43,30 @@ describe('ShoppingList - Integration Tests', () => {
     expect(screen.getByTestId('cart-count')).toHaveTextContent('Productos en la lista: 0')
   })
 
-  it('should add a product to the list when button is clicked', () => {
+  it('should add a product to the list when button is clicked', async () => {
+    const user = userEvent.setup()
     render(<ShoppingList products={mockProducts} />)
 
     // Buscar todos los botones "Agregar a la lista"
     const addButtons = screen.getAllByTestId('add-to-cart-button')
 
     // Click en el primer botón (Leche)
-    fireEvent.click(addButtons[0])
+    await user.click(addButtons[0])
 
     expect(screen.getByTestId('cart-count')).toHaveTextContent('Productos en la lista: 1')
   })
 
-  it('should display added products in the list', () => {
+  it('should display added products in the list', async () => {
+    const user = userEvent.setup()
     render(<ShoppingList products={mockProducts} />)
 
     const addButtons = screen.getAllByTestId('add-to-cart-button')
 
     // Agregar Leche
-    fireEvent.click(addButtons[0])
+    await user.click(addButtons[0])
 
     // Agregar Pan
-    fireEvent.click(addButtons[1])
+    await user.click(addButtons[1])
 
     expect(screen.getByTestId('cart-count')).toHaveTextContent('Productos en la lista: 2')
 
@@ -72,32 +75,34 @@ describe('ShoppingList - Integration Tests', () => {
     expect(cartItems).toHaveTextContent('Pan')
   })
 
-  it('should remove a product from the list', () => {
+  it('should remove a product from the list', async () => {
+    const user = userEvent.setup()
     render(<ShoppingList products={mockProducts} />)
 
     const addButtons = screen.getAllByTestId('add-to-cart-button')
 
     // Agregar Leche
-    fireEvent.click(addButtons[0])
+    await user.click(addButtons[0])
 
     expect(screen.getByTestId('cart-count')).toHaveTextContent('Productos en la lista: 1')
 
     // Eliminar Leche
     const removeButton = screen.getByTestId('remove-1')
-    fireEvent.click(removeButton)
+    await user.click(removeButton)
 
     expect(screen.getByTestId('cart-count')).toHaveTextContent('Productos en la lista: 0')
   })
 
-  it('should allow adding the same product multiple times', () => {
+  it('should allow adding the same product multiple times', async () => {
+    const user = userEvent.setup()
     render(<ShoppingList products={mockProducts} />)
 
     const addButtons = screen.getAllByTestId('add-to-cart-button')
 
     // Agregar Leche tres veces
-    fireEvent.click(addButtons[0])
-    fireEvent.click(addButtons[0])
-    fireEvent.click(addButtons[0])
+    await user.click(addButtons[0])
+    await user.click(addButtons[0])
+    await user.click(addButtons[0])
 
     expect(screen.getByTestId('cart-count')).toHaveTextContent('Productos en la lista: 3')
   })
