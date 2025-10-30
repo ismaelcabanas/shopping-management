@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ArrowLeft, Plus, ClipboardList } from 'lucide-react';
 import { ProductList, type ProductWithInventory } from '../components/ProductList';
 import { GetProductsWithInventory } from '../../application/use-cases/GetProductsWithInventory';
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository';
 import { LocalStorageInventoryRepository } from '../../infrastructure/repositories/LocalStorageInventoryRepository';
+import { Button } from '../shared/components/Button';
 
 export function ProductCatalogPage() {
   const navigate = useNavigate();
@@ -52,16 +54,18 @@ export function ProductCatalogPage() {
       <div className="bg-white border-b border-gray-200 px-4 py-4">
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-between">
-            <button
+            <Button
               data-testid="back-button"
               onClick={handleBack}
-              className="text-gray-600 hover:text-gray-900 font-medium"
-              style={{ minHeight: '44px' }}
+              variant="ghost"
+              size="sm"
+              className="flex items-center gap-2"
             >
-              ← Volver
-            </button>
+              <ArrowLeft className="w-4 h-4" />
+              Volver
+            </Button>
             <h1 className="text-2xl font-bold text-gray-900">Mi Despensa</h1>
-            <div style={{ width: '80px' }}></div> {/* Spacer for centering */}
+            <div className="w-20"></div> {/* Spacer for centering */}
           </div>
         </div>
       </div>
@@ -70,9 +74,10 @@ export function ProductCatalogPage() {
       <div className="max-w-2xl mx-auto px-4 py-6">
         {/* Product count */}
         {!isLoading && products.length > 0 && (
-          <div className="mb-4">
+          <div className="mb-4 flex items-center gap-2">
+            <ClipboardList className="w-5 h-5 text-primary" />
             <h2 className="text-lg font-semibold text-gray-700">
-              📋 Productos en Despensa ({products.length})
+              Productos en Despensa ({products.length})
             </h2>
           </div>
         )}
@@ -85,7 +90,7 @@ export function ProductCatalogPage() {
       <button
         data-testid="fab-add-product"
         onClick={handleAddProduct}
-        className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center"
+        className="fixed bottom-6 right-6 bg-success hover:bg-success-hover text-white rounded-full shadow-card-hover hover:shadow-card-active transition-all duration-200 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-success focus:ring-offset-2"
         style={{
           minWidth: '56px',
           minHeight: '56px',
@@ -94,7 +99,7 @@ export function ProductCatalogPage() {
         }}
         aria-label="Añadir producto"
       >
-        <span className="text-2xl font-bold">+</span>
+        <Plus className="w-6 h-6" />
       </button>
     </div>
   );
