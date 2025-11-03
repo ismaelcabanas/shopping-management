@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ProductForm } from '../../../presentation/components/ProductForm';
 
 describe('ProductForm - Component Tests (TDD)', () => {
@@ -36,35 +37,38 @@ describe('ProductForm - Component Tests (TDD)', () => {
   });
 
   describe('Validation - Product Name', () => {
-    it('should show error when name is empty', () => {
+    it('should show error when name is empty', async () => {
+      const user = userEvent.setup();
       render(<ProductForm onSubmit={vi.fn()} />);
 
       const submitButton = screen.getByRole('button', { name: /agregar producto/i });
 
       // Try to submit with empty name
-      fireEvent.click(submitButton);
+      await user.click(submitButton);
 
       expect(screen.getByText(/el nombre no puede estar vacío/i)).toBeInTheDocument();
     });
 
-    it('should show error when name is less than 2 characters', () => {
+    it('should show error when name is less than 2 characters', async () => {
+      const user = userEvent.setup();
       render(<ProductForm onSubmit={vi.fn()} />);
 
       const nameInput = screen.getByLabelText(/nombre del producto/i);
       const submitButton = screen.getByRole('button', { name: /agregar producto/i });
 
-      fireEvent.change(nameInput, { target: { value: 'L' } });
-      fireEvent.click(submitButton);
+      await user.type(nameInput, 'L');
+      await user.click(submitButton);
 
       expect(screen.getByText(/el nombre debe tener al menos 2 caracteres/i)).toBeInTheDocument();
     });
 
-    it('should NOT show error when name is valid', () => {
+    it('should NOT show error when name is valid', async () => {
+      const user = userEvent.setup();
       render(<ProductForm onSubmit={vi.fn()} />);
 
       const nameInput = screen.getByLabelText(/nombre del producto/i);
 
-      fireEvent.change(nameInput, { target: { value: 'Leche' } });
+      await user.type(nameInput, 'Leche');
 
       expect(screen.queryByText(/el nombre no puede estar vacío/i)).not.toBeInTheDocument();
       expect(screen.queryByText(/el nombre debe tener al menos 2 caracteres/i)).not.toBeInTheDocument();
@@ -72,7 +76,8 @@ describe('ProductForm - Component Tests (TDD)', () => {
   });
 
   describe('Validation - Quantity', () => {
-    it('should accept zero as valid quantity', () => {
+    it('should accept zero as valid quantity', async () => {
+      const user = userEvent.setup();
       const onSubmit = vi.fn();
       render(<ProductForm onSubmit={onSubmit} />);
 
@@ -80,14 +85,16 @@ describe('ProductForm - Component Tests (TDD)', () => {
       const quantityInput = screen.getByLabelText(/cantidad inicial/i);
       const submitButton = screen.getByRole('button', { name: /agregar producto/i });
 
-      fireEvent.change(nameInput, { target: { value: 'Leche' } });
-      fireEvent.change(quantityInput, { target: { value: '0' } });
-      fireEvent.click(submitButton);
+      await user.type(nameInput, 'Leche');
+      await user.clear(quantityInput);
+      await user.type(quantityInput, '0');
+      await user.click(submitButton);
 
       expect(onSubmit).toHaveBeenCalledTimes(1);
     });
 
     it('should reject negative quantities', async () => {
+      const user = userEvent.setup();
       const onSubmit = vi.fn();
       render(<ProductForm onSubmit={onSubmit} />);
 
@@ -95,9 +102,10 @@ describe('ProductForm - Component Tests (TDD)', () => {
       const quantityInput = screen.getByLabelText(/cantidad inicial/i);
       const submitButton = screen.getByRole('button', { name: /agregar producto/i });
 
-      fireEvent.change(nameInput, { target: { value: 'Leche' } });
-      fireEvent.change(quantityInput, { target: { value: '-5' } });
-      fireEvent.click(submitButton);
+      await user.type(nameInput, 'Leche');
+      await user.clear(quantityInput);
+      await user.type(quantityInput, '-5');
+      await user.click(submitButton);
 
       // Should show error message (wait for state update)
       await waitFor(() => {
@@ -109,7 +117,8 @@ describe('ProductForm - Component Tests (TDD)', () => {
   });
 
   describe('Form Submission', () => {
-    it('should call onSubmit with correct data when form is valid', () => {
+    it('should call onSubmit with correct data when form is valid', async () => {
+      const user = userEvent.setup();
       const onSubmit = vi.fn();
       render(<ProductForm onSubmit={onSubmit} />);
 
@@ -117,9 +126,10 @@ describe('ProductForm - Component Tests (TDD)', () => {
       const quantityInput = screen.getByLabelText(/cantidad inicial/i);
       const submitButton = screen.getByRole('button', { name: /agregar producto/i });
 
-      fireEvent.change(nameInput, { target: { value: 'Leche' } });
-      fireEvent.change(quantityInput, { target: { value: '10' } });
-      fireEvent.click(submitButton);
+      await user.type(nameInput, 'Leche');
+      await user.clear(quantityInput);
+      await user.type(quantityInput, '10');
+      await user.click(submitButton);
 
       expect(onSubmit).toHaveBeenCalledTimes(1);
       expect(onSubmit).toHaveBeenCalledWith({
@@ -129,7 +139,8 @@ describe('ProductForm - Component Tests (TDD)', () => {
       });
     });
 
-    it('should NOT call onSubmit when name is invalid', () => {
+    it('should NOT call onSubmit when name is invalid', async () => {
+      const user = userEvent.setup();
       const onSubmit = vi.fn();
       render(<ProductForm onSubmit={onSubmit} />);
 
@@ -137,14 +148,16 @@ describe('ProductForm - Component Tests (TDD)', () => {
       const quantityInput = screen.getByLabelText(/cantidad inicial/i);
       const submitButton = screen.getByRole('button', { name: /agregar producto/i });
 
-      fireEvent.change(nameInput, { target: { value: 'L' } });
-      fireEvent.change(quantityInput, { target: { value: '10' } });
-      fireEvent.click(submitButton);
+      await user.type(nameInput, 'L');
+      await user.clear(quantityInput);
+      await user.type(quantityInput, '10');
+      await user.click(submitButton);
 
       expect(onSubmit).not.toHaveBeenCalled();
     });
 
-    it('should clear the form after successful submission', () => {
+    it('should clear the form after successful submission', async () => {
+      const user = userEvent.setup();
       const onSubmit = vi.fn();
       render(<ProductForm onSubmit={onSubmit} />);
 
@@ -152,9 +165,10 @@ describe('ProductForm - Component Tests (TDD)', () => {
       const quantityInput = screen.getByLabelText(/cantidad inicial/i) as HTMLInputElement;
       const submitButton = screen.getByRole('button', { name: /agregar producto/i });
 
-      fireEvent.change(nameInput, { target: { value: 'Leche' } });
-      fireEvent.change(quantityInput, { target: { value: '10' } });
-      fireEvent.click(submitButton);
+      await user.type(nameInput, 'Leche');
+      await user.clear(quantityInput);
+      await user.type(quantityInput, '10');
+      await user.click(submitButton);
 
       expect(nameInput.value).toBe('');
       expect(quantityInput.value).toBe('');

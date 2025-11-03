@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { ProductCatalogPage } from '../../../presentation/pages/ProductCatalogPage';
 
@@ -67,11 +68,12 @@ describe('ProductCatalogPage - Component Tests (TDD)', () => {
     expect(minWidth).toBeGreaterThanOrEqual(56);
   });
 
-  it('should navigate to add product page when FAB is clicked', () => {
+  it('should navigate to add product page when FAB is clicked', async () => {
+    const user = userEvent.setup();
     renderWithRouter(<ProductCatalogPage />);
 
     const fab = screen.getByTestId('fab-add-product');
-    fireEvent.click(fab);
+    await user.click(fab);
 
     expect(mockNavigate).toHaveBeenCalledWith('/catalog/add');
   });
@@ -130,11 +132,12 @@ describe('ProductCatalogPage - Component Tests (TDD)', () => {
     expect(screen.getByTestId('back-button')).toBeInTheDocument();
   });
 
-  it('should navigate back when back button is clicked', () => {
+  it('should navigate back when back button is clicked', async () => {
+    const user = userEvent.setup();
     renderWithRouter(<ProductCatalogPage />);
 
     const backButton = screen.getByTestId('back-button');
-    fireEvent.click(backButton);
+    await user.click(backButton);
 
     expect(mockNavigate).toHaveBeenCalledWith(-1);
   });
