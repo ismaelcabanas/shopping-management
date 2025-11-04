@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useProducts } from '../../../presentation/hooks/useProducts';
 import { Product } from '../../../domain/model/Product';
 import { ProductId } from '../../../domain/model/ProductId';
+import { UnitType } from '../../../domain/model/UnitType';
 
 // Mock del repositorio a nivel de módulo
 const mockFindAll = vi.fn();
@@ -41,16 +42,14 @@ describe('useProducts', () => {
     it('should load products successfully', async () => {
       const mockProducts = [
         new Product(
-          new ProductId('1'),
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
           'Arroz',
-          'Granos',
-          1.0
+          UnitType.units()
         ),
         new Product(
-          new ProductId('2'),
+          ProductId.fromString('00000000-0000-0000-0000-000000000002'),
           'Aceite',
-          'Condimentos',
-          0.5
+          UnitType.units()
         ),
       ];
 
@@ -120,20 +119,18 @@ describe('useProducts', () => {
     it('should refetch products when refetch is called', async () => {
       const initialProducts = [
         new Product(
-          new ProductId('1'),
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
           'Arroz',
-          'Granos',
-          1.0
+          UnitType.units()
         ),
       ];
 
       const updatedProducts = [
         ...initialProducts,
         new Product(
-          new ProductId('2'),
+          ProductId.fromString('00000000-0000-0000-0000-000000000002'),
           'Aceite',
-          'Condimentos',
-          0.5
+          UnitType.units()
         ),
       ];
 
@@ -200,10 +197,9 @@ describe('useProducts', () => {
     it('should handle errors during refetch', async () => {
       const initialProducts = [
         new Product(
-          new ProductId('1'),
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
           'Arroz',
-          'Granos',
-          1.0
+          UnitType.units()
         ),
       ];
 
@@ -239,10 +235,9 @@ describe('useProducts', () => {
     it('should not update state after unmounting', async () => {
       const mockProducts = [
         new Product(
-          new ProductId('1'),
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
           'Arroz',
-          'Granos',
-          1.0
+          UnitType.units()
         ),
       ];
 

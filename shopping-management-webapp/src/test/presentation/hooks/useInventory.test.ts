@@ -1,7 +1,6 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useInventory } from '../../../presentation/hooks/useInventory';
-import type { ProductWithInventory } from '../../../application/use-cases/GetProductsWithInventory';
 import type { AddProductToInventoryCommand } from '../../../application/use-cases/AddProductToInventory';
 import { Product } from '../../../domain/model/Product';
 import { ProductId } from '../../../domain/model/ProductId';
@@ -56,12 +55,12 @@ describe('useInventory', () => {
     it('should load products with inventory successfully', async () => {
       const mockProducts = [
         new Product(
-          new ProductId('1'),
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
           'Arroz',
           UnitType.units()
         ),
         new Product(
-          new ProductId('2'),
+          ProductId.fromString('00000000-0000-0000-0000-000000000002'),
           'Aceite',
           UnitType.units()
         ),
@@ -113,7 +112,7 @@ describe('useInventory', () => {
     it('should handle products without inventory items (quantity 0)', async () => {
       const mockProducts = [
         new Product(
-          new ProductId('1'),
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
           'Arroz',
           UnitType.units()
         ),
@@ -152,7 +151,7 @@ describe('useInventory', () => {
     it('should handle errors when loading inventory fails', async () => {
       const mockProducts = [
         new Product(
-          new ProductId('1'),
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
           'Arroz',
           UnitType.units()
         ),
@@ -177,7 +176,7 @@ describe('useInventory', () => {
     it('should add a new product to inventory', async () => {
       const initialProducts = [
         new Product(
-          new ProductId('1'),
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
           'Arroz',
           UnitType.units()
         ),
@@ -200,7 +199,7 @@ describe('useInventory', () => {
 
       // Prepare for adding new product
       const newProduct = new Product(
-        new ProductId('2'),
+        ProductId.fromString('00000000-0000-0000-0000-000000000002'),
         'Aceite',
         UnitType.units()
       );
@@ -234,7 +233,7 @@ describe('useInventory', () => {
       mockInventoryRepositoryFindByProductId.mockResolvedValue(null);
 
       const existingProduct = new Product(
-        new ProductId('1'),
+        ProductId.fromString('00000000-0000-0000-0000-000000000001'),
         'Arroz',
         UnitType.units()
       );
@@ -304,7 +303,7 @@ describe('useInventory', () => {
     it('should refetch products when refetch is called', async () => {
       const initialProducts = [
         new Product(
-          new ProductId('1'),
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
           'Arroz',
           UnitType.units()
         ),
@@ -313,7 +312,7 @@ describe('useInventory', () => {
       const updatedProducts = [
         ...initialProducts,
         new Product(
-          new ProductId('2'),
+          ProductId.fromString('00000000-0000-0000-0000-000000000002'),
           'Aceite',
           UnitType.units()
         ),
@@ -347,7 +346,7 @@ describe('useInventory', () => {
     it('should handle errors during refetch', async () => {
       const initialProducts = [
         new Product(
-          new ProductId('1'),
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
           'Arroz',
           UnitType.units()
         ),
@@ -403,7 +402,7 @@ describe('useInventory', () => {
       // Resolve promise after unmount
       const mockProducts = [
         new Product(
-          new ProductId('1'),
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
           'Arroz',
           UnitType.units()
         ),
