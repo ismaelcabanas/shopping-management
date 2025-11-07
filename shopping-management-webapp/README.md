@@ -1,11 +1,116 @@
-# React + TypeScript + Vite
+# Shopping Management - WebApp
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Web application for intelligent personal inventory management and shopping optimization.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React 19 + TypeScript
+- Vite 7
+- Tailwind CSS 3
+- React Router 7
+- Zustand (state management)
+- TanStack Query (data fetching)
+- Vitest + React Testing Library (testing)
+- Playwright (E2E testing)
+
+## Prerequisites
+
+- Node.js 18+ and npm (or yarn/pnpm)
+
+## Installation
+
+```bash
+npm install
+```
+
+## Available Commands
+
+### Development
+
+Start the development server with hot-reload:
+
+```bash
+npm run dev
+```
+
+```bash
+npm run dev -- --host
+```
+
+The application will be available at `http://localhost:5173`
+
+### Build
+
+Build the application for production:
+
+```bash
+npm run build
+```
+
+The compiled files will be generated in the `dist/` directory
+
+### Preview
+
+Preview the production build locally:
+
+```bash
+npm run preview
+```
+
+### Linting
+
+Run the linter to check the code:
+
+```bash
+npm run lint
+```
+
+### Testing
+
+Run unit tests in watch mode:
+
+```bash
+npm test
+```
+
+Run unit tests once:
+
+```bash
+npm run test:unit
+```
+
+Run E2E tests with Playwright:
+
+```bash
+npm run test:e2e
+```
+
+Run E2E tests in UI mode:
+
+```bash
+npm run test:e2e:ui
+```
+
+Run E2E tests in headed mode (with visible browser):
+
+```bash
+npm run test:e2e:headed
+```
+
+Run E2E tests in debug mode:
+
+```bash
+npm run test:e2e:debug
+```
+
+## Architecture
+
+The project follows Domain-Driven Design (DDD) and Clean Architecture principles:
+
+- `src/domain/` - Entities, value objects, and business logic
+- `src/application/` - Use cases and application services
+- `src/infrastructure/` - Repository implementations and external services
+- `src/presentation/` - UI components and pages
 
 ## React Compiler
 
