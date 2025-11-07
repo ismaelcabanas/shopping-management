@@ -25,35 +25,42 @@ Cada archivo incluye:
 
 ## Historias Completadas ✅
 
-### Épica: Gestión de Inventario Personal
+### Épica 1: Gestión de Inventario Personal
 
 | ID | Título | Estado | Sprint | Tests |
 |----|--------|--------|--------|-------|
-| [US-001](./US-001-ver-pagina-bienvenida.md) | Ver página de bienvenida | 🟢 Completado | Sprint 1 | 2 |
+| [US-001](./US-001-ver-pagina-bienvenida.md) | Ver página de bienvenida | 🟢 Completado | Sprint 1 | 4 |
 | [US-002](./US-002-navegar-entre-secciones.md) | Navegar entre secciones | 🟢 Completado | Sprint 1 | 11 |
 | [US-003](./US-003-ver-inventario-productos.md) | Ver inventario de productos | 🟢 Completado | Sprint 2 | 20 |
 | [US-004](./US-004-anadir-producto-inventario.md) | Añadir producto al inventario | 🟢 Completado | Sprint 2 | 14 |
-| [US-005](./US-005-ver-catalogo-productos.md) | Ver catálogo de productos | 🟢 Completado | Sprint 3 | 13+ |
+| [US-005](./US-005-ver-catalogo-productos.md) | Ver catálogo de productos | 🟢 Completado | Sprint 3 | 21 |
 
-**Total de tests automatizados**: 211 tests
+### Épica 2: Gestión Avanzada de Inventario
+
+| ID | Título | Estado | Sprint | Tests |
+|----|--------|--------|--------|-------|
+| [US-006](./US-006-editar-producto.md) | Editar información de un producto | 🟢 Completado | Sprint 4 | 28 |
+| [US-007](./US-007-eliminar-producto.md) | Eliminar un producto del sistema | 🟢 Completado | Sprint 4 | 13 |
+
+**Total de tests automatizados**: 253 tests
 
 ---
 
 ## Épicas y Roadmap
 
-### 📦 Épica 1: Gestión de Inventario Personal (Actual)
+### 📦 Épica 1: Gestión de Inventario Personal ✅ COMPLETADA
 - ✅ **US-001**: Ver página de bienvenida
 - ✅ **US-002**: Navegar entre secciones
 - ✅ **US-003**: Ver inventario de productos
 - ✅ **US-004**: Añadir producto al inventario
 - ✅ **US-005**: Ver catálogo de productos
 
-### 🔧 Épica 2: Gestión Avanzada de Inventario (Próximo - Sprint 4)
-- 🔴 **[US-006](./US-006-editar-producto.md)**: Editar información de un producto (3 SP, ~2-3h)
-- 🔴 **[US-007](./US-007-eliminar-producto.md)**: Eliminar un producto del sistema (2 SP, ~1-2h)
-- 🔴 **US-008**: Actualizar cantidad de inventario
+### 🔧 Épica 2: Gestión Avanzada de Inventario (Sprint 4 - Actual)
+- ✅ **[US-006](./US-006-editar-producto.md)**: Editar información de un producto (3 SP, ~2-3h)
+- ✅ **[US-007](./US-007-eliminar-producto.md)**: Eliminar un producto del sistema (2 SP, ~1-2h)
+- 🔴 **[US-008](./US-008-registrar-compra-actualizar-inventario.md)**: Registrar compra y actualizar inventario (5 SP, ~3-4h)
 
-**🎯 CRUD Completo**: Con US-006 y US-007 completaremos Create, Read, Update, Delete
+**🎯 CRUD Completo**: ✅ Con US-006 y US-007 completados, tenemos Create, Read, Update, Delete
 
 ### 🏪 Épica 3: Gestión de Tiendas (Planificado)
 - 🔴 **US-009**: Crear una tienda
@@ -68,19 +75,19 @@ Cada archivo incluye:
 ## Estadísticas del Proyecto
 
 ### Por Estado
-- **Completadas**: 5 historias (42%)
+- **Completadas**: 7 historias (58%)
 - **En Progreso**: 0 historias (0%)
-- **Pendientes**: 7 historias (58%)
+- **Pendientes**: 5 historias (42%)
 - **Total**: 12 historias
 
 ### Por Épica
 - **Épica 1** (Gestión Inventario): 5/5 completadas ✅
-- **Épica 2** (Gestión Avanzada): 0/3 completadas
+- **Épica 2** (Gestión Avanzada): 2/3 completadas (67%)
 - **Épica 3** (Tiendas): 0/2 completadas
 - **Épica 4** (Lista Compras): 0/2 completadas
 
 ### Cobertura de Tests
-- **Total tests**: 211 tests
+- **Total tests**: 253 tests
 - **Metodología**: Test-Driven Development (TDD)
 - **Cobertura**: ~85%
 
@@ -96,7 +103,7 @@ Todas las historias completadas siguen **Clean Architecture + DDD**:
 │   - Pages                           │
 │   - Custom Hooks (useProducts,     │
 │     useInventory)                   │
-│   - Components                      │
+│   - Components (EditProductModal)   │
 └──────────────┬──────────────────────┘
                │
 ┌──────────────▼──────────────────────┐
@@ -105,6 +112,8 @@ Todas las historias completadas siguen **Clean Architecture + DDD**:
 │     • GetAllProducts                │
 │     • GetProductsWithInventory      │
 │     • AddProductToInventory         │
+│     • UpdateProduct ✨ NEW          │
+│     • DeleteProduct ✨ NEW          │
 └──────────────┬──────────────────────┘
                │
 ┌──────────────▼──────────────────────┐
@@ -212,7 +221,11 @@ Añadir la nueva historia a la tabla correspondiente.
 - Historias completadas: 1
 - Story points: 8
 
-**Velocity promedio**: ~8.6 story points/sprint
+### Sprint 4
+- Historias completadas: 2
+- Story points: 5 (US-006: 3 SP, US-007: 2 SP)
+
+**Velocity promedio**: ~7.75 story points/sprint
 
 ---
 
