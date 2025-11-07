@@ -1,12 +1,36 @@
+import { Pencil } from 'lucide-react';
+import { ProductId } from '../../domain/model/ProductId';
+import { UnitType } from '../../domain/model/UnitType';
+import { Product } from '../../domain/model/Product';
+import type { Product as ProductType } from '../../domain/model/Product';
+
 export interface ProductListItemProps {
+  id: string;
   name: string;
   quantity: number;
-  unitType: 'units';
+  unitType: string;
+  onEdit?: (product: ProductType) => void;
 }
 
-export function ProductListItem({ name, quantity }: ProductListItemProps) {
+export function ProductListItem({ id, name, quantity, unitType, onEdit }: ProductListItemProps) {
   const formatQuantity = () => {
-    return `${quantity} ud`;
+    const unitLabels: Record<string, string> = {
+      units: 'ud',
+      kg: 'kg',
+      liters: 'l',
+    };
+    const label = unitLabels[unitType] || unitType;
+    return `${quantity} ${label}`;
+  };
+
+  const handleEdit = () => {
+    if (onEdit) {
+      // Create Product domain object to pass to onEdit
+      const productId = ProductId.fromString(id);
+      const unit = UnitType.create(unitType);
+      const product = new Product(productId, name, unit);
+      onEdit(product);
+    }
   };
 
   return (
@@ -22,12 +46,24 @@ export function ProductListItem({ name, quantity }: ProductListItemProps) {
         >
           {name}
         </h3>
-        <span
-          data-testid="product-list-item-quantity"
-          className="text-sm font-medium text-gray-600"
-        >
-          {formatQuantity()}
-        </span>
+        <div className="flex items-center gap-3">
+          <span
+            data-testid="product-list-item-quantity"
+            className="text-sm font-medium text-gray-600"
+          >
+            {formatQuantity()}
+          </span>
+          {onEdit && (
+            <button
+              data-testid="edit-product-button"
+              onClick={handleEdit}
+              className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label={`Editar ${name}`}
+            >
+              <Pencil className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

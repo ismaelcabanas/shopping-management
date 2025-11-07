@@ -45,10 +45,17 @@ describe('Product Domain - Add Products Feature', () => {
       expect(() => new Product(productId, shortName, unitType)).toThrow('Product name must be at least 2 characters');
     });
 
-    it('should reject invalid unit types (not "units")', () => {
+    it('should accept valid unit types (units, kg, liters)', () => {
       // Act & Assert
-      expect(() => UnitType.create('liters')).toThrow('Only "units" is supported in this iteration');
-      expect(() => UnitType.create('kg')).toThrow('Only "units" is supported in this iteration');
+      expect(() => UnitType.create('units')).not.toThrow();
+      expect(() => UnitType.create('kg')).not.toThrow();
+      expect(() => UnitType.create('liters')).not.toThrow();
+    });
+
+    it('should reject invalid unit types', () => {
+      // Act & Assert
+      expect(() => UnitType.create('invalid')).toThrow('Invalid unit type');
+      expect(() => UnitType.create('pounds')).toThrow('Invalid unit type');
     });
   });
 

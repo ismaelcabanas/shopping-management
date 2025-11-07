@@ -2,15 +2,22 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, ClipboardList } from 'lucide-react';
 import { ProductList, type ProductWithInventory } from '../components/ProductList';
+import { EditProductModal } from '../components/EditProductModal';
 import { GetProductsWithInventory } from '../../application/use-cases/GetProductsWithInventory';
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository';
 import { LocalStorageInventoryRepository } from '../../infrastructure/repositories/LocalStorageInventoryRepository';
+import { useProducts } from '../hooks/useProducts';
 import { Button } from '../shared/components/Button';
+import type { Product } from '../../domain/model/Product';
 
 export function ProductCatalogPage() {
   const navigate = useNavigate();
   const [products, setProducts] = useState<ProductWithInventory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [productToEdit, setProductToEdit] = useState<Product | null>(null);
+
+  const { updateProduct } = useProducts();
 
   useEffect(() => {
     loadProducts();
@@ -48,6 +55,21 @@ export function ProductCatalogPage() {
     navigate(-1);
   };
 
+  const handleEditProduct = async (product: Product) => {
+    setProductToEdit(product);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    setProductToEdit(null);
+  };
+
+  const handleSaveProduct = async (command: { id: string; name: string; unitType: string }) => {
+    await updateProduct(command);
+    await loadProducts(); // Refresh the list
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -83,7 +105,11 @@ export function ProductCatalogPage() {
         )}
 
         {/* Product List */}
-        <ProductList products={products} isLoading={isLoading} />
+        <ProductList
+          products={products}
+          isLoading={isLoading}
+          onEditProduct={handleEditProduct}
+        />
       </div>
 
       {/* FAB (Floating Action Button) */}
@@ -101,6 +127,16 @@ export function ProductCatalogPage() {
       >
         <Plus className="w-6 h-6" />
       </button>
+
+      {/* Edit Product Modal */}
+      {productToEdit && (
+        <EditProductModal
+          product={productToEdit}
+          isOpen={isEditModalOpen}
+          onClose={handleCloseEditModal}
+          onSave={handleSaveProduct}
+        />
+      )}
     </div>
   );
 }
