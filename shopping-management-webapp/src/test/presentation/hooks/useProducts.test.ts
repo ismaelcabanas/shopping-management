@@ -7,13 +7,16 @@ import { UnitType } from '../../../domain/model/UnitType';
 
 // Mock del repositorio a nivel de módulo
 const mockFindAll = vi.fn();
+const mockSave = vi.fn();
+const mockFindById = vi.fn();
+const mockFindByName = vi.fn();
 
 vi.mock('../../../infrastructure/repositories/LocalStorageProductRepository', () => ({
   LocalStorageProductRepository: vi.fn().mockImplementation(() => ({
     findAll: mockFindAll,
-    save: vi.fn(),
-    findById: vi.fn(),
-    findByName: vi.fn(),
+    save: mockSave,
+    findById: mockFindById,
+    findByName: mockFindByName,
   })),
 }));
 
@@ -262,6 +265,162 @@ describe('useProducts', () => {
       await new Promise((resolve) => setTimeout(resolve, 10));
 
       // No errors should have been thrown due to setState on unmounted component
+    });
+  });
+
+  describe('updateProduct functionality', () => {
+    it('should update a product successfully', async () => {
+      const initialProducts = [
+        new Product(
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
+          'Leche',
+          UnitType.liters()
+        ),
+      ];
+
+      const updatedProducts = [
+        new Product(
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
+          'Leche Desnatada',
+          UnitType.liters()
+        ),
+      ];
+
+      mockFindAll
+        .mockResolvedValueOnce(initialProducts) // Initial load
+        .mockResolvedValueOnce(updatedProducts); // After update
+
+      mockFindById.mockResolvedValue(initialProducts[0]);
+      mockFindByName.mockResolvedValue(null); // No duplicate name
+      mockSave.mockResolvedValue(undefined);
+
+      const { result } = renderHook(() => useProducts());
+
+      // Wait for initial load
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      expect(result.current.products).toEqual(initialProducts);
+
+      // Update product
+      await result.current.updateProduct({
+        id: '00000000-0000-0000-0000-000000000001',
+        name: 'Leche Desnatada',
+        unitType: 'liters',
+      });
+
+      // Should refetch and show updated product
+      await waitFor(() => {
+        expect(result.current.products).toEqual(updatedProducts);
+      });
+
+      expect(mockFindById).toHaveBeenCalledWith(expect.anything());
+      expect(mockSave).toHaveBeenCalled();
+    });
+
+    it('should handle error when product does not exist', async () => {
+      mockFindAll.mockResolvedValue([]);
+      mockFindById.mockResolvedValue(null);
+
+      const { result } = renderHook(() => useProducts());
+
+      // Wait for initial load
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      // Attempt to update non-existent product
+      await expect(
+        result.current.updateProduct({
+          id: '00000000-0000-0000-0000-000000000001',
+          name: 'New Name',
+          unitType: 'units',
+        })
+      ).rejects.toThrow('Product not found');
+    });
+
+    it('should handle error when new name already exists', async () => {
+      const initialProducts = [
+        new Product(
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
+          'Leche',
+          UnitType.liters()
+        ),
+        new Product(
+          ProductId.fromString('00000000-0000-0000-0000-000000000002'),
+          'Pan',
+          UnitType.units()
+        ),
+      ];
+
+      mockFindAll.mockResolvedValue(initialProducts);
+      mockFindById.mockResolvedValue(initialProducts[0]);
+      mockFindByName.mockResolvedValue(initialProducts[1]); // Pan already exists
+
+      const { result } = renderHook(() => useProducts());
+
+      // Wait for initial load
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      // Attempt to rename Leche to Pan (which already exists)
+      await expect(
+        result.current.updateProduct({
+          id: '00000000-0000-0000-0000-000000000001',
+          name: 'Pan',
+          unitType: 'liters',
+        })
+      ).rejects.toThrow('Product name already exists');
+    });
+
+    it('should refetch products automatically after successful update', async () => {
+      const initialProducts = [
+        new Product(
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
+          'Arroz',
+          UnitType.kg()
+        ),
+      ];
+
+      const updatedProducts = [
+        new Product(
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
+          'Arroz Integral',
+          UnitType.kg()
+        ),
+      ];
+
+      mockFindAll
+        .mockResolvedValueOnce(initialProducts)
+        .mockResolvedValueOnce(updatedProducts);
+
+      mockFindById.mockResolvedValue(initialProducts[0]);
+      mockFindByName.mockResolvedValue(null); // No duplicate name
+      mockSave.mockResolvedValue(undefined);
+
+      const { result } = renderHook(() => useProducts());
+
+      // Wait for initial load
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      // Update product
+      await result.current.updateProduct({
+        id: '00000000-0000-0000-0000-000000000001',
+        name: 'Arroz Integral',
+        unitType: 'kg',
+      });
+
+      // Verify products were updated and refetch was called
+      await waitFor(() => {
+        expect(result.current.products[0].name).toBe('Arroz Integral');
+      });
+
+      // Verify refetch was called (findAll should be called twice: initial + after update)
+      expect(mockFindAll).toHaveBeenCalledTimes(2);
     });
   });
 });

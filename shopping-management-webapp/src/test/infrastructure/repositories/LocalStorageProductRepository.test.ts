@@ -212,4 +212,104 @@ describe('LocalStorageProductRepository', () => {
       expect(product3!.name).toBe('Leche');
     });
   });
+
+  describe('update via save()', () => {
+    it('should update product name when product exists', async () => {
+      // Arrange
+      const productId = ProductId.fromString('a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d');
+      const originalProduct = new Product(productId, 'Leche', UnitType.liters());
+      await repository.save(originalProduct);
+
+      // Act - Update via save (upsert behavior)
+      const updatedProduct = new Product(productId, 'Leche Desnatada', UnitType.liters());
+      await repository.save(updatedProduct);
+
+      // Assert
+      const products = await repository.findAll();
+      expect(products).toHaveLength(1); // Still only one product
+      expect(products[0].name).toBe('Leche Desnatada');
+      expect(products[0].id.value).toBe(productId.value);
+    });
+
+    it('should update product unit type when product exists', async () => {
+      // Arrange
+      const productId = ProductId.fromString('a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d');
+      const originalProduct = new Product(productId, 'Aceite', UnitType.units());
+      await repository.save(originalProduct);
+
+      // Act - Update via save
+      const updatedProduct = new Product(productId, 'Aceite', UnitType.liters());
+      await repository.save(updatedProduct);
+
+      // Assert
+      const product = await repository.findById(productId);
+      expect(product).not.toBeNull();
+      expect(product!.unitType.value).toBe('liters');
+      expect(product!.name).toBe('Aceite');
+    });
+
+    it('should update both name and unit type simultaneously', async () => {
+      // Arrange
+      const productId = ProductId.fromString('a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d');
+      const originalProduct = new Product(productId, 'Agua', UnitType.units());
+      await repository.save(originalProduct);
+
+      // Act - Update both fields
+      const updatedProduct = new Product(productId, 'Agua Mineral', UnitType.liters());
+      await repository.save(updatedProduct);
+
+      // Assert
+      const product = await repository.findById(productId);
+      expect(product).not.toBeNull();
+      expect(product!.name).toBe('Agua Mineral');
+      expect(product!.unitType.value).toBe('liters');
+    });
+
+    it('should preserve other products when updating one', async () => {
+      // Arrange
+      const productId1 = ProductId.fromString('a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d');
+      const productId2 = ProductId.fromString('b2c3d4e5-f6a7-4b5c-9d0e-1f2a3b4c5d6e');
+      const productId3 = ProductId.fromString('c3d4e5f6-a7b8-4c5d-0e1f-2a3b4c5d6e7f');
+
+      await repository.save(new Product(productId1, 'Leche', UnitType.liters()));
+      await repository.save(new Product(productId2, 'Pan', UnitType.units()));
+      await repository.save(new Product(productId3, 'Arroz', UnitType.kg()));
+
+      // Act - Update only one product
+      const updatedProduct = new Product(productId2, 'Pan Integral', UnitType.kg());
+      await repository.save(updatedProduct);
+
+      // Assert
+      const products = await repository.findAll();
+      expect(products).toHaveLength(3);
+
+      const leche = products.find(p => p.id.equals(productId1));
+      const pan = products.find(p => p.id.equals(productId2));
+      const arroz = products.find(p => p.id.equals(productId3));
+
+      expect(leche!.name).toBe('Leche');
+      expect(pan!.name).toBe('Pan Integral');
+      expect(pan!.unitType.value).toBe('kg');
+      expect(arroz!.name).toBe('Arroz');
+    });
+
+    it('should handle update with findById and then save', async () => {
+      // Arrange - Create initial product
+      const productId = ProductId.fromString('a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d');
+      await repository.save(new Product(productId, 'Café', UnitType.kg()));
+
+      // Act - Simulate Update Use Case flow
+      const existingProduct = await repository.findById(productId);
+      expect(existingProduct).not.toBeNull();
+
+      // Create updated product with same ID
+      const updatedProduct = new Product(productId, 'Café Molido', UnitType.units());
+      await repository.save(updatedProduct);
+
+      // Assert
+      const product = await repository.findById(productId);
+      expect(product!.name).toBe('Café Molido');
+      expect(product!.unitType.value).toBe('units');
+    });
+  });
 });

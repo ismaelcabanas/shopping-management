@@ -1,4 +1,5 @@
 import { ProductListItem } from './ProductListItem';
+import type { Product } from '../../domain/model/Product';
 
 export interface ProductWithInventory {
   id: string;
@@ -10,6 +11,7 @@ export interface ProductWithInventory {
 export interface ProductListProps {
   products: ProductWithInventory[];
   isLoading?: boolean;
+  onEditProduct?: (product: Product) => void;
 }
 
 function SkeletonLoader() {
@@ -43,7 +45,7 @@ function EmptyState() {
   );
 }
 
-export function ProductList({ products, isLoading = false }: ProductListProps) {
+export function ProductList({ products, isLoading = false, onEditProduct }: ProductListProps) {
   if (isLoading) {
     return (
       <div data-testid="product-list-container" className="space-y-3">
@@ -63,9 +65,11 @@ export function ProductList({ products, isLoading = false }: ProductListProps) {
       {products.map((product) => (
         <ProductListItem
           key={product.id}
+          id={product.id}
           name={product.name}
           quantity={product.quantity}
           unitType={product.unitType}
+          onEdit={onEditProduct}
         />
       ))}
     </div>

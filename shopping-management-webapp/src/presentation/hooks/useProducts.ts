@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Product } from '../../domain/model/Product';
 import { GetAllProducts } from '../../application/use-cases/GetAllProducts';
+import { UpdateProduct, UpdateProductCommand } from '../../application/use-cases/UpdateProduct';
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository';
 
 export interface UseProductsReturn {
@@ -8,6 +9,7 @@ export interface UseProductsReturn {
   isLoading: boolean;
   error: Error | null;
   refetch: () => Promise<void>;
+  updateProduct: (command: UpdateProductCommand) => Promise<void>;
 }
 
 /**
@@ -86,6 +88,29 @@ export function useProducts(): UseProductsReturn {
     await loadProducts();
   }, [loadProducts]);
 
+  /**
+   * Updates an existing product
+   */
+  const updateProduct = useCallback(async (command: UpdateProductCommand) => {
+    try {
+      setError(null);
+
+      // Initialize repository and use case
+      const productRepository = new LocalStorageProductRepository();
+      const updateProductUseCase = new UpdateProduct(productRepository);
+
+      // Execute use case
+      await updateProductUseCase.execute(command);
+
+      // Refetch products to update the list
+      await loadProducts();
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Unknown error');
+      setError(error);
+      throw error; // Re-throw so the caller can handle it
+    }
+  }, [loadProducts]);
+
   // Load products on mount
   useEffect(() => {
     loadProducts();
@@ -101,5 +126,6 @@ export function useProducts(): UseProductsReturn {
     isLoading,
     error,
     refetch,
+    updateProduct,
   };
 }
