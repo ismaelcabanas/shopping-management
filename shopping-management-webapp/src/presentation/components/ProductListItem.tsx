@@ -8,13 +8,19 @@ export interface ProductListItemProps {
   id: string;
   name: string;
   quantity: number;
-  unitType: 'units';
+  unitType: string;
   onEdit?: (product: ProductType) => void;
 }
 
 export function ProductListItem({ id, name, quantity, unitType, onEdit }: ProductListItemProps) {
   const formatQuantity = () => {
-    return `${quantity} ud`;
+    const unitLabels: Record<string, string> = {
+      units: 'ud',
+      kg: 'kg',
+      liters: 'l',
+    };
+    const label = unitLabels[unitType] || unitType;
+    return `${quantity} ${label}`;
   };
 
   const handleEdit = () => {

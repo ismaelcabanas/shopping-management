@@ -5,7 +5,7 @@ export interface ProductWithInventory {
   id: string;
   name: string;
   quantity: number;
-  unitType: 'units';
+  unitType: string;
 }
 
 export interface ProductListProps {

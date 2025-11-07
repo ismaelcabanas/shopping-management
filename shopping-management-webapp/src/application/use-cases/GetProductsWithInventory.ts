@@ -5,7 +5,7 @@ export interface ProductWithInventory {
   id: string;
   name: string;
   quantity: number;
-  unitType: 'units';
+  unitType: string;
 }
 
 export class GetProductsWithInventory {
@@ -33,7 +33,7 @@ export class GetProductsWithInventory {
           id: product.id.value,
           name: product.name,
           quantity: inventoryItem?.currentStock.value ?? 0,
-          unitType: 'units' as const,
+          unitType: product.unitType.value,
         };
       })
     );
