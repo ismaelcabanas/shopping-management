@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Product } from '../../domain/model/Product';
 import { GetAllProducts } from '../../application/use-cases/GetAllProducts';
-import { UpdateProduct, UpdateProductCommand } from '../../application/use-cases/UpdateProduct';
+import { UpdateProduct } from '../../application/use-cases/UpdateProduct';
+import type { UpdateProductCommand } from '../../application/use-cases/UpdateProduct';
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository';
 
 export interface UseProductsReturn {
