@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { Product } from '../../domain/model/Product';
 import { GetAllProducts } from '../../application/use-cases/GetAllProducts';
 import { UpdateProduct } from '../../application/use-cases/UpdateProduct';
+import { DeleteProduct } from '../../application/use-cases/DeleteProduct';
 import type { UpdateProductCommand } from '../../application/use-cases/UpdateProduct';
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository';
 
@@ -11,6 +12,7 @@ export interface UseProductsReturn {
   error: Error | null;
   refetch: () => Promise<void>;
   updateProduct: (command: UpdateProductCommand) => Promise<void>;
+  deleteProduct: (productId: string) => Promise<void>;
 }
 
 /**
@@ -112,6 +114,29 @@ export function useProducts(): UseProductsReturn {
     }
   }, [loadProducts]);
 
+  /**
+   * Deletes a product
+   */
+  const deleteProduct = useCallback(async (productId: string) => {
+    try {
+      setError(null);
+
+      // Initialize repository and use case
+      const productRepository = new LocalStorageProductRepository();
+      const deleteProductUseCase = new DeleteProduct(productRepository);
+
+      // Execute use case
+      await deleteProductUseCase.execute(productId);
+
+      // Refetch products to update the list
+      await loadProducts();
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Unknown error');
+      setError(error);
+      throw error; // Re-throw so the caller can handle it
+    }
+  }, [loadProducts]);
+
   // Load products on mount
   useEffect(() => {
     loadProducts();
@@ -128,5 +153,6 @@ export function useProducts(): UseProductsReturn {
     error,
     refetch,
     updateProduct,
+    deleteProduct,
   };
 }

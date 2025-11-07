@@ -10,6 +10,7 @@ const mockFindAll = vi.fn();
 const mockSave = vi.fn();
 const mockFindById = vi.fn();
 const mockFindByName = vi.fn();
+const mockDelete = vi.fn();
 
 vi.mock('../../../infrastructure/repositories/LocalStorageProductRepository', () => ({
   LocalStorageProductRepository: vi.fn().mockImplementation(() => ({
@@ -17,6 +18,7 @@ vi.mock('../../../infrastructure/repositories/LocalStorageProductRepository', ()
     save: mockSave,
     findById: mockFindById,
     findByName: mockFindByName,
+    delete: mockDelete,
   })),
 }));
 
@@ -420,6 +422,98 @@ describe('useProducts', () => {
       });
 
       // Verify refetch was called (findAll should be called twice: initial + after update)
+      expect(mockFindAll).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('deleteProduct functionality', () => {
+    it('should delete a product successfully', async () => {
+      const initialProducts = [
+        new Product(
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
+          'Leche',
+          UnitType.liters()
+        ),
+        new Product(
+          ProductId.fromString('00000000-0000-0000-0000-000000000002'),
+          'Pan',
+          UnitType.units()
+        ),
+      ];
+
+      const afterDeleteProducts = [
+        new Product(
+          ProductId.fromString('00000000-0000-0000-0000-000000000002'),
+          'Pan',
+          UnitType.units()
+        ),
+      ];
+
+      mockFindAll
+        .mockResolvedValueOnce(initialProducts)
+        .mockResolvedValueOnce(afterDeleteProducts);
+
+      mockFindById.mockResolvedValue(initialProducts[0]);
+
+      const { result } = renderHook(() => useProducts());
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      expect(result.current.products).toHaveLength(2);
+
+      await result.current.deleteProduct('00000000-0000-0000-0000-000000000001');
+
+      await waitFor(() => {
+        expect(result.current.products).toHaveLength(1);
+      });
+
+      expect(result.current.products[0].name).toBe('Pan');
+    });
+
+    it('should handle error when deleting non-existent product', async () => {
+      mockFindAll.mockResolvedValue([]);
+      mockFindById.mockResolvedValue(null);
+
+      const { result } = renderHook(() => useProducts());
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      await expect(
+        result.current.deleteProduct('00000000-0000-0000-0000-000000000001')
+      ).rejects.toThrow('Product not found');
+    });
+
+    it('should refetch products automatically after successful deletion', async () => {
+      const initialProducts = [
+        new Product(
+          ProductId.fromString('00000000-0000-0000-0000-000000000001'),
+          'Leche',
+          UnitType.liters()
+        ),
+      ];
+
+      mockFindAll
+        .mockResolvedValueOnce(initialProducts)
+        .mockResolvedValueOnce([]);
+
+      mockFindById.mockResolvedValue(initialProducts[0]);
+
+      const { result } = renderHook(() => useProducts());
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      await result.current.deleteProduct('00000000-0000-0000-0000-000000000001');
+
+      await waitFor(() => {
+        expect(result.current.products).toHaveLength(0);
+      });
+
       expect(mockFindAll).toHaveBeenCalledTimes(2);
     });
   });

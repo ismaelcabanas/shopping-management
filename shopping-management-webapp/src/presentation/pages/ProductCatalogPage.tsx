@@ -17,7 +17,7 @@ export function ProductCatalogPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState<Product | null>(null);
 
-  const { updateProduct } = useProducts();
+  const { updateProduct, deleteProduct } = useProducts();
 
   useEffect(() => {
     loadProducts();
@@ -70,6 +70,26 @@ export function ProductCatalogPage() {
     await loadProducts(); // Refresh the list
   };
 
+  const handleDeleteProduct = async (productId: string) => {
+    // Find product name for confirmation dialog
+    const product = products.find(p => p.id === productId);
+    const productName = product?.name || 'este producto';
+
+    const confirmed = window.confirm(
+      `¿Estás seguro de que quieres eliminar "${productName}"?\n\nEsta acción no se puede deshacer.`
+    );
+
+    if (confirmed) {
+      try {
+        await deleteProduct(productId);
+        await loadProducts(); // Refresh the list
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        alert('Error al eliminar el producto. Por favor, intenta de nuevo.');
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -109,6 +129,7 @@ export function ProductCatalogPage() {
           products={products}
           isLoading={isLoading}
           onEditProduct={handleEditProduct}
+          onDeleteProduct={handleDeleteProduct}
         />
       </div>
 

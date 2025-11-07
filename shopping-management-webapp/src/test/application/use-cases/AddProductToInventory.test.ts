@@ -27,6 +27,10 @@ describe('AddProductToInventory Use Case', () => {
       findByName: async (name: string) => {
         return products.find(p => p.name.toLowerCase() === name.toLowerCase()) || null;
       },
+      delete: async (id: ProductId) => {
+        const index = products.findIndex(p => p.id.equals(id));
+        if (index !== -1) products.splice(index, 1);
+      },
     };
 
     inventoryRepository = {

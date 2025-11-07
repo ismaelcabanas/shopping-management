@@ -1,4 +1,4 @@
-import { Pencil } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react';
 import { ProductId } from '../../domain/model/ProductId';
 import { UnitType } from '../../domain/model/UnitType';
 import { Product } from '../../domain/model/Product';
@@ -10,9 +10,10 @@ export interface ProductListItemProps {
   quantity: number;
   unitType: string;
   onEdit?: (product: ProductType) => void;
+  onDelete?: (productId: string) => void;
 }
 
-export function ProductListItem({ id, name, quantity, unitType, onEdit }: ProductListItemProps) {
+export function ProductListItem({ id, name, quantity, unitType, onEdit, onDelete }: ProductListItemProps) {
   const formatQuantity = () => {
     const unitLabels: Record<string, string> = {
       units: 'ud',
@@ -30,6 +31,12 @@ export function ProductListItem({ id, name, quantity, unitType, onEdit }: Produc
       const unit = UnitType.create(unitType);
       const product = new Product(productId, name, unit);
       onEdit(product);
+    }
+  };
+
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete(id);
     }
   };
 
@@ -61,6 +68,16 @@ export function ProductListItem({ id, name, quantity, unitType, onEdit }: Produc
               aria-label={`Editar ${name}`}
             >
               <Pencil className="w-4 h-4" />
+            </button>
+          )}
+          {onDelete && (
+            <button
+              data-testid="delete-product-button"
+              onClick={handleDelete}
+              className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
+              aria-label={`Eliminar ${name}`}
+            >
+              <Trash2 className="w-4 h-4" />
             </button>
           )}
         </div>
