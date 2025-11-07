@@ -57,6 +57,21 @@ export class LocalStorageProductRepository implements ProductRepository {
     return products.find(p => p.name.toLowerCase() === name.toLowerCase()) || null;
   }
 
+  async delete(id: ProductId): Promise<void> {
+    const products = await this.findAll();
+    const index = products.findIndex(p => p.id.equals(id));
+
+    if (index === -1) {
+      throw new Error('Product not found');
+    }
+
+    products.splice(index, 1);
+
+    // Convert to DTOs and save
+    const dtos = products.map(p => this.toDTO(p));
+    this.storage.set(this.storageKey, dtos);
+  }
+
   private toDTO(product: Product): ProductDTO {
     return {
       id: product.id.value,

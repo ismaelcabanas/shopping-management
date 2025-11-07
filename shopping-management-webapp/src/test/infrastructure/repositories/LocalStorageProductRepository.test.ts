@@ -312,4 +312,84 @@ describe('LocalStorageProductRepository', () => {
       expect(product!.unitType.value).toBe('units');
     });
   });
+
+  describe('delete()', () => {
+    it('should delete an existing product', async () => {
+      // Arrange
+      const productId = ProductId.fromString('a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d');
+      await repository.save(new Product(productId, 'Leche', UnitType.liters()));
+
+      // Act
+      await repository.delete(productId);
+
+      // Assert
+      const products = await repository.findAll();
+      expect(products).toHaveLength(0);
+    });
+
+    it('should throw error when deleting non-existent product', async () => {
+      // Arrange
+      const nonExistentId = ProductId.fromString('a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d');
+
+      // Act & Assert
+      await expect(repository.delete(nonExistentId)).rejects.toThrow('Product not found');
+    });
+
+    it('should delete only the specified product', async () => {
+      // Arrange
+      const productId1 = ProductId.fromString('a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d');
+      const productId2 = ProductId.fromString('b2c3d4e5-f6a7-4b5c-9d0e-1f2a3b4c5d6e');
+      const productId3 = ProductId.fromString('c3d4e5f6-a7b8-4c5d-0e1f-2a3b4c5d6e7f');
+
+      await repository.save(new Product(productId1, 'Leche', UnitType.liters()));
+      await repository.save(new Product(productId2, 'Pan', UnitType.units()));
+      await repository.save(new Product(productId3, 'Arroz', UnitType.kg()));
+
+      // Act
+      await repository.delete(productId2);
+
+      // Assert
+      const products = await repository.findAll();
+      expect(products).toHaveLength(2);
+      expect(products.find(p => p.id.equals(productId1))).toBeDefined();
+      expect(products.find(p => p.id.equals(productId2))).toBeUndefined();
+      expect(products.find(p => p.id.equals(productId3))).toBeDefined();
+    });
+
+    it('should persist deletion to localStorage', async () => {
+      // Arrange
+      const productId1 = ProductId.fromString('a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d');
+      const productId2 = ProductId.fromString('b2c3d4e5-f6a7-4b5c-9d0e-1f2a3b4c5d6e');
+
+      await repository.save(new Product(productId1, 'Leche', UnitType.liters()));
+      await repository.save(new Product(productId2, 'Pan', UnitType.units()));
+
+      // Act
+      await repository.delete(productId1);
+
+      // Assert - Verify in localStorage
+      const stored = localStorage.getItem('shopping_manager_products');
+      expect(stored).not.toBeNull();
+
+      const parsed = JSON.parse(stored!);
+      expect(parsed).toHaveLength(1);
+      expect(parsed[0].id).toBe(productId2.value);
+      expect(parsed[0].name).toBe('Pan');
+    });
+
+    it('should allow re-creating a product with same ID after deletion', async () => {
+      // Arrange
+      const productId = ProductId.fromString('a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d');
+      await repository.save(new Product(productId, 'Leche', UnitType.liters()));
+
+      // Act - Delete and recreate
+      await repository.delete(productId);
+      await repository.save(new Product(productId, 'Leche Desnatada', UnitType.liters()));
+
+      // Assert
+      const products = await repository.findAll();
+      expect(products).toHaveLength(1);
+      expect(products[0].name).toBe('Leche Desnatada');
+    });
+  });
 });
