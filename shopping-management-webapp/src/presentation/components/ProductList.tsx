@@ -12,6 +12,7 @@ export interface ProductListProps {
   products: ProductWithInventory[];
   isLoading?: boolean;
   onEditProduct?: (product: Product) => void;
+  onDeleteProduct?: (productId: string) => void;
 }
 
 function SkeletonLoader() {
@@ -45,7 +46,7 @@ function EmptyState() {
   );
 }
 
-export function ProductList({ products, isLoading = false, onEditProduct }: ProductListProps) {
+export function ProductList({ products, isLoading = false, onEditProduct, onDeleteProduct }: ProductListProps) {
   if (isLoading) {
     return (
       <div data-testid="product-list-container" className="space-y-3">
@@ -70,6 +71,7 @@ export function ProductList({ products, isLoading = false, onEditProduct }: Prod
           quantity={product.quantity}
           unitType={product.unitType}
           onEdit={onEditProduct}
+          onDelete={onDeleteProduct}
         />
       ))}
     </div>
