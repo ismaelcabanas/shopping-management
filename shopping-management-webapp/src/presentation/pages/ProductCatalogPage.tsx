@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { ArrowLeft, Plus, ClipboardList, ShoppingCart } from 'lucide-react';
 import { ProductList, type ProductWithInventory } from '../components/ProductList';
 import { EditProductModal } from '../components/EditProductModal';
@@ -121,7 +122,7 @@ export function ProductCatalogPage() {
       await registerPurchase(items);
       await loadProducts(); // Refresh the list
       setIsRegisterPurchaseOpen(false);
-      alert('Compra registrada exitosamente');
+      toast.success('Compra registrada exitosamente');
     } catch (error) {
       console.error('Error registering purchase:', error);
       throw error; // Let the modal handle the error
