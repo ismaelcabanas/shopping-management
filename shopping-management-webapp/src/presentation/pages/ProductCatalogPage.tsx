@@ -24,7 +24,7 @@ export function ProductCatalogPage() {
   const [productToEdit, setProductToEdit] = useState<Product | null>(null);
 
   const { updateProduct, deleteProduct } = useProducts();
-  const { registerPurchase } = useInventory();
+  const { addProduct, registerPurchase } = useInventory();
 
   useEffect(() => {
     loadProducts();
@@ -119,6 +119,30 @@ export function ProductCatalogPage() {
 
   const handleSaveRegisterPurchase = async (items: PurchaseItemInput[]) => {
     try {
+      // First, create any new products that don't exist
+      for (const item of items) {
+        // Check if product ID looks like a UUID (existing product) or a name (new product)
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.productId);
+
+        if (!isUUID) {
+          // It's a new product - create it
+          const productName = item.productId; // In this case, productId is actually the product name
+
+          // Generate a new ID for the product
+          const newProductId = crypto.randomUUID();
+
+          await addProduct({
+            id: newProductId,
+            name: productName,
+            initialQuantity: 0, // Initial inventory will be set by RegisterPurchase
+          });
+
+          // Update the item with the new product's ID
+          item.productId = newProductId;
+        }
+      }
+
+      // Now register the purchase with all valid product IDs
       await registerPurchase(items);
       await loadProducts(); // Refresh the list
       setIsRegisterPurchaseOpen(false);
@@ -167,18 +191,16 @@ export function ProductCatalogPage() {
               <div />
             )}
 
-            {allProducts.length > 0 && (
-              <Button
-                data-testid="register-purchase-button"
-                onClick={handleRegisterPurchase}
-                variant="primary"
-                size="sm"
-                className="flex items-center gap-2"
-              >
-                <ShoppingCart className="w-4 h-4" />
-                Registrar Compra
-              </Button>
-            )}
+            <Button
+              data-testid="register-purchase-button"
+              onClick={handleRegisterPurchase}
+              variant="primary"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              Registrar Compra
+            </Button>
           </div>
         )}
 

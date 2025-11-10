@@ -53,7 +53,7 @@ describe('RegisterPurchaseModal', () => {
     expect(screen.getByText('Registrar Compra')).toBeInTheDocument();
   });
 
-  it('should show product selector and quantity input', () => {
+  it('should show product input and quantity input', () => {
     render(
       <RegisterPurchaseModal
         isOpen={true}
@@ -63,7 +63,7 @@ describe('RegisterPurchaseModal', () => {
       />
     );
 
-    expect(screen.getByRole('combobox')).toBeInTheDocument();
+    expect(screen.getByTestId('product-input')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Cantidad')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /añadir/i })).toBeInTheDocument();
   });
@@ -78,12 +78,12 @@ describe('RegisterPurchaseModal', () => {
       />
     );
 
-    const select = screen.getByRole('combobox');
+    const productInput = screen.getByTestId('product-input');
     const quantityInput = screen.getByPlaceholderText('Cantidad');
     const addButton = screen.getByRole('button', { name: /añadir/i });
 
     // Select product
-    fireEvent.change(select, { target: { value: '00000000-0000-0000-0000-000000000001' } });
+    fireEvent.change(productInput, { target: { value: 'Leche' } });
 
     // Enter quantity
     fireEvent.change(quantityInput, { target: { value: '5' } });
@@ -107,18 +107,18 @@ describe('RegisterPurchaseModal', () => {
       />
     );
 
-    const select = screen.getByRole('combobox');
+    const productInput = screen.getByTestId('product-input');
     const quantityInput = screen.getByPlaceholderText('Cantidad');
     const addButton = screen.getByRole('button', { name: /añadir/i });
 
     // Add first product
-    fireEvent.change(select, { target: { value: '00000000-0000-0000-0000-000000000001' } });
+    fireEvent.change(productInput, { target: { value: 'Leche' } });
     fireEvent.change(quantityInput, { target: { value: '5' } });
     fireEvent.click(addButton);
 
     // Add second product
     await waitFor(() => {
-      fireEvent.change(select, { target: { value: '00000000-0000-0000-0000-000000000002' } });
+      fireEvent.change(productInput, { target: { value: 'Pan' } });
     });
     fireEvent.change(quantityInput, { target: { value: '3' } });
     fireEvent.click(addButton);
@@ -154,11 +154,11 @@ describe('RegisterPurchaseModal', () => {
       />
     );
 
-    const select = screen.getByRole('combobox');
+    const productInput = screen.getByTestId('product-input');
     const quantityInput = screen.getByPlaceholderText('Cantidad');
     const addButton = screen.getByRole('button', { name: /añadir/i });
 
-    fireEvent.change(select, { target: { value: '00000000-0000-0000-0000-000000000001' } });
+    fireEvent.change(productInput, { target: { value: 'Leche' } });
     fireEvent.change(quantityInput, { target: { value: '5' } });
     fireEvent.click(addButton);
 
@@ -178,11 +178,11 @@ describe('RegisterPurchaseModal', () => {
       />
     );
 
-    const select = screen.getByRole('combobox');
+    const productInput = screen.getByTestId('product-input');
     const quantityInput = screen.getByPlaceholderText('Cantidad');
     const addButton = screen.getByRole('button', { name: /añadir/i });
 
-    fireEvent.change(select, { target: { value: '00000000-0000-0000-0000-000000000001' } });
+    fireEvent.change(productInput, { target: { value: 'Leche' } });
     fireEvent.change(quantityInput, { target: { value: '0' } });
     fireEvent.click(addButton);
 
@@ -203,11 +203,11 @@ describe('RegisterPurchaseModal', () => {
       />
     );
 
-    const select = screen.getByRole('combobox');
+    const productInput = screen.getByTestId('product-input');
     const quantityInput = screen.getByPlaceholderText('Cantidad');
     const addButton = screen.getByRole('button', { name: /añadir/i });
 
-    fireEvent.change(select, { target: { value: '00000000-0000-0000-0000-000000000001' } });
+    fireEvent.change(productInput, { target: { value: 'Leche' } });
     fireEvent.change(quantityInput, { target: { value: '5' } });
     fireEvent.click(addButton);
 
@@ -252,11 +252,11 @@ describe('RegisterPurchaseModal', () => {
       />
     );
 
-    const select = screen.getByRole('combobox');
+    const productInput = screen.getByTestId('product-input');
     const quantityInput = screen.getByPlaceholderText('Cantidad');
     const addButton = screen.getByRole('button', { name: /añadir/i });
 
-    fireEvent.change(select, { target: { value: '00000000-0000-0000-0000-000000000001' } });
+    fireEvent.change(productInput, { target: { value: 'Leche' } });
     fireEvent.change(quantityInput, { target: { value: '5' } });
     fireEvent.click(addButton);
 

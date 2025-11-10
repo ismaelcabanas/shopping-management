@@ -9,21 +9,35 @@ export interface RegisterPurchaseModalProps {
   onSave: (items: PurchaseItemInput[]) => Promise<void>;
 }
 
+interface PurchaseItemWithName extends PurchaseItemInput {
+  productName: string;
+}
+
 export function RegisterPurchaseModal({
   isOpen,
   products,
   onCancel,
   onSave,
 }: RegisterPurchaseModalProps) {
-  const [selectedProduct, setSelectedProduct] = useState<string>('');
+  const [productName, setProductName] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
-  const [purchaseItems, setPurchaseItems] = useState<PurchaseItemInput[]>([]);
+  const [purchaseItems, setPurchaseItems] = useState<PurchaseItemWithName[]>([]);
   const [error, setError] = useState<string>('');
   const [isSaving, setIsSaving] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // Filter products based on input
+  const filteredProducts = productName.trim()
+    ? products.filter(p =>
+        p.name.toLowerCase().includes(productName.toLowerCase())
+      )
+    : [];
 
   const handleAddProduct = () => {
-    if (!selectedProduct) {
-      setError('Selecciona un producto');
+    const trimmedName = productName.trim();
+
+    if (!trimmedName) {
+      setError('Escribe el nombre del producto');
       return;
     }
 
@@ -33,37 +47,34 @@ export function RegisterPurchaseModal({
       return;
     }
 
-    const product = products.find(p => p.id.value === selectedProduct);
-    if (!product) return;
-
-    // Check if product is already in the list
-    const existingIndex = purchaseItems.findIndex(
-      item => item.productId === selectedProduct
+    // Find if product exists (case-insensitive)
+    const existingProduct = products.find(
+      p => p.name.toLowerCase() === trimmedName.toLowerCase()
     );
 
-    if (existingIndex !== -1) {
-      // Sum quantity to existing item
-      const updated = [...purchaseItems];
-      updated[existingIndex] = {
-        ...updated[existingIndex],
-        quantity: updated[existingIndex].quantity + qty,
-      };
-      setPurchaseItems(updated);
-    } else {
-      // Add new item
-      setPurchaseItems([
-        ...purchaseItems,
-        {
-          productId: selectedProduct,
-          quantity: qty,
-        },
-      ]);
+    const productId = existingProduct?.id.value || trimmedName;
+
+    // Check if product is already in the list
+    if (purchaseItems.find(item => item.productId === productId)) {
+      setError('Este producto ya está en la lista');
+      return;
     }
 
+    // Add to purchase list
+    setPurchaseItems([
+      ...purchaseItems,
+      {
+        productId,
+        quantity: qty,
+        productName: existingProduct?.name || trimmedName,
+      },
+    ]);
+
     // Reset form
-    setSelectedProduct('');
+    setProductName('');
     setQuantity('');
     setError('');
+    setShowSuggestions(false);
   };
 
   const handleRemoveProduct = (productId: string) => {
@@ -74,10 +85,17 @@ export function RegisterPurchaseModal({
     try {
       setIsSaving(true);
       setError('');
-      await onSave(purchaseItems);
+
+      // Map to PurchaseItemInput (remove productName)
+      const itemsToSave: PurchaseItemInput[] = purchaseItems.map(item => ({
+        productId: item.productId,
+        quantity: item.quantity,
+      }));
+
+      await onSave(itemsToSave);
       // Reset state after successful save
       setPurchaseItems([]);
-      setSelectedProduct('');
+      setProductName('');
       setQuantity('');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al guardar la compra';
@@ -87,9 +105,21 @@ export function RegisterPurchaseModal({
     }
   };
 
-  const getProductName = (productId: string): string => {
-    const product = products.find(p => p.id.value === productId);
-    return product ? product.name : '';
+  const handleSelectSuggestion = (product: Product) => {
+    setProductName(product.name);
+    setShowSuggestions(false);
+  };
+
+  const handleInputFocus = () => {
+    if (productName.trim()) {
+      setShowSuggestions(true);
+    }
+  };
+
+  const handleInputChange = (value: string) => {
+    setProductName(value);
+    setError('');
+    setShowSuggestions(value.trim().length > 0);
   };
 
   if (!isOpen) return null;
@@ -99,28 +129,41 @@ export function RegisterPurchaseModal({
       <div className="bg-white p-6 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <h2 className="text-2xl font-bold mb-4">Registrar Compra</h2>
 
-        {/* Product selector */}
+        {/* Product input with autocomplete */}
         <div className="mb-6">
           <label className="block text-sm font-medium mb-2">
-            Selecciona los productos que compraste:
+            Escribe el nombre del producto:
           </label>
-          <div className="flex gap-2">
-            <select
-              data-testid="product-selector"
-              value={selectedProduct}
-              onChange={(e) => {
-                setSelectedProduct(e.target.value);
-                setError('');
-              }}
-              className="flex-1 border rounded px-3 py-2"
-            >
-              <option value="">Seleccionar producto...</option>
-              {products.map(product => (
-                <option key={product.id.value} value={product.id.value}>
-                  {product.name}
-                </option>
-              ))}
-            </select>
+          <div className="flex gap-2 relative">
+            <div className="flex-1 relative">
+              <input
+                data-testid="product-input"
+                type="text"
+                value={productName}
+                onChange={(e) => handleInputChange(e.target.value)}
+                onFocus={handleInputFocus}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                placeholder="Ej: Leche, Pan, Arroz..."
+                className="w-full border rounded px-3 py-2"
+              />
+
+              {/* Autocomplete suggestions */}
+              {showSuggestions && filteredProducts.length > 0 && (
+                <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-48 overflow-y-auto">
+                  {filteredProducts.map(product => (
+                    <button
+                      key={product.id.value}
+                      type="button"
+                      onClick={() => handleSelectSuggestion(product)}
+                      className="w-full text-left px-3 py-2 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                    >
+                      {product.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <input
               data-testid="quantity-input"
               type="number"
@@ -141,6 +184,13 @@ export function RegisterPurchaseModal({
               Añadir
             </button>
           </div>
+
+          {products.length === 0 && (
+            <p className="text-gray-600 text-sm mt-2">
+              💡 Escribe el nombre de cualquier producto. Si no existe en tu catálogo, se creará automáticamente.
+            </p>
+          )}
+
           {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
         </div>
 
@@ -152,11 +202,14 @@ export function RegisterPurchaseModal({
               {purchaseItems.map(item => (
                 <div
                   key={item.productId}
-                  data-testid={`purchase-item-${getProductName(item.productId)}`}
+                  data-testid={`purchase-item-${item.productName}`}
                   className="flex justify-between items-center p-3 bg-gray-50 rounded"
                 >
                   <span>
-                    {getProductName(item.productId)} - {item.quantity}
+                    {item.productName} - {item.quantity}
+                    {!products.find(p => p.id.value === item.productId) && (
+                      <span className="ml-2 text-xs text-green-600 font-semibold">(nuevo)</span>
+                    )}
                   </span>
                   <button
                     onClick={() => handleRemoveProduct(item.productId)}
