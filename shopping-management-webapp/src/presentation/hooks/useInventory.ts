@@ -3,6 +3,8 @@ import type { ProductWithInventory } from '../../application/use-cases/GetProduc
 import { GetProductsWithInventory } from '../../application/use-cases/GetProductsWithInventory';
 import type { AddProductToInventoryCommand } from '../../application/use-cases/AddProductToInventory';
 import { AddProductToInventory } from '../../application/use-cases/AddProductToInventory';
+import type { PurchaseItemInput } from '../../application/use-cases/RegisterPurchase';
+import { RegisterPurchase } from '../../application/use-cases/RegisterPurchase';
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository';
 import { LocalStorageInventoryRepository } from '../../infrastructure/repositories/LocalStorageInventoryRepository';
 
@@ -11,6 +13,7 @@ export interface UseInventoryReturn {
   isLoading: boolean;
   error: Error | null;
   addProduct: (command: AddProductToInventoryCommand) => Promise<void>;
+  registerPurchase: (items: PurchaseItemInput[]) => Promise<void>;
   refetch: () => Promise<void>;
 }
 
@@ -133,6 +136,42 @@ export function useInventory(): UseInventoryReturn {
   );
 
   /**
+   * Registers a purchase and updates inventory
+   * @param items - Array of purchase items with product ID and quantity
+   * @throws {Error} If the purchase is invalid or if a product doesn't exist
+   */
+  const registerPurchase = useCallback(
+    async (items: PurchaseItemInput[]): Promise<void> => {
+      try {
+        setError(null);
+
+        // Initialize repositories and use case
+        const productRepository = new LocalStorageProductRepository();
+        const inventoryRepository = new LocalStorageInventoryRepository();
+        const registerPurchaseUseCase = new RegisterPurchase(
+          productRepository,
+          inventoryRepository
+        );
+
+        // Execute use case
+        await registerPurchaseUseCase.execute({ items });
+
+        // Reload products after registering purchase
+        await loadProductsWithInventory();
+      } catch (err) {
+        // Only update state if component is still mounted
+        if (isMountedRef.current) {
+          const error = err instanceof Error ? err : new Error('Unknown error');
+          setError(error);
+        }
+        // Re-throw the error so the caller can handle it
+        throw err;
+      }
+    },
+    [loadProductsWithInventory]
+  );
+
+  /**
    * Refetches products with inventory from the repositories
    */
   const refetch = useCallback(async () => {
@@ -154,6 +193,7 @@ export function useInventory(): UseInventoryReturn {
     isLoading,
     error,
     addProduct,
+    registerPurchase,
     refetch,
   };
 }

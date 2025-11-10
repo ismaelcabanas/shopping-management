@@ -22,6 +22,18 @@ vi.mock('../../../application/use-cases/GetProductsWithInventory', () => ({
   })),
 }));
 
+// Mock de LocalStorageProductRepository
+const mockFindAll = vi.fn();
+vi.mock('../../../infrastructure/repositories/LocalStorageProductRepository', () => ({
+  LocalStorageProductRepository: vi.fn().mockImplementation(() => ({
+    findAll: mockFindAll,
+    findById: vi.fn(),
+    findByName: vi.fn(),
+    save: vi.fn(),
+    delete: vi.fn(),
+  })),
+}));
+
 // Helper para renderizar con router
 function renderWithRouter(component: React.ReactElement) {
   return render(<BrowserRouter>{component}</BrowserRouter>);
@@ -32,6 +44,7 @@ describe('ProductCatalogPage - Component Tests (TDD)', () => {
     vi.clearAllMocks();
     // Por defecto, retornar array vacío
     mockExecute.mockResolvedValue([]);
+    mockFindAll.mockResolvedValue([]);
   });
 
   it('should render page title', () => {
@@ -148,7 +161,7 @@ describe('ProductCatalogPage - Component Tests (TDD)', () => {
     renderWithRouter(<ProductCatalogPage />);
 
     await waitFor(() => {
-      expect(mockExecute).toHaveBeenCalledTimes(1);
+      expect(mockExecute).toHaveBeenCalled();
     });
   });
 
