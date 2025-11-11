@@ -45,7 +45,7 @@ test.describe('US-008: Register Purchase and Update Inventory', () => {
     // When: I register a purchase containing Milk (3) and Bread (4)
 
     // Add Milk - 3 units
-    await page.getByTestId('product-selector').selectOption({ label: 'Milk' });
+    await page.getByTestId('product-input').fill('Milk');
     await page.getByTestId('quantity-input').fill('3');
     await page.getByTestId('add-item-button').click();
 
@@ -54,7 +54,7 @@ test.describe('US-008: Register Purchase and Update Inventory', () => {
     await expect(page.getByTestId('purchase-item-Milk')).toContainText('3');
 
     // Add Bread - 4 units
-    await page.getByTestId('product-selector').selectOption({ label: 'Bread' });
+    await page.getByTestId('product-input').fill('Bread');
     await page.getByTestId('quantity-input').fill('4');
     await page.getByTestId('add-item-button').click();
 
@@ -87,7 +87,7 @@ test.describe('US-008: Register Purchase and Update Inventory', () => {
     await expect(page.getByTestId('register-purchase-modal')).toBeVisible();
 
     // When: I add 3 units of Milk
-    await page.getByTestId('product-selector').selectOption({ label: 'Milk' });
+    await page.getByTestId('product-input').fill('Milk');
     await page.getByTestId('quantity-input').fill('3');
     await page.getByTestId('add-item-button').click();
 
@@ -96,7 +96,7 @@ test.describe('US-008: Register Purchase and Update Inventory', () => {
     await expect(page.getByTestId('purchase-item-Milk')).toContainText('3');
 
     // And: I add 4 units of Bread
-    await page.getByTestId('product-selector').selectOption({ label: 'Bread' });
+    await page.getByTestId('product-input').fill('Bread');
     await page.getByTestId('quantity-input').fill('4');
     await page.getByTestId('add-item-button').click();
 
@@ -123,7 +123,7 @@ test.describe('US-008: Register Purchase and Update Inventory', () => {
     await expect(page.getByTestId('register-purchase-modal')).toBeVisible();
 
     // Add 3 units of Milk
-    await page.getByTestId('product-selector').selectOption({ label: 'Milk' });
+    await page.getByTestId('product-input').fill('Milk');
     await page.getByTestId('quantity-input').fill('3');
     await page.getByTestId('add-item-button').click();
 
