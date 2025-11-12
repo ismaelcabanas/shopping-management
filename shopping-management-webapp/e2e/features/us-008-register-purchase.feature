@@ -43,31 +43,3 @@ Feature: Register Purchase and Update Inventory
     Then my Milk inventory remains at 5 units
     And I do not receive any confirmation message
 
-  # Validation rules are tested at unit/integration level
-  # These scenarios document the expected behavior but may not need E2E automation
-
-  @unit-covered
-  Scenario: Cannot register purchase with invalid quantity
-    When I attempt to register a purchase of 0 units of Milk
-    Then the purchase is rejected with an appropriate error message
-    # Covered by: RegisterPurchase.test.ts
-
-  @unit-covered
-  Scenario: Cannot register purchase for non-existent product
-    When I attempt to register a purchase of 5 units of UnknownProduct
-    Then the purchase is rejected with an appropriate error message
-    # Covered by: RegisterPurchase.test.ts
-
-  @unit-covered
-  Scenario: Purchase creates inventory record when none exists
-    Given Eggs is in my catalog but has no inventory record
-    When I register a purchase of 6 units of Eggs
-    Then an inventory record is created for Eggs with 6 units
-    # Covered by: RegisterPurchase.test.ts
-
-  @integration-covered
-  Scenario: Purchase maintains data integrity on failure
-    When I attempt to register a purchase with invalid data
-    Then the entire purchase is rejected atomically
-    And no partial updates are applied
-    # Covered by: RegisterPurchase.test.ts
