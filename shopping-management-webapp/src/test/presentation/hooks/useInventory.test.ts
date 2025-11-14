@@ -9,6 +9,7 @@ import { UnitType } from '../../../domain/model/UnitType';
 // Mock de los repositorios a nivel de módulo
 const mockProductRepositoryFindAll = vi.fn();
 const mockProductRepositoryFindByName = vi.fn();
+const mockProductRepositoryFindById = vi.fn();
 const mockProductRepositorySave = vi.fn();
 const mockInventoryRepositoryFindByProductId = vi.fn();
 const mockInventoryRepositorySave = vi.fn();
@@ -17,8 +18,8 @@ vi.mock('../../../infrastructure/repositories/LocalStorageProductRepository', ()
   LocalStorageProductRepository: vi.fn().mockImplementation(() => ({
     findAll: mockProductRepositoryFindAll,
     findByName: mockProductRepositoryFindByName,
+    findById: mockProductRepositoryFindById,
     save: mockProductRepositorySave,
-    findById: vi.fn(),
   })),
 }));
 
@@ -380,6 +381,74 @@ describe('useInventory', () => {
 
       // Products should be cleared on error
       expect(result.current.productsWithInventory).toEqual([]);
+    });
+  });
+
+  describe('registerPurchase functionality', () => {
+    it('should register purchase and update inventory', async () => {
+      const mockProduct = new Product(
+        ProductId.fromString('00000000-0000-0000-0000-000000000001'),
+        'Leche',
+        UnitType.units()
+      );
+
+      // Initial load
+      mockProductRepositoryFindAll.mockResolvedValue([mockProduct]);
+      mockInventoryRepositoryFindByProductId.mockResolvedValue({
+        currentStock: { value: 5 },
+      });
+
+      const { result } = renderHook(() => useInventory());
+
+      // Wait for initial load
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      expect(result.current.productsWithInventory[0].quantity).toBe(5);
+
+      // Setup for registerPurchase
+      mockProductRepositoryFindById.mockResolvedValue(mockProduct);
+
+      // Register purchase
+      await result.current.registerPurchase([
+        {
+          productId: '00000000-0000-0000-0000-000000000001',
+          quantity: 3,
+        },
+      ]);
+
+      // Should have refetched
+      await waitFor(() => {
+        expect(mockProductRepositoryFindAll).toHaveBeenCalledTimes(2);
+      });
+    });
+
+    it('should handle errors when registering purchase', async () => {
+      mockProductRepositoryFindAll.mockResolvedValue([]);
+      mockProductRepositoryFindById.mockResolvedValue(null);
+
+      const { result } = renderHook(() => useInventory());
+
+      // Wait for initial load
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      // Try to register purchase with non-existent product
+      await expect(
+        result.current.registerPurchase([
+          {
+            productId: '00000000-0000-0000-0000-000000000001',
+            quantity: 3,
+          },
+        ])
+      ).rejects.toThrow();
+
+      // Error state should be set
+      await waitFor(() => {
+        expect(result.current.error).toBeTruthy();
+      });
     });
   });
 

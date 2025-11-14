@@ -1,26 +1,34 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, ClipboardList } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { ArrowLeft, Plus, ClipboardList, ShoppingCart } from 'lucide-react';
 import { ProductList, type ProductWithInventory } from '../components/ProductList';
 import { EditProductModal } from '../components/EditProductModal';
+import { RegisterPurchaseModal } from '../components/RegisterPurchaseModal';
 import { GetProductsWithInventory } from '../../application/use-cases/GetProductsWithInventory';
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository';
 import { LocalStorageInventoryRepository } from '../../infrastructure/repositories/LocalStorageInventoryRepository';
 import { useProducts } from '../hooks/useProducts';
+import { useInventory } from '../hooks/useInventory';
 import { Button } from '../shared/components/Button';
 import type { Product } from '../../domain/model/Product';
+import type { PurchaseItemInput } from '../../application/use-cases/RegisterPurchase';
 
 export function ProductCatalogPage() {
   const navigate = useNavigate();
   const [products, setProducts] = useState<ProductWithInventory[]>([]);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isRegisterPurchaseOpen, setIsRegisterPurchaseOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState<Product | null>(null);
 
   const { updateProduct, deleteProduct } = useProducts();
+  const { addProduct, registerPurchase } = useInventory();
 
   useEffect(() => {
     loadProducts();
+    loadAllProducts();
   }, []);
 
   const loadProducts = async () => {
@@ -44,6 +52,17 @@ export function ProductCatalogPage() {
       setProducts([]);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const loadAllProducts = async () => {
+    try {
+      const productRepository = new LocalStorageProductRepository();
+      const prods = await productRepository.findAll();
+      setAllProducts(prods);
+    } catch (error) {
+      console.error('Error loading all products:', error);
+      setAllProducts([]);
     }
   };
 
@@ -90,6 +109,50 @@ export function ProductCatalogPage() {
     }
   };
 
+  const handleRegisterPurchase = () => {
+    setIsRegisterPurchaseOpen(true);
+  };
+
+  const handleCloseRegisterPurchase = () => {
+    setIsRegisterPurchaseOpen(false);
+  };
+
+  const handleSaveRegisterPurchase = async (items: PurchaseItemInput[]) => {
+    try {
+      // First, create any new products that don't exist
+      for (const item of items) {
+        // Check if product ID looks like a UUID (existing product) or a name (new product)
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.productId);
+
+        if (!isUUID) {
+          // It's a new product - create it
+          const productName = item.productId; // In this case, productId is actually the product name
+
+          // Generate a new ID for the product
+          const newProductId = crypto.randomUUID();
+
+          await addProduct({
+            id: newProductId,
+            name: productName,
+            initialQuantity: 0, // Initial inventory will be set by RegisterPurchase
+          });
+
+          // Update the item with the new product's ID
+          item.productId = newProductId;
+        }
+      }
+
+      // Now register the purchase with all valid product IDs
+      await registerPurchase(items);
+      await loadProducts(); // Refresh the list
+      setIsRegisterPurchaseOpen(false);
+      toast.success('Compra registrada exitosamente');
+    } catch (error) {
+      console.error('Error registering purchase:', error);
+      throw error; // Let the modal handle the error
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -114,13 +177,30 @@ export function ProductCatalogPage() {
 
       {/* Content */}
       <div className="max-w-2xl mx-auto px-4 py-6">
-        {/* Product count */}
-        {!isLoading && products.length > 0 && (
-          <div className="mb-4 flex items-center gap-2">
-            <ClipboardList className="w-5 h-5 text-primary" />
-            <h2 className="text-lg font-semibold text-gray-700">
-              Productos en Despensa ({products.length})
-            </h2>
+        {/* Header with product count and Register Purchase button */}
+        {!isLoading && (
+          <div className="mb-4 flex items-center justify-between">
+            {products.length > 0 ? (
+              <div className="flex items-center gap-2">
+                <ClipboardList className="w-5 h-5 text-primary" />
+                <h2 className="text-lg font-semibold text-gray-700">
+                  Productos en Despensa ({products.length})
+                </h2>
+              </div>
+            ) : (
+              <div />
+            )}
+
+            <Button
+              data-testid="register-purchase-button"
+              onClick={handleRegisterPurchase}
+              variant="primary"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              Registrar Compra
+            </Button>
           </div>
         )}
 
@@ -158,6 +238,14 @@ export function ProductCatalogPage() {
           onSave={handleSaveProduct}
         />
       )}
+
+      {/* Register Purchase Modal */}
+      <RegisterPurchaseModal
+        isOpen={isRegisterPurchaseOpen}
+        products={allProducts}
+        onSave={handleSaveRegisterPurchase}
+        onCancel={handleCloseRegisterPurchase}
+      />
     </div>
   );
 }
