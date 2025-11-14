@@ -41,8 +41,9 @@ Cada archivo incluye:
 |----|--------|--------|--------|-------|
 | [US-006](./US-006-editar-producto.md) | Editar información de un producto | 🟢 Completado | Sprint 4 | 28 |
 | [US-007](./US-007-eliminar-producto.md) | Eliminar un producto del sistema | 🟢 Completado | Sprint 4 | 13 |
+| [US-008](./US-008-registrar-compra-actualizar-inventario.md) | Registrar compra y actualizar inventario | 🟢 Completado | Sprint 4 | 25+ |
 
-**Total de tests automatizados**: 253 tests
+**Total de tests automatizados**: 278+ tests
 
 ---
 
@@ -55,39 +56,70 @@ Cada archivo incluye:
 - ✅ **US-004**: Añadir producto al inventario
 - ✅ **US-005**: Ver catálogo de productos
 
-### 🔧 Épica 2: Gestión Avanzada de Inventario (Sprint 4 - Actual)
+### 🔧 Épica 2: Gestión Avanzada de Inventario ✅ COMPLETADA
 - ✅ **[US-006](./US-006-editar-producto.md)**: Editar información de un producto (3 SP, ~2-3h)
 - ✅ **[US-007](./US-007-eliminar-producto.md)**: Eliminar un producto del sistema (2 SP, ~1-2h)
-- 🔴 **[US-008](./US-008-registrar-compra-actualizar-inventario.md)**: Registrar compra y actualizar inventario (5 SP, ~3-4h)
+- ✅ **[US-008](./US-008-registrar-compra-actualizar-inventario.md)**: Registrar compra y actualizar inventario (5 SP, ~3-4h)
 
-**🎯 CRUD Completo**: ✅ Con US-006 y US-007 completados, tenemos Create, Read, Update, Delete
+**🎯 CRUD Completo**: ✅ Create, Read, Update, Delete
+**🛒 Gestión de Compras**: ✅ Registro de compras con actualización automática de inventario
 
-### 🏪 Épica 3: Gestión de Tiendas (Planificado)
-- 🔴 **US-009**: Crear una tienda
-- 🔴 **US-010**: Registrar precio de producto en tienda
+### 📸 Épica 3: Automatización de Compras (Sprint 5 - CRÍTICA) 🔥
+- 🔴 **[US-009](./US-009-escanear-ticket-registrar-compra.md)**: Escanear ticket y registrar compra (OCR) (5 SP, ~3-4h) 🔥
+- 🔴 **US-010**: Mejorar matching de productos (OCR v2) (5 SP, ~3-4h)
 
-### 📝 Épica 4: Lista de Compras Inteligente (Futuro)
-- 🔴 **US-011**: Generar lista de compras automática
-- 🔴 **US-012**: Comparar precios entre tiendas
+**🎯 Objetivo**: Reducir friction del registro de compras de 10 min → <3 min
+**⚠️ Validación Crítica**: Esta épica determina el éxito del producto
+
+### 🔄 Épica 4: Gestión de Consumo (Alta Prioridad)
+- 🔴 **US-011**: Registrar consumo de productos (3 SP, ~2-3h)
+- 🔴 **US-012**: Ver historial de consumo (2 SP, ~1-2h)
+- 🔴 **US-013**: Alertas de stock bajo (3 SP, ~2-3h)
+- 🔴 **US-014**: Añadir automáticamente a lista de compras (5 SP, ~3-4h)
+
+**🎯 CRUD Completo del Ciclo**: Comprar → Almacenar → **Consumir** → Alertar
+
+### 📊 Épica 5: Inteligencia de Consumo (Media Prioridad)
+- 🔴 **US-015**: Calcular tasa de consumo promedio (3 SP)
+- 🔴 **US-016**: Predecir cuándo se agotará un producto (5 SP)
+- 🔴 **US-017**: Sugerir cantidad óptima de compra (5 SP)
+
+### 🏪 Épica 6: Gestión de Tiendas (Baja Prioridad)
+- 🔴 **US-018**: Crear una tienda (3 SP)
+- 🔴 **US-019**: Registrar precio de producto en tienda (3 SP)
+- 🔴 **US-020**: Comparar precios entre tiendas (5 SP)
+
+### 📝 Épica 7: Lista de Compras Inteligente (Futuro)
+- 🔴 **US-021**: Generar lista de compras automática (5 SP)
+- 🔴 **US-022**: Optimizar lista por tienda más económica (8 SP)
 
 ---
 
 ## Estadísticas del Proyecto
 
 ### Por Estado
-- **Completadas**: 7 historias (58%)
+- **Completadas**: 8 historias (36%)
 - **En Progreso**: 0 historias (0%)
-- **Pendientes**: 5 historias (42%)
-- **Total**: 12 historias
+- **Pendientes**: 14 historias (64%)
+- **Total**: 22 historias planificadas
 
 ### Por Épica
 - **Épica 1** (Gestión Inventario): 5/5 completadas ✅
-- **Épica 2** (Gestión Avanzada): 2/3 completadas (67%)
-- **Épica 3** (Tiendas): 0/2 completadas
-- **Épica 4** (Lista Compras): 0/2 completadas
+- **Épica 2** (Gestión Avanzada): 3/3 completadas ✅
+- **Épica 3** (Automatización Compras): 0/2 completadas 🔥
+- **Épica 4** (Gestión Consumo): 0/4 completadas
+- **Épica 5** (Inteligencia Consumo): 0/3 completadas
+- **Épica 6** (Tiendas): 0/3 completadas
+- **Épica 7** (Lista Inteligente): 0/2 completadas
+
+### Por Prioridad
+- 🔥 **Crítica**: 1 historia (US-009 - OCR)
+- 🔴 **Alta**: 7 historias (Épica 3-4)
+- 🟡 **Media**: 3 historias (Épica 5)
+- 🟢 **Baja**: 3 historias (Épica 6-7)
 
 ### Cobertura de Tests
-- **Total tests**: 253 tests
+- **Total tests**: 278+ tests
 - **Metodología**: Test-Driven Development (TDD)
 - **Cobertura**: ~85%
 
@@ -112,16 +144,18 @@ Todas las historias completadas siguen **Clean Architecture + DDD**:
 │     • GetAllProducts                │
 │     • GetProductsWithInventory      │
 │     • AddProductToInventory         │
-│     • UpdateProduct ✨ NEW          │
-│     • DeleteProduct ✨ NEW          │
+│     • UpdateProduct                 │
+│     • DeleteProduct                 │
+│     • RegisterPurchase ✨ NEW       │
 └──────────────┬──────────────────────┘
                │
 ┌──────────────▼──────────────────────┐
 │   Domain Layer                      │
 │   - Entities (Product,              │
-│     InventoryItem)                  │
+│     InventoryItem, Purchase)        │
 │   - Value Objects (ProductId,       │
-│     Quantity, UnitType)             │
+│     Quantity, UnitType,             │
+│     PurchaseId, PurchaseItem)       │
 │   - Repository Interfaces           │
 └──────────────┬──────────────────────┘
                │
@@ -222,10 +256,18 @@ Añadir la nueva historia a la tabla correspondiente.
 - Story points: 8
 
 ### Sprint 4
-- Historias completadas: 2
-- Story points: 5 (US-006: 3 SP, US-007: 2 SP)
+- Historias completadas: 3
+- Story points: 10 (US-006: 3 SP, US-007: 2 SP, US-008: 5 SP)
 
-**Velocity promedio**: ~7.75 story points/sprint
+### Sprint 5 (Planificado - CRÍTICO) 🔥
+- **US-009**: Escanear ticket (OCR) - 5 SP 🔥
+- **US-011**: Registrar consumo - 3 SP
+- **US-012**: Ver historial consumo - 2 SP
+- **Total planificado**: 10 SP
+
+**Objetivo Sprint 5**: Validar OCR como factor crítico de éxito + cerrar ciclo de consumo
+
+**Velocity promedio**: ~9 story points/sprint
 
 ---
 

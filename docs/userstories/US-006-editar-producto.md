@@ -1,10 +1,11 @@
 # US-006: Editar información de un producto
 
 **Épica**: Gestión Avanzada de Inventario
-**Estado**: 🔴 Pendiente
+**Estado**: ✅ Completada
 **Prioridad**: Alta
-**Sprint**: Sprint 4 (Planificado)
+**Sprint**: Sprint 4
 **Estimación**: 3 story points (~2-3 horas)
+**Fecha de Finalización**: 2025-11-14
 
 ---
 
@@ -372,20 +373,20 @@ setIsEditModalOpen(false);
 
 ## Definition of Done
 
-- [ ] Use Case `UpdateProduct` implementado con validaciones
-- [ ] Método `update()` en `LocalStorageProductRepository`
-- [ ] Método `updateProduct()` en hook `useProducts()`
-- [ ] Componente `EditProductModal` creado
-- [ ] Integración en `ProductCatalogPage`
-- [ ] 15+ tests escritos y pasando (TDD)
-- [ ] Validaciones de nombre y unidad funcionando
-- [ ] Validación de nombre duplicado funcionando
-- [ ] Toast notifications de éxito/error
-- [ ] Tests E2E verificados
-- [ ] Code review completado
-- [ ] Documentación actualizada (este archivo)
-- [ ] ADR actualizado si hay decisiones arquitectónicas
-- [ ] Desplegado y verificado en desarrollo
+- [x] Use Case `UpdateProduct` implementado con validaciones
+- [x] Método `update()` en `LocalStorageProductRepository`
+- [x] Método `updateProduct()` en hook `useProducts()`
+- [x] Componente `EditProductModal` creado
+- [x] Integración en `ProductCatalogPage`
+- [x] 15+ tests escritos y pasando (TDD)
+- [x] Validaciones de nombre y unidad funcionando
+- [x] Validación de nombre duplicado funcionando
+- [x] Toast notifications de éxito/error
+- [x] Tests E2E verificados
+- [x] Code review completado
+- [x] Documentación actualizada (este archivo)
+- [x] ADR actualizado si hay decisiones arquitectónicas
+- [x] Desplegado y verificado en desarrollo
 
 ---
 

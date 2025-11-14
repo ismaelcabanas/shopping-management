@@ -1,10 +1,11 @@
 # US-008: Registrar compra y actualizar inventario
 
 **Épica**: Gestión Avanzada de Inventario
-**Estado**: 🔴 Pendiente
+**Estado**: ✅ Completada
 **Prioridad**: Alta
-**Sprint**: Sprint 4 (Planificado)
+**Sprint**: Sprint 4
 **Estimación**: 5 story points (~3-4 horas)
+**Fecha de Finalización**: 2025-11-14
 
 ---
 
@@ -647,21 +648,21 @@ export function RegisterPurchaseModal({
 
 ## Definition of Done
 
-- [ ] Entidades `Purchase`, `PurchaseItem`, `PurchaseId` implementadas
-- [ ] Use Case `RegisterPurchase` implementado con validaciones
-- [ ] Método `registerPurchase()` en hook `useInventory()`
-- [ ] Componente `RegisterPurchaseModal` creado
-- [ ] Integración en `ProductCatalogPage`
-- [ ] 25+ tests escritos y pasando (TDD)
-- [ ] Modal con selector de productos y cantidades
-- [ ] Validaciones de entrada funcionando
-- [ ] Actualización automática de inventario
-- [ ] Creación de inventario si no existe
-- [ ] Toast notifications de éxito/error
-- [ ] Tests E2E verificados
-- [ ] Code review completado
-- [ ] Documentación actualizada
-- [ ] Desplegado y verificado en desarrollo
+- [x] Entidades `Purchase`, `PurchaseItem`, `PurchaseId` implementadas
+- [x] Use Case `RegisterPurchase` implementado con validaciones
+- [x] Método `registerPurchase()` en hook `useInventory()`
+- [x] Componente `RegisterPurchaseModal` creado
+- [x] Integración en `ProductCatalogPage`
+- [x] 25+ tests escritos y pasando (TDD)
+- [x] Modal con selector de productos y cantidades
+- [x] Validaciones de entrada funcionando
+- [x] Actualización automática de inventario
+- [x] Creación de inventario si no existe
+- [x] Toast notifications de éxito/error
+- [x] Tests E2E verificados
+- [x] Code review completado
+- [x] Documentación actualizada
+- [x] Desplegado y verificado en desarrollo
 
 ---
 

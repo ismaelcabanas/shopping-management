@@ -1,10 +1,11 @@
 # US-007: Eliminar un producto del sistema
 
 **Épica**: Gestión Avanzada de Inventario
-**Estado**: 🔴 Pendiente
+**Estado**: ✅ Completada
 **Prioridad**: Alta
-**Sprint**: Sprint 4 (Planificado)
+**Sprint**: Sprint 4
 **Estimación**: 2 story points (~1-2 horas)
+**Fecha de Finalización**: 2025-11-14
 
 ---
 
@@ -544,21 +545,21 @@ Cuando implementemos estas features, debemos eliminar cascada:
 
 ## Definition of Done
 
-- [ ] Use Case `DeleteProduct` implementado con validaciones
-- [ ] Método `delete()` en `LocalStorageProductRepository`
-- [ ] Método `deleteByProductId()` en `LocalStorageInventoryRepository`
-- [ ] Método `deleteProduct()` en hook `useProducts()`
-- [ ] Componente `DeleteConfirmationDialog` creado
-- [ ] Integración en `ProductCatalogPage`
-- [ ] 19+ tests escritos y pasando (TDD)
-- [ ] Diálogo de confirmación con mensaje claro
-- [ ] Eliminación cascada de producto e inventario
-- [ ] Toast notifications de éxito/error
-- [ ] Accesibilidad verificada (focus trap, ESC key)
-- [ ] Tests E2E verificados
-- [ ] Code review completado
-- [ ] Documentación actualizada (este archivo)
-- [ ] Desplegado y verificado en desarrollo
+- [x] Use Case `DeleteProduct` implementado con validaciones
+- [x] Método `delete()` en `LocalStorageProductRepository`
+- [x] Método `deleteByProductId()` en `LocalStorageInventoryRepository`
+- [x] Método `deleteProduct()` en hook `useProducts()`
+- [x] Componente `DeleteConfirmationDialog` creado
+- [x] Integración en `ProductCatalogPage`
+- [x] 19+ tests escritos y pasando (TDD)
+- [x] Diálogo de confirmación con mensaje claro
+- [x] Eliminación cascada de producto e inventario
+- [x] Toast notifications de éxito/error
+- [x] Accesibilidad verificada (focus trap, ESC key)
+- [x] Tests E2E verificados
+- [x] Code review completado
+- [x] Documentación actualizada (este archivo)
+- [x] Desplegado y verificado en desarrollo
 
 ---
 
