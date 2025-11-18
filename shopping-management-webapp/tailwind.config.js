@@ -46,6 +46,28 @@ export default {
         'page': '2rem',       // Standard page padding
         'section': '1.5rem',  // Section spacing
       },
+      // Z-index scale for layering
+      zIndex: {
+        'dropdown': '1000',
+        'modal': '1050',
+        'popover': '1060',
+        'tooltip': '1070',
+      },
+      // Animations for UI feedback
+      animation: {
+        'fade-in': 'fadeIn 150ms ease-in',
+        'scale-in': 'scaleIn 200ms ease-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        scaleIn: {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+      },
     },
   },
   plugins: [],
