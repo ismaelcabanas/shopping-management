@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import type { Product } from '../../domain/model/Product';
 import type { PurchaseItemInput } from '../../application/use-cases/RegisterPurchase';
+import { Modal } from '../shared/components/Modal';
+import { Button } from '../shared/components/Button';
 
 export interface RegisterPurchaseModalProps {
   isOpen: boolean;
@@ -122,12 +124,16 @@ export function RegisterPurchaseModal({
     setShowSuggestions(value.trim().length > 0);
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" data-testid="register-purchase-modal">
-      <div className="bg-white p-6 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <h2 className="text-2xl font-bold mb-4">Registrar Compra</h2>
+    <Modal
+      isOpen={isOpen}
+      onClose={onCancel}
+      title="Registrar Compra"
+      size="lg"
+      closeOnBackdropClick={false}
+      closeOnEscape={!isSaving}
+    >
+      <div data-testid="register-purchase-modal">
 
         {/* Product input with autocomplete */}
         <div className="mb-6">
@@ -176,13 +182,14 @@ export function RegisterPurchaseModal({
               className="w-24 border rounded px-3 py-2"
               min="1"
             />
-            <button
+            <Button
               data-testid="add-item-button"
               onClick={handleAddProduct}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              variant="primary"
+              size="md"
             >
               Añadir
-            </button>
+            </Button>
           </div>
 
           {products.length === 0 && (
@@ -211,12 +218,14 @@ export function RegisterPurchaseModal({
                       <span className="ml-2 text-xs text-green-600 font-semibold">(nuevo)</span>
                     )}
                   </span>
-                  <button
+                  <Button
                     onClick={() => handleRemoveProduct(item.productId)}
-                    className="text-red-600 hover:text-red-800"
+                    variant="ghost"
+                    size="sm"
+                    className="text-danger hover:text-danger-hover"
                   >
                     Eliminar
-                  </button>
+                  </Button>
                 </div>
               ))}
             </div>
@@ -224,25 +233,27 @@ export function RegisterPurchaseModal({
         )}
 
         {/* Actions */}
-        <div className="flex gap-4 justify-end">
-          <button
+        <div className="flex gap-3 justify-end mt-6">
+          <Button
             data-testid="cancel-purchase-button"
             onClick={onCancel}
-            className="px-4 py-2 border rounded hover:bg-gray-100"
+            variant="secondary"
             disabled={isSaving}
           >
             Cancelar
-          </button>
-          <button
+          </Button>
+          <Button
             data-testid="confirm-purchase-button"
             onClick={handleSave}
             disabled={purchaseItems.length === 0 || isSaving}
-            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            variant="primary"
+            loading={isSaving}
+            className="bg-success hover:bg-success-hover"
           >
-            {isSaving ? 'Guardando...' : 'Guardar Compra'}
-          </button>
+            Guardar Compra
+          </Button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }
