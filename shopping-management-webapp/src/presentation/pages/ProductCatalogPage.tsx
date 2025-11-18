@@ -5,6 +5,7 @@ import { ArrowLeft, Plus, ClipboardList, ShoppingCart } from 'lucide-react';
 import { ProductList, type ProductWithInventory } from '../components/ProductList';
 import { EditProductModal } from '../components/EditProductModal';
 import { RegisterPurchaseModal } from '../components/RegisterPurchaseModal';
+import { ConfirmDialog } from '../shared/components/ConfirmDialog';
 import { GetProductsWithInventory } from '../../application/use-cases/GetProductsWithInventory';
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository';
 import { LocalStorageInventoryRepository } from '../../infrastructure/repositories/LocalStorageInventoryRepository';
@@ -21,7 +22,10 @@ export function ProductCatalogPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isRegisterPurchaseOpen, setIsRegisterPurchaseOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState<Product | null>(null);
+  const [productToDelete, setProductToDelete] = useState<{ id: string; name: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { updateProduct, deleteProduct } = useProducts();
   const { addProduct, registerPurchase } = useInventory();
@@ -89,24 +93,36 @@ export function ProductCatalogPage() {
     await loadProducts(); // Refresh the list
   };
 
-  const handleDeleteProduct = async (productId: string) => {
+  const handleDeleteProduct = (productId: string) => {
     // Find product name for confirmation dialog
     const product = products.find(p => p.id === productId);
     const productName = product?.name || 'este producto';
 
-    const confirmed = window.confirm(
-      `¿Estás seguro de que quieres eliminar "${productName}"?\n\nEsta acción no se puede deshacer.`
-    );
+    setProductToDelete({ id: productId, name: productName });
+    setIsDeleteDialogOpen(true);
+  };
 
-    if (confirmed) {
-      try {
-        await deleteProduct(productId);
-        await loadProducts(); // Refresh the list
-      } catch (error) {
-        console.error('Error deleting product:', error);
-        alert('Error al eliminar el producto. Por favor, intenta de nuevo.');
-      }
+  const handleConfirmDelete = async () => {
+    if (!productToDelete) return;
+
+    try {
+      setIsDeleting(true);
+      await deleteProduct(productToDelete.id);
+      await loadProducts(); // Refresh the list
+      setIsDeleteDialogOpen(false);
+      setProductToDelete(null);
+      toast.success(`Producto "${productToDelete.name}" eliminado correctamente`);
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      toast.error('Error al eliminar el producto. Por favor, intenta de nuevo.');
+    } finally {
+      setIsDeleting(false);
     }
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeleteDialogOpen(false);
+    setProductToDelete(null);
   };
 
   const handleRegisterPurchase = () => {
@@ -245,6 +261,19 @@ export function ProductCatalogPage() {
         products={allProducts}
         onSave={handleSaveRegisterPurchase}
         onCancel={handleCloseRegisterPurchase}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={isDeleteDialogOpen}
+        title="Eliminar producto"
+        message={`¿Estás seguro de que quieres eliminar "${productToDelete?.name}"? Esta acción no se puede deshacer.`}
+        variant="danger"
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        loading={isDeleting}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
       />
     </div>
   );
