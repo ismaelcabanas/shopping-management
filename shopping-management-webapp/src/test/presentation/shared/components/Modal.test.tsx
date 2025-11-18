@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Modal } from '../../../../presentation/shared/components/Modal'
 
@@ -257,8 +257,6 @@ describe('Modal', () => {
   })
 
   it('restores focus to previous element when closed', async () => {
-    const user = userEvent.setup()
-
     const { rerender } = render(
       <>
         <button>Trigger button</button>
