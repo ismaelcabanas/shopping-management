@@ -186,4 +186,15 @@ describe('ProductCatalogPage - Component Tests (TDD)', () => {
     expect(productNames[1]).toHaveTextContent('Leche');
     expect(productNames[2]).toHaveTextContent('Pan');
   });
+
+  it('should display scan ticket button', async () => {
+    mockExecute.mockResolvedValue([]);
+    mockFindAll.mockResolvedValue([]);
+
+    renderWithRouter(<ProductCatalogPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/escanear ticket/i)).toBeInTheDocument();
+    });
+  });
 });
