@@ -101,12 +101,18 @@ This document contains all development rules and guidelines for this project, ap
 
 Before ANY commit:
 1. Run `npm run build` (TypeScript compilation)
-2. Run `npm test` (all tests must pass)
-3. If errors exist: fix them and re-run
-4. Only commit when both pass with ZERO errors
+2. Run `npm run lint` (code quality checks)
+3. Run `npm test` (all tests must pass)
+4. If errors exist: fix them and re-run
+5. Only commit when all checks pass with ZERO errors
 
 ❌ **NEVER**: Commit → discover errors → fix commit
 ✅ **ALWAYS**: Validate → fix all errors → commit once
+
+**Validation order matters:**
+1. Build first (catches type errors)
+2. Lint second (catches code quality issues)
+3. Test last (validates functionality)
 
 ## 10. Quick Reference for All AI Agents
 
@@ -117,7 +123,7 @@ When working on this project:
 3. **Keep code small and typed** - TypeScript strict mode, max 20 lines per function when practical 📏
 4. **Show your thinking process** - be conversational and progressive 💭
 5. **Question everything** - assumptions, requirements, design choices ❓
-6. **Run tests and build before EVERY commit** - zero tolerance ✅
+6. **Run build, lint, and tests before EVERY commit** - zero tolerance ✅
 7. **Run tests automatically** after every change 🧪
 8. **Focus on simplicity** over cleverness ✨
 9. **Ask for clarification** when in doubt 🤔
