@@ -2,6 +2,29 @@
 
 Este documento es una guía para construir una aplicación web completa, detallando su arquitectura, metodología y stack tecnológico. El objetivo es crear un sistema robusto, mantenible y alineado con la lógica de negocio a través de un desarrollo guiado por pruebas.
 
+---
+
+## 0. AI Development Rules (for all AI Agents)
+
+**IMPORTANTE:** Antes de comenzar cualquier tarea, todos los agentes de IA (Claude, Cursor, GitHub Copilot, etc.) deben leer y seguir las reglas de desarrollo ubicadas en `.agents/rules/`:
+
+- **`.agents/rules/base.md`** - Reglas generales de desarrollo: TDD, baby steps, calidad de código, estándares
+- **`.agents/rules/testing.md`** - Reglas específicas de testing: Vitest, React Testing Library, cobertura
+- **`.agents/rules/architecture.md`** - Reglas de arquitectura: DDD, Clean Architecture, estructura de capas
+- **`.agents/rules/feedback-learning-loop.md`** - Sistema de feedback y mejora continua de las reglas
+
+Estas reglas son **obligatorias** y sobrescriben cualquier comportamiento por defecto. El contenido específico de este documento (CLAUDE.md) complementa las reglas generales.
+
+### Sistema de Mejora Continua
+
+El sistema de reglas está diseñado para evolucionar con el tiempo. Los agentes de IA deben:
+1. **Aprender activamente** de cada interacción con el usuario
+2. **Proponer mejoras** a las reglas cuando identifiquen oportunidades de refinamiento
+3. **Esperar aprobación explícita** antes de modificar cualquier regla
+4. Ver `.agents/rules/feedback-learning-loop.md` para el proceso completo
+
+---
+
 ## 1. Descripción del Proyecto (Project Description)
 
 La aplicación "Shopping Manager" es un sistema inteligente de gestión de inventario personal y optimización de compras. El objetivo principal es:
