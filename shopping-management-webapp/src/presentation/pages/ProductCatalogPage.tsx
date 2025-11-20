@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { ArrowLeft, Plus, ClipboardList, ShoppingCart } from 'lucide-react';
+import { ArrowLeft, Plus, ClipboardList, ShoppingCart, Camera } from 'lucide-react';
 import { ProductList, type ProductWithInventory } from '../components/ProductList';
 import { EditProductModal } from '../components/EditProductModal';
 import { RegisterPurchaseModal } from '../components/RegisterPurchaseModal';
+import { TicketScanModal } from '../components/TicketScanModal';
 import { ConfirmDialog } from '../shared/components/ConfirmDialog';
 import { GetProductsWithInventory } from '../../application/use-cases/GetProductsWithInventory';
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository';
@@ -22,6 +23,7 @@ export function ProductCatalogPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isRegisterPurchaseOpen, setIsRegisterPurchaseOpen] = useState(false);
+  const [isTicketScanOpen, setIsTicketScanOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState<Product | null>(null);
   const [productToDelete, setProductToDelete] = useState<{ id: string; name: string } | null>(null);
@@ -207,16 +209,28 @@ export function ProductCatalogPage() {
               <div />
             )}
 
-            <Button
-              data-testid="register-purchase-button"
-              onClick={handleRegisterPurchase}
-              variant="primary"
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <ShoppingCart className="w-4 h-4" />
-              Registrar Compra
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                data-testid="scan-ticket-button"
+                onClick={() => setIsTicketScanOpen(true)}
+                variant="secondary"
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <Camera className="w-4 h-4" />
+                Escanear Ticket
+              </Button>
+              <Button
+                data-testid="register-purchase-button"
+                onClick={handleRegisterPurchase}
+                variant="primary"
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <ShoppingCart className="w-4 h-4" />
+                Registrar Compra
+              </Button>
+            </div>
           </div>
         )}
 
@@ -261,6 +275,16 @@ export function ProductCatalogPage() {
         products={allProducts}
         onSave={handleSaveRegisterPurchase}
         onCancel={handleCloseRegisterPurchase}
+      />
+
+      {/* Ticket Scan Modal */}
+      <TicketScanModal
+        isOpen={isTicketScanOpen}
+        onClose={() => setIsTicketScanOpen(false)}
+        onConfirm={() => {
+          setIsTicketScanOpen(false);
+          toast.success('Funcionalidad de escaneo en desarrollo');
+        }}
       />
 
       {/* Delete Confirmation Dialog */}
