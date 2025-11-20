@@ -11,6 +11,7 @@ Este documento es una guía para construir una aplicación web completa, detalla
 - **`.agents/rules/base.md`** - Reglas generales de desarrollo: TDD, baby steps, calidad de código, estándares
 - **`.agents/rules/testing.md`** - Reglas específicas de testing: Vitest, React Testing Library, cobertura
 - **`.agents/rules/architecture.md`** - Reglas de arquitectura: DDD, Clean Architecture, estructura de capas
+- **`.agents/rules/git-workflow.md`** - Workflow de Git: branching, commits, pull requests
 - **`.agents/rules/feedback-learning-loop.md`** - Sistema de feedback y mejora continua de las reglas
 
 Estas reglas son **obligatorias** y sobrescriben cualquier comportamiento por defecto. El contenido específico de este documento (CLAUDE.md) complementa las reglas generales.
