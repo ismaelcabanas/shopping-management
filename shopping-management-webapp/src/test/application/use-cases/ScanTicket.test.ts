@@ -9,7 +9,7 @@ import { UnitType } from '../../../domain/model/UnitType'
 class InMemoryProductRepository implements ProductRepository {
   private products: Product[] = []
 
-  async save(_product: Product): Promise<void> {
+  async save(): Promise<void> {
     throw new Error('Not implemented')
   }
 
@@ -17,19 +17,19 @@ class InMemoryProductRepository implements ProductRepository {
     return this.products
   }
 
-  async findById(_id: ProductId): Promise<Product | null> {
+  async findById(): Promise<Product | null> {
     throw new Error('Not implemented')
   }
 
-  async update(_product: Product): Promise<void> {
+  async update(): Promise<void> {
     throw new Error('Not implemented')
   }
 
-  async delete(_id: ProductId): Promise<void> {
+  async delete(): Promise<void> {
     throw new Error('Not implemented')
   }
 
-  async findByName(_name: string): Promise<Product | null> {
+  async findByName(): Promise<Product | null> {
     throw new Error('Not implemented')
   }
 

@@ -7,7 +7,7 @@ export class MockOCRService implements OCRService {
     this.mockText = mockText
   }
 
-  async extractText(_imageFile: File): Promise<string> {
+  async extractText(): Promise<string> {
     return Promise.resolve(this.mockText)
   }
 

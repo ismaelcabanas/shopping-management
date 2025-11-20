@@ -44,7 +44,7 @@ export class ScanTicket {
     }
   }
 
-  private calculateGlobalConfidence(items: typeof this.matcher.match extends (...args: any[]) => infer R ? R[] : never): number {
+  private calculateGlobalConfidence(items: ReturnType<typeof this.matcher.match>[]): number {
     if (items.length === 0) return 0
     const avgConfidence = items.reduce((sum, item) => sum + item.confidence, 0) / items.length
     return avgConfidence

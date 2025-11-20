@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 export class TicketParser {
   parseLine(line: string): RawDetectedItem | null {
-    const pattern = /^(.+?)\s+(\d+)\s+[\d,\.]+$/
+    const pattern = /^(.+?)\s+(\d+)\s+[\d,.]+$/
     const match = line.match(pattern)
 
     if (match) {
