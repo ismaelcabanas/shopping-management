@@ -71,6 +71,73 @@
 - Keep minimal - only test happy paths and critical flows
 - Run separately from unit tests
 
+## Testing Strategy: When to Simplify vs When to Persist
+
+### Pragmatic Testing Decisions
+
+While TDD is our core methodology, there are situations where **pragmatic simplification** of tests is the correct choice:
+
+#### ✅ Simplify Unit/Integration Tests When:
+
+1. **Async Operations Are Too Complex to Mock**
+   - FileReader, WebSockets, Service Workers in test environments
+   - Browser APIs that behave differently in test runners (jsdom, etc.)
+   - Multiple nested async operations with timing dependencies
+
+2. **All Individual Components Are Well-Tested**
+   - Each component has its own comprehensive unit tests
+   - The integration logic is straightforward (just wiring)
+   - The hook/service being integrated is already tested
+
+3. **E2E Tests Provide Better Coverage**
+   - The flow involves real browser behavior (file uploads, drag & drop)
+   - User interactions span multiple components
+   - Real-world timing and async behavior is critical
+
+4. **Test Complexity Exceeds Value**
+   - Test setup requires extensive mocking infrastructure
+   - Test is brittle and breaks on minor refactors
+   - Test doesn't catch real bugs (just implementation details)
+
+#### Strategy When Simplifying:
+
+1. **Document the decision explicitly in test comments:**
+   ```typescript
+   // Note: Full file upload -> processing -> results flow is validated in E2E tests
+   // This is due to complexity of testing FileReader async behavior in unit tests
+   // Individual components (UploadView, ProcessingView, ResultsView) are tested separately
+   ```
+
+2. **Ensure comprehensive coverage at component level:**
+   - Each component in the flow has its own tests
+   - Hooks/services are tested independently
+   - Integration test covers basic structure/props
+
+3. **Add E2E test to TODO or backlog:**
+   - Don't skip validation entirely
+   - Move complex integration testing to appropriate layer
+
+#### ❌ Do NOT Simplify When:
+
+- The component is critical business logic
+- There are no E2E tests planned
+- Individual components aren't well tested
+- The integration logic is complex (not just wiring)
+- You haven't attempted proper testing first
+
+### Example: File Upload Integration
+
+**Bad approach:** Spend 2+ hours fighting FileReader mocks in unit tests
+
+**Good approach:**
+1. Test UploadView component (can select file, correct attributes)
+2. Test ProcessingView component (shows spinner, correct text)
+3. Test ResultsView component (displays items, handles callbacks)
+4. Test integration modal (renders correct view, has correct structure)
+5. Add E2E test for complete file upload → OCR → results flow
+
+**Result:** Comprehensive coverage at the right layers, time used efficiently.
+
 ## Test Organization
 
 ```
