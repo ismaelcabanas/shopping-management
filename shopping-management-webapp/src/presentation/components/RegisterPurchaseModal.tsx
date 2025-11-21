@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Product } from '../../domain/model/Product';
 import type { PurchaseItemInput } from '../../application/use-cases/RegisterPurchase';
 import { Modal } from '../shared/components/Modal';
@@ -9,6 +9,7 @@ export interface RegisterPurchaseModalProps {
   products: Product[];
   onCancel: () => void;
   onSave: (items: PurchaseItemInput[]) => Promise<void>;
+  initialItems?: PurchaseItemInput[];
 }
 
 interface PurchaseItemWithName extends PurchaseItemInput {
@@ -20,6 +21,7 @@ export function RegisterPurchaseModal({
   products,
   onCancel,
   onSave,
+  initialItems,
 }: RegisterPurchaseModalProps) {
   const [productName, setProductName] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
@@ -27,6 +29,27 @@ export function RegisterPurchaseModal({
   const [error, setError] = useState<string>('');
   const [isSaving, setIsSaving] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // Initialize purchase items when modal opens with initialItems
+  useEffect(() => {
+    if (isOpen && initialItems && initialItems.length > 0) {
+      const itemsWithNames: PurchaseItemWithName[] = initialItems.map(item => {
+        // Find product by ID
+        const product = products.find(p => p.id.value === item.productId);
+
+        return {
+          productId: item.productId,
+          quantity: item.quantity,
+          productName: product?.name || item.productId, // Use productId as name if not found
+        };
+      });
+
+      setPurchaseItems(itemsWithNames);
+    } else if (isOpen && !initialItems) {
+      // Reset when opening without initialItems
+      setPurchaseItems([]);
+    }
+  }, [isOpen, initialItems, products]);
 
   // Filter products based on input
   const filteredProducts = productName.trim()
