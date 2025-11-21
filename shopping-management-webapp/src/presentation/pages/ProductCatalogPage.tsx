@@ -15,6 +15,7 @@ import { useInventory } from '../hooks/useInventory';
 import { Button } from '../shared/components/Button';
 import type { Product } from '../../domain/model/Product';
 import type { PurchaseItemInput } from '../../application/use-cases/RegisterPurchase';
+import type { MatchedDetectedItem } from '../../application/dtos/TicketScanResult';
 
 export function ProductCatalogPage() {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ export function ProductCatalogPage() {
   const [productToEdit, setProductToEdit] = useState<Product | null>(null);
   const [productToDelete, setProductToDelete] = useState<{ id: string; name: string } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [initialPurchaseItems, setInitialPurchaseItems] = useState<PurchaseItemInput[] | undefined>(undefined);
 
   const { updateProduct, deleteProduct } = useProducts();
   const { addProduct, registerPurchase } = useInventory();
@@ -128,11 +130,29 @@ export function ProductCatalogPage() {
   };
 
   const handleRegisterPurchase = () => {
+    setInitialPurchaseItems(undefined); // Clear any previous initial items
     setIsRegisterPurchaseOpen(true);
   };
 
   const handleCloseRegisterPurchase = () => {
     setIsRegisterPurchaseOpen(false);
+    setInitialPurchaseItems(undefined); // Clear initial items when closing
+  };
+
+  const handleTicketScanConfirm = (items: MatchedDetectedItem[]) => {
+    // Convert MatchedDetectedItem[] to PurchaseItemInput[]
+    const purchaseItems: PurchaseItemInput[] = items.map(item => ({
+      // Use matchedProductId if available, otherwise use productName as ID
+      productId: item.matchedProductId || item.productName,
+      quantity: item.quantity,
+    }));
+
+    // Close ticket scan modal
+    setIsTicketScanOpen(false);
+
+    // Open register purchase modal with pre-filled items
+    setInitialPurchaseItems(purchaseItems);
+    setIsRegisterPurchaseOpen(true);
   };
 
   const handleSaveRegisterPurchase = async (items: PurchaseItemInput[]) => {
@@ -275,16 +295,14 @@ export function ProductCatalogPage() {
         products={allProducts}
         onSave={handleSaveRegisterPurchase}
         onCancel={handleCloseRegisterPurchase}
+        initialItems={initialPurchaseItems}
       />
 
       {/* Ticket Scan Modal */}
       <TicketScanModal
         isOpen={isTicketScanOpen}
         onClose={() => setIsTicketScanOpen(false)}
-        onConfirm={() => {
-          setIsTicketScanOpen(false);
-          toast.success('Funcionalidad de escaneo en desarrollo');
-        }}
+        onConfirm={handleTicketScanConfirm}
       />
 
       {/* Delete Confirmation Dialog */}
