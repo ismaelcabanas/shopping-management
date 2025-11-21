@@ -271,4 +271,140 @@ describe('RegisterPurchaseModal', () => {
       expect(screen.queryByText(/Leche - 5/)).not.toBeInTheDocument();
     });
   });
+
+  describe('with initialItems prop', () => {
+    it('should pre-fill purchase items when initialItems is provided', () => {
+      const initialItems = [
+        { productId: '00000000-0000-0000-0000-000000000001', quantity: 3 },
+        { productId: '00000000-0000-0000-0000-000000000002', quantity: 2 },
+      ];
+
+      render(
+        <RegisterPurchaseModal
+          isOpen={true}
+          products={mockProducts}
+          onSave={mockOnSave}
+          onCancel={mockOnCancel}
+          initialItems={initialItems}
+        />
+      );
+
+      // Should display pre-filled items
+      expect(screen.getByText(/Leche - 3/)).toBeInTheDocument();
+      expect(screen.getByText(/Pan - 2/)).toBeInTheDocument();
+    });
+
+    it('should allow adding more items to pre-filled list', async () => {
+      const initialItems = [
+        { productId: '00000000-0000-0000-0000-000000000001', quantity: 3 },
+      ];
+
+      render(
+        <RegisterPurchaseModal
+          isOpen={true}
+          products={mockProducts}
+          onSave={mockOnSave}
+          onCancel={mockOnCancel}
+          initialItems={initialItems}
+        />
+      );
+
+      // Pre-filled item should be there
+      expect(screen.getByText(/Leche - 3/)).toBeInTheDocument();
+
+      // Add another item
+      const productInput = screen.getByTestId('product-input');
+      const quantityInput = screen.getByPlaceholderText('Cantidad');
+      const addButton = screen.getByRole('button', { name: /añadir/i });
+
+      fireEvent.change(productInput, { target: { value: 'Pan' } });
+      fireEvent.change(quantityInput, { target: { value: '2' } });
+      fireEvent.click(addButton);
+
+      await waitFor(() => {
+        expect(screen.getByText(/Pan - 2/)).toBeInTheDocument();
+      });
+
+      // Both items should be present
+      expect(screen.getByText(/Leche - 3/)).toBeInTheDocument();
+      expect(screen.getByText(/Pan - 2/)).toBeInTheDocument();
+    });
+
+    it('should allow removing pre-filled items', async () => {
+      const initialItems = [
+        { productId: '00000000-0000-0000-0000-000000000001', quantity: 3 },
+      ];
+
+      render(
+        <RegisterPurchaseModal
+          isOpen={true}
+          products={mockProducts}
+          onSave={mockOnSave}
+          onCancel={mockOnCancel}
+          initialItems={initialItems}
+        />
+      );
+
+      expect(screen.getByText(/Leche - 3/)).toBeInTheDocument();
+
+      // Remove the pre-filled item
+      const removeButton = screen.getByRole('button', { name: /eliminar/i });
+      fireEvent.click(removeButton);
+
+      await waitFor(() => {
+        expect(screen.queryByText(/Leche - 3/)).not.toBeInTheDocument();
+      });
+    });
+
+    it('should handle initialItems with new product names (not UUIDs)', () => {
+      const initialItems = [
+        { productId: 'Tomates', quantity: 5 }, // New product
+        { productId: '00000000-0000-0000-0000-000000000001', quantity: 2 }, // Existing
+      ];
+
+      render(
+        <RegisterPurchaseModal
+          isOpen={true}
+          products={mockProducts}
+          onSave={mockOnSave}
+          onCancel={mockOnCancel}
+          initialItems={initialItems}
+        />
+      );
+
+      // Should display both items
+      expect(screen.getByText(/Tomates - 5/)).toBeInTheDocument();
+      expect(screen.getByText(/Leche - 2/)).toBeInTheDocument();
+
+      // New product should have "(nuevo)" badge
+      expect(screen.getByText(/\(nuevo\)/)).toBeInTheDocument();
+    });
+
+    it('should save all items including pre-filled ones when confirm is clicked', async () => {
+      const initialItems = [
+        { productId: '00000000-0000-0000-0000-000000000001', quantity: 3 },
+        { productId: '00000000-0000-0000-0000-000000000002', quantity: 2 },
+      ];
+
+      render(
+        <RegisterPurchaseModal
+          isOpen={true}
+          products={mockProducts}
+          onSave={mockOnSave}
+          onCancel={mockOnCancel}
+          initialItems={initialItems}
+        />
+      );
+
+      const confirmButton = screen.getByTestId('confirm-purchase-button');
+      fireEvent.click(confirmButton);
+
+      await waitFor(() => {
+        expect(mockOnSave).toHaveBeenCalledWith([
+          { productId: '00000000-0000-0000-0000-000000000001', quantity: 3 },
+          { productId: '00000000-0000-0000-0000-000000000002', quantity: 2 },
+        ]);
+      });
+    });
+  });
 });
