@@ -1,4 +1,4 @@
-import type { RawDetectedItem, MatchedDetectedItem } from '../../application/dtos/TicketScanResult'
+import type { RawDetectedItem, MatchedDetectedItem } from '../model/DetectedItem'
 import type { Product } from '../model/Product'
 import type { ConfidenceThresholds } from '../model/ConfidenceThresholds'
 

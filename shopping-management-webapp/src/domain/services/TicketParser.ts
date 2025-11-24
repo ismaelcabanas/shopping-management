@@ -1,4 +1,4 @@
-import type { RawDetectedItem } from '../../application/dtos/TicketScanResult'
+import type { RawDetectedItem } from '../model/DetectedItem'
 import { v4 as uuidv4 } from 'uuid'
 
 export class TicketParser {

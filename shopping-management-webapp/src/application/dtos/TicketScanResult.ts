@@ -1,18 +1,17 @@
-export type DetectionStatus = 'matched' | 'unmatched' | 'low-confidence'
+/**
+ * TicketScanResult - Application DTO
+ *
+ * Re-exporta los modelos de dominio y define el resultado del caso de uso.
+ * Los DTOs de aplicación pueden importar y usar modelos de dominio.
+ */
+import type {
+  DetectionStatus,
+  RawDetectedItem,
+  MatchedDetectedItem
+} from '../../domain/model/DetectedItem'
 
-export interface RawDetectedItem {
-  id: string
-  rawLine: string
-  productName: string
-  quantity: number
-  confidence: number
-}
-
-export interface MatchedDetectedItem extends RawDetectedItem {
-  matchedProductId?: string
-  matchedProductName?: string
-  status: DetectionStatus
-}
+// Re-export domain models for convenience
+export type { DetectionStatus, RawDetectedItem, MatchedDetectedItem }
 
 export interface TicketScanResult {
   rawText: string
