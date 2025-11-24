@@ -16,17 +16,17 @@ export class MockOCRService implements OCRService {
   async extractText(imageFile: File): Promise<string> {
     // If mockText was set explicitly, use it
     if (this.mockText) {
-      return Promise.resolve(this.mockText)
+      return this.mockText
     }
 
     // Otherwise, return predefined response based on filename
     const filename = imageFile.name.toLowerCase()
 
-    if (filename.includes('new')) return Promise.resolve(this.mockResponses['new-products'])
-    if (filename.includes('mixed')) return Promise.resolve(this.mockResponses['mixed'])
-    if (filename.includes('blank')) return Promise.resolve(this.mockResponses['blank'])
+    if (filename.includes('new')) return this.mockResponses['new-products']
+    if (filename.includes('mixed')) return this.mockResponses['mixed']
+    if (filename.includes('blank')) return this.mockResponses['blank']
 
-    return Promise.resolve(this.mockResponses['default'])
+    return this.mockResponses['default']
   }
 
   getProviderName(): string {
