@@ -14,7 +14,7 @@ export function TicketUploadView({ onFileSelect }: TicketUploadViewProps) {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center p-8 space-y-4">
+    <div className="flex flex-col items-center justify-center p-8 space-y-4" data-testid="ticket-upload-view">
       <Upload className="w-16 h-16 text-gray-400" />
 
       <div className="text-center">

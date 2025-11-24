@@ -87,7 +87,7 @@ describe('TicketResultsView', () => {
     render(<TicketResultsView items={items} onConfirm={vi.fn()} onCancel={vi.fn()} />)
 
     expect(screen.getByRole('button', { name: /confirmar/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /cancelar/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /cerrar/i })).toBeInTheDocument()
   })
 
   it('should call onConfirm when confirm button is clicked', async () => {
@@ -110,7 +110,7 @@ describe('TicketResultsView', () => {
 
     render(<TicketResultsView items={items} onConfirm={vi.fn()} onCancel={mockOnCancel} />)
 
-    const cancelButton = screen.getByRole('button', { name: /cancelar/i })
+    const cancelButton = screen.getByRole('button', { name: /cerrar/i })
     await user.click(cancelButton)
 
     expect(mockOnCancel).toHaveBeenCalled()

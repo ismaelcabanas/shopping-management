@@ -13,11 +13,24 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Ticket Scan Flow - Complete E2E', () => {
   test.beforeEach(async ({ page }) => {
-    // Setup: Navigate to product catalog
+    // Setup: Clear localStorage and add test products
     await page.goto('/catalog');
+    await page.evaluate(() => localStorage.clear());
+
+    // Add test products to match against
+    await page.evaluate(() => {
+      const products = [
+        { id: 'p1', name: 'Leche', category: 'Lácteos', usualConsumptionRate: 2 },
+        { id: 'p2', name: 'Pan', category: 'Panadería', usualConsumptionRate: 3 }
+      ];
+      localStorage.setItem('products', JSON.stringify(products));
+    });
+
+    // Reload to pick up products
+    await page.reload();
 
     // Wait for page to load
-    await expect(page.getByText('Mi Despensa')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Mi Despensa' })).toBeVisible();
   });
 
   test('should complete full ticket scan workflow with matched products', async ({ page }) => {
@@ -28,7 +41,7 @@ test.describe('Ticket Scan Flow - Complete E2E', () => {
     await page.click('[data-testid="scan-ticket-button"]');
 
     // Then: Ticket Scan modal opens
-    await expect(page.getByRole('heading', { name: /escanear ticket/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Escanear Ticket', exact: true })).toBeVisible();
 
     // When: User uploads a ticket image
     // Note: In real tests with Ollama, this would trigger actual OCR
@@ -50,7 +63,7 @@ test.describe('Ticket Scan Flow - Complete E2E', () => {
     await page.click('button:has-text("Confirmar")');
 
     // Then: Ticket Scan modal closes
-    await expect(page.getByRole('heading', { name: /escanear ticket/i })).not.toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Escanear Ticket', exact: true })).not.toBeVisible();
 
     // Then: Register Purchase modal opens with pre-filled items
     await expect(page.getByTestId('register-purchase-modal')).toBeVisible();
@@ -146,7 +159,7 @@ test.describe('Ticket Scan Flow - Complete E2E', () => {
     await page.click('button:has-text("Cerrar")');
 
     // Modal should close
-    await expect(page.getByRole('heading', { name: /escanear ticket/i })).not.toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Escanear Ticket', exact: true })).not.toBeVisible();
 
     // No purchase should be registered
     // (We can verify by checking that no toast appears)
@@ -221,7 +234,7 @@ test.describe('Ticket Scan Flow - Complete E2E', () => {
     await page.keyboard.press('Enter');
 
     // Modal should open
-    await expect(page.getByRole('heading', { name: /escanear ticket/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Escanear Ticket', exact: true })).toBeVisible();
   });
 
   test('should complete workflow in reasonable time', async ({ page }) => {
@@ -259,14 +272,27 @@ test.describe('Ticket Scan Flow - Complete E2E', () => {
     await page.reload();
 
     // Verify product still appears in catalog
-    await expect(page.getByText('Mi Despensa')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Mi Despensa' })).toBeVisible();
     // Products should persist (they're stored in localStorage)
   });
 });
 
 test.describe('Ticket Scan Flow - Error Scenarios', () => {
   test.beforeEach(async ({ page }) => {
+    // Setup: Clear localStorage and add test products
     await page.goto('/catalog');
+    await page.evaluate(() => localStorage.clear());
+
+    // Add test products
+    await page.evaluate(() => {
+      const products = [
+        { id: 'p1', name: 'Leche', category: 'Lácteos', usualConsumptionRate: 2 },
+        { id: 'p2', name: 'Pan', category: 'Panadería', usualConsumptionRate: 3 }
+      ];
+      localStorage.setItem('products', JSON.stringify(products));
+    });
+
+    await page.reload();
   });
 
   test('should handle OCR service errors gracefully', async ({ page }) => {
@@ -281,7 +307,7 @@ test.describe('Ticket Scan Flow - Error Scenarios', () => {
 
     // Should show error message (exact message depends on implementation)
     // For now, just verify modal doesn't crash and stays open
-    await expect(page.getByRole('heading', { name: /escanear ticket/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Escanear Ticket', exact: true })).toBeVisible();
   });
 
   test('should handle empty OCR results', async ({ page }) => {
@@ -308,7 +334,20 @@ test.describe('Ticket Scan Flow - Error Scenarios', () => {
 
 test.describe('Ticket Scan Flow - Integration with Product Catalog', () => {
   test.beforeEach(async ({ page }) => {
+    // Setup: Clear localStorage and add test products
     await page.goto('/catalog');
+    await page.evaluate(() => localStorage.clear());
+
+    // Add test products
+    await page.evaluate(() => {
+      const products = [
+        { id: 'p1', name: 'Leche', category: 'Lácteos', usualConsumptionRate: 2 },
+        { id: 'p2', name: 'Pan', category: 'Panadería', usualConsumptionRate: 3 }
+      ];
+      localStorage.setItem('products', JSON.stringify(products));
+    });
+
+    await page.reload();
   });
 
   test('should open scan modal from catalog page', async ({ page }) => {
@@ -319,7 +358,7 @@ test.describe('Ticket Scan Flow - Integration with Product Catalog', () => {
 
     // Click and verify modal opens
     await scanButton.click();
-    await expect(page.getByRole('heading', { name: /escanear ticket/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Escanear Ticket', exact: true })).toBeVisible();
   });
 
   test('should return to catalog after successful purchase', async ({ page }) => {
@@ -333,7 +372,7 @@ test.describe('Ticket Scan Flow - Integration with Product Catalog', () => {
     await page.click('[data-testid="confirm-purchase-button"]');
 
     // Should still be on catalog page
-    await expect(page.getByText('Mi Despensa')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Mi Despensa' })).toBeVisible();
     await expect(page).toHaveURL(/\/catalog/);
   });
 });

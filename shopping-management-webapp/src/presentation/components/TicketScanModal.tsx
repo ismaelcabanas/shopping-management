@@ -46,14 +46,7 @@ export function TicketScanModal({ isOpen, onClose, onConfirm }: TicketScanModalP
   }, [isProcessing, scanResult])
 
   const handleFileSelect = async (file: File) => {
-    // For MockOCRService, read file content and set as mock text
-    const reader = new FileReader()
-    reader.onload = async () => {
-      const text = reader.result as string
-      ocrService.setMockText(text)
-      await scanTicket(file)
-    }
-    reader.readAsText(file)
+    await scanTicket(file)
   }
 
   const handleConfirm = (items: MatchedDetectedItem[]) => {

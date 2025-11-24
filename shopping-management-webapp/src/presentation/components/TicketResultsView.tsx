@@ -30,7 +30,7 @@ export function TicketResultsView({ items, onConfirm, onCancel }: TicketResultsV
   }
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col space-y-4" data-testid="ticket-results-view">
       <div className="text-center">
         <h3 className="text-lg font-semibold text-gray-700 mb-2">
           Productos Detectados ({items.length})
@@ -41,9 +41,10 @@ export function TicketResultsView({ items, onConfirm, onCancel }: TicketResultsV
       </div>
 
       <div className="max-h-96 overflow-y-auto space-y-2">
-        {items.map((item) => (
+        {items.map((item, index) => (
           <div
             key={item.id}
+            data-testid={`detected-item-${index}`}
             data-status={item.status}
             className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200"
           >
@@ -73,10 +74,16 @@ export function TicketResultsView({ items, onConfirm, onCancel }: TicketResultsV
       </div>
 
       <div className="flex gap-2 pt-4 border-t border-gray-200">
-        <Button variant="secondary" onClick={onCancel} fullWidth>
-          Cancelar
+        <Button
+          data-testid="cancel-ticket-scan-button"
+          variant="secondary"
+          onClick={onCancel}
+          fullWidth
+        >
+          Cerrar
         </Button>
         <Button
+          data-testid="confirm-ticket-scan-button"
           variant="primary"
           onClick={() => onConfirm(items)}
           fullWidth

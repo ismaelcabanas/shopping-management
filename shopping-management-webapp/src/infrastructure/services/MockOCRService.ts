@@ -2,13 +2,31 @@ import type { OCRService } from '../../application/ports/OCRService'
 
 export class MockOCRService implements OCRService {
   private mockText: string
+  private mockResponses: Record<string, string> = {
+    'default': 'Leche | 2\nPan | 3',
+    'new-products': 'Tomates | 5\nPlátanos | 2',
+    'mixed': 'Leche | 2\nTomates | 5\nPan | 1',
+    'blank': ''
+  }
 
   constructor(mockText: string = '') {
     this.mockText = mockText
   }
 
-  async extractText(): Promise<string> {
-    return Promise.resolve(this.mockText)
+  async extractText(imageFile: File): Promise<string> {
+    // If mockText was set explicitly, use it
+    if (this.mockText) {
+      return Promise.resolve(this.mockText)
+    }
+
+    // Otherwise, return predefined response based on filename
+    const filename = imageFile.name.toLowerCase()
+
+    if (filename.includes('new')) return Promise.resolve(this.mockResponses['new-products'])
+    if (filename.includes('mixed')) return Promise.resolve(this.mockResponses['mixed'])
+    if (filename.includes('blank')) return Promise.resolve(this.mockResponses['blank'])
+
+    return Promise.resolve(this.mockResponses['default'])
   }
 
   getProviderName(): string {
