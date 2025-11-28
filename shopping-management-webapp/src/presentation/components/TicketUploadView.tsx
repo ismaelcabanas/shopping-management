@@ -1,5 +1,4 @@
 import { Upload } from 'lucide-react'
-import { Button } from '../shared/components/Button'
 
 interface TicketUploadViewProps {
   onFileSelect: (file: File) => void
@@ -34,10 +33,11 @@ export function TicketUploadView({ onFileSelect }: TicketUploadViewProps) {
         className="hidden"
         aria-label="Selecciona una imagen del ticket"
       />
-      <label htmlFor="ticket-upload">
-        <Button variant="primary" type="button">
-          Seleccionar Imagen
-        </Button>
+      <label
+        htmlFor="ticket-upload"
+        className="inline-flex items-center justify-center rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary cursor-pointer bg-primary text-white hover:bg-primary-hover py-3 px-6 text-base min-h-touch"
+      >
+        Seleccionar Imagen
       </label>
 
       <p className="text-xs text-gray-400">
