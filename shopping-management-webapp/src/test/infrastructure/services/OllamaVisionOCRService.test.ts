@@ -101,7 +101,7 @@ describe('OllamaVisionOCRService', () => {
 
     expect(requestBody.model).toBe('llava');
     expect(requestBody.stream).toBe(false);
-    expect(requestBody.prompt).toContain('shopping receipt');
+    expect(requestBody.prompt).toContain('shopping assistant');
     expect(requestBody.prompt).toContain('product_name | quantity');
   });
 

@@ -106,23 +106,25 @@ export class OllamaVisionOCRService implements OCRService {
    * Build the prompt for Ollama to extract products from ticket
    */
   private buildPrompt(): string {
-    return `Analyze this shopping receipt/ticket image and extract ONLY the products with their quantities.
+    return `You are a helpful shopping assistant analyzing a grocery receipt for personal inventory management.
 
-IMPORTANT RULES:
-1. Format each line as: "product_name | quantity"
-2. Extract ONLY the purchased items (products bought)
-3. Ignore prices, totals, store name, date, and other metadata
-4. If quantity is not visible, assume 1
-5. Use the exact product name as shown on the ticket
-6. One product per line
-7. Do NOT include explanations, just the data
+Task: Extract ONLY product names and quantities from this receipt. This is the user's own receipt for their personal shopping list app.
 
-Example output:
-Leche Entera | 2
-Pan de Molde | 1
-Arroz Integral | 3
-Tomates | 1
+Output format (one per line):
+product_name | quantity
 
-Now extract the products from the image:`;
+Rules:
+- Only extract product names and quantities
+- Skip prices, dates, store info, totals
+- If no quantity shown, use 1
+- Use exact product names from receipt
+- No explanations, just data
+
+Example:
+Milk | 2
+Bread | 1
+Rice | 3
+
+Extract products:`;
   }
 }

@@ -2,6 +2,14 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { TicketScanModal } from '../../../presentation/components/TicketScanModal'
 
+// Mock GeminiVisionOCRService to avoid API key requirement in tests
+vi.mock('../../../infrastructure/services/ocr/GeminiVisionOCRService', () => ({
+  GeminiVisionOCRService: vi.fn().mockImplementation(() => ({
+    extractText: vi.fn().mockResolvedValue('Mock product | 1'),
+    getProviderName: vi.fn().mockReturnValue('mock-gemini')
+  }))
+}))
+
 describe('TicketScanModal', () => {
   beforeEach(() => {
     vi.clearAllMocks()

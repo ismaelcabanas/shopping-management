@@ -4,7 +4,7 @@ import { TicketUploadView } from './TicketUploadView'
 import { TicketProcessingView } from './TicketProcessingView'
 import { TicketResultsView } from './TicketResultsView'
 import { useTicketScan } from '../hooks/useTicketScan'
-import { MockOCRService } from '../../infrastructure/services/MockOCRService'
+import { GeminiVisionOCRService } from '../../infrastructure/services/ocr/GeminiVisionOCRService'
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository'
 import type { MatchedDetectedItem } from '../../application/dtos/TicketScanResult'
 
@@ -20,10 +20,12 @@ export function TicketScanModal({ isOpen, onClose, onConfirm }: TicketScanModalP
   const [currentView, setCurrentView] = useState<ViewState>('upload')
 
   // Initialize services
-  const ocrService = new MockOCRService()
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY
+  const model = import.meta.env.VITE_GEMINI_MODEL || 'gemini-2.0-flash'
+  const ocrService = new GeminiVisionOCRService(apiKey, model)
   const productRepository = new LocalStorageProductRepository()
 
-  const { scanResult, isProcessing, scanTicket, resetScan } = useTicketScan(
+  const { scanResult, isProcessing, error, scanTicket, resetScan } = useTicketScan(
     ocrService,
     productRepository
   )
@@ -42,18 +44,15 @@ export function TicketScanModal({ isOpen, onClose, onConfirm }: TicketScanModalP
       setCurrentView('processing')
     } else if (scanResult) {
       setCurrentView('results')
+    } else if (error) {
+      // If there's an error, go back to upload view to show error
+      setCurrentView('upload')
     }
-  }, [isProcessing, scanResult])
+  }, [isProcessing, scanResult, error])
 
   const handleFileSelect = async (file: File) => {
-    // For MockOCRService, read file content and set as mock text
-    const reader = new FileReader()
-    reader.onload = async () => {
-      const text = reader.result as string
-      ocrService.setMockText(text)
-      await scanTicket(file)
-    }
-    reader.readAsText(file)
+    // GeminiVisionOCRService handles the file directly
+    await scanTicket(file)
   }
 
   const handleConfirm = (items: MatchedDetectedItem[]) => {
@@ -69,7 +68,18 @@ export function TicketScanModal({ isOpen, onClose, onConfirm }: TicketScanModalP
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Escanear Ticket">
-      {currentView === 'upload' && <TicketUploadView onFileSelect={handleFileSelect} />}
+      {currentView === 'upload' && (
+        <div>
+          <TicketUploadView onFileSelect={handleFileSelect} />
+          {error && (
+            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-800">
+                <strong>Error:</strong> {error.message}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
       {currentView === 'processing' && <TicketProcessingView />}
       {currentView === 'results' && scanResult && (
         <TicketResultsView
