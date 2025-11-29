@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import type { OCRService } from '../../application/ports/OCRService'
 import type { ProductRepository } from '../../domain/repositories/ProductRepository'
 import type { TicketScanResult } from '../../application/dtos/TicketScanResult'
@@ -30,17 +30,18 @@ export function useTicketScan(
       const result = await scanTicketUseCase.execute({ imageFile: file })
       setScanResult(result)
     } catch (err) {
+      console.error('Error scanning ticket:', err)
       setError(err instanceof Error ? err : new Error('Unknown error'))
     } finally {
       setIsProcessing(false)
     }
   }
 
-  const resetScan = (): void => {
+  const resetScan = useCallback((): void => {
     setScanResult(null)
     setError(null)
     setIsProcessing(false)
-  }
+  }, [])
 
   return {
     scanResult,

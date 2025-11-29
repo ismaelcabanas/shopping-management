@@ -3,7 +3,8 @@ import { v4 as uuidv4 } from 'uuid'
 
 export class TicketParser {
   parseLine(line: string): RawDetectedItem | null {
-    const pattern = /^(.+?)\s+(\d+)\s+[\d,.]+$/
+    // Format: "product_name | quantity"
+    const pattern = /^(.+?)\s*\|\s*(\d+)$/
     const match = line.match(pattern)
 
     if (match) {
@@ -12,7 +13,7 @@ export class TicketParser {
         rawLine: line,
         productName: match[1].trim(),
         quantity: parseInt(match[2]),
-        confidence: 0.5
+        confidence: 0.8
       }
     }
 

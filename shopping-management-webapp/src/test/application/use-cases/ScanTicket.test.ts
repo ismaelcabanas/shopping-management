@@ -49,8 +49,8 @@ describe('ScanTicket', () => {
     scanTicket = new ScanTicket(ocrService, productRepository)
   })
 
-  it('should extract text from image and parse products', async () => {
-    const ticketText = 'Leche Pascual    2    3.00\nPan de Molde    1    1.20'
+  it('should extract text from image and parse products (pipe format)', async () => {
+    const ticketText = 'Leche Pascual | 2\nPan de Molde | 1'
     ocrService.setMockText(ticketText)
 
     productRepository.setProducts([

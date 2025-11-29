@@ -52,8 +52,8 @@ describe('useTicketScan', () => {
     expect(result.current.error).toBeNull()
   })
 
-  it('should scan ticket and return result', async () => {
-    const ticketText = 'Leche Pascual    2    3.00'
+  it('should scan ticket and return result (pipe format)', async () => {
+    const ticketText = 'Leche Pascual | 2'
     ocrService.setMockText(ticketText)
 
     productRepository.setProducts([
