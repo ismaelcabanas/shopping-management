@@ -19,24 +19,39 @@ The Shopping Management app needs OCR (Optical Character Recognition) capabiliti
 
 ## 📊 Available Options
 
-### 1. Ollama + LLaVA (Local LLM with Vision) ⭐ **SELECTED**
+### 1. Ollama + LLaVA (Local LLM with Vision) ⚠️ **NOT RECOMMENDED**
 
 **Type:** Multimodal LLM (Local)
 **Cost:** Free (unlimited)
 **Privacy:** 100% local, data never leaves your machine
+**Status:** Tested but proved unreliable for receipt OCR
 
 #### Advantages
 - ✅ **Zero cost:** No API fees, no limits
-- ✅ **Context understanding:** Interprets ticket structure, not just text extraction
 - ✅ **Privacy:** All processing happens locally
 - ✅ **No internet required:** Works offline
-- ✅ **Single-step extraction:** Gets products + quantities in one pass
-- ✅ **Robust:** Handles handwriting, poor quality images
 
 #### Disadvantages
-- ❌ **Requires local resources:** Needs GPU for optimal performance (CPU works but slower)
+- ❌ **Unreliable output:** Generates infinite/repeated text
+- ❌ **Hallucinations:** Invents products not in the ticket
+- ❌ **Privacy rejections:** Sometimes refuses to process receipts citing "personal information"
+- ❌ **Inconsistent quality:** Cannot reliably extract structured data
+- ❌ **Requires local resources:** Needs GPU for optimal performance
 - ❌ **Slower:** 5-15 seconds per image (vs <2s for cloud APIs)
 - ❌ **Setup required:** Need to install Ollama + pull model
+
+#### Real-World Testing Results (Feature 009)
+**Model Tested:** `llava` (7b)
+**Test Scenario:** Spanish grocery receipt with 15 products
+
+**Issues Encountered:**
+1. Generated infinite output loops
+2. Added explanations despite being told not to
+3. Hallucinated products not present in receipt
+4. Refused processing claiming privacy concerns
+5. Inconsistent format across multiple attempts
+
+**Conclusion:** Not suitable for production use in ticket scanning. Consider for other use cases.
 
 #### When to Use
 - **Development:** Perfect for unlimited testing
@@ -75,24 +90,39 @@ See: `src/infrastructure/services/ocr/OllamaVisionOCRService.ts`
 
 ---
 
-### 2. Google Gemini (Cloud LLM with Vision)
+### 2. Google Gemini (Cloud LLM with Vision) ⭐ **RECOMMENDED & ACTIVE**
 
 **Type:** Multimodal LLM (Cloud)
 **Cost:** Free tier: 60 requests/minute
 **Privacy:** Data sent to Google Cloud
+**Status:** Production-ready, actively used in Feature 009
 
 #### Advantages
+- ✅ **Proven reliability:** Successfully extracts 15 products from Spanish receipts
+- ✅ **Intelligent quantity detection:** Handles "6U" in names and "6 Un x 0.97 €/un" multi-line patterns
 - ✅ **Generous free tier:** 60 req/min is enough for personal use
 - ✅ **Excellent quality:** State-of-the-art multimodal understanding
-- ✅ **Fast:** <2 seconds per image
+- ✅ **Fast:** 2-4 seconds per image (tested)
 - ✅ **No infrastructure:** Just API calls
-- ✅ **Context understanding:** Like Ollama, understands ticket structure
+- ✅ **Reliable output:** Consistent formatting, no hallucinations
 
 #### Disadvantages
 - ❌ **Requires internet:** Won't work offline
 - ❌ **Privacy concerns:** Images sent to Google
 - ❌ **Rate limits:** 60 req/min (usually sufficient)
 - ❌ **Potential cost:** May incur charges if exceeding free tier
+
+#### Real-World Testing Results (Feature 009)
+**Model Used:** `gemini-2.0-flash`
+**Test Scenario:** Spanish grocery receipt with 15 products
+
+**Success Metrics:**
+- ✅ 100% product extraction accuracy (15/15 products)
+- ✅ Correct quantity detection from product names ("LECHUGA 6U" → 6)
+- ✅ Correct multi-line quantity parsing ("6 Un x 0.97 €/un" → quantity 6)
+- ✅ Consistent pipe-separated format (`product | quantity`)
+- ✅ Average response time: 2-4 seconds
+- ✅ No hallucinations or fabricated products
 
 #### When to Use
 - **Production:** When you need cloud deployment
@@ -299,17 +329,17 @@ export class TesseractOCRService implements IOCRService {
 
 ---
 
-## 🏆 Recommendation Matrix
+## 🏆 Recommendation Matrix (Updated after Feature 009 Testing)
 
-| Scenario | Recommended Option | Alternative |
-|----------|-------------------|-------------|
-| **Development** | Ollama + LLaVA | Tesseract |
-| **Personal use (local)** | Ollama + LLaVA | - |
-| **Production (cloud)** | Google Gemini | Claude Haiku |
-| **Privacy-critical** | Ollama + LLaVA | Tesseract |
-| **Budget-critical** | Ollama + LLaVA | Gemini (free tier) |
-| **Speed-critical** | Gemini/Claude | Tesseract |
-| **Offline required** | Ollama + LLaVA | Tesseract |
+| Scenario | Recommended Option | Alternative | Notes |
+|----------|-------------------|-------------|-------|
+| **Development** | **Google Gemini** | MockOCRService | Ollama unreliable for receipts |
+| **Production** | **Google Gemini** | Claude Haiku | Proven in production |
+| **Personal use** | **Google Gemini** | - | Free tier sufficient |
+| **Privacy-critical** | Tesseract (+ custom parsing) | - | Ollama not recommended |
+| **Budget-critical** | **Google Gemini** (free tier) | Tesseract | 60 req/min free |
+| **Speed-critical** | **Google Gemini** | Claude Haiku | 2-4s per ticket |
+| **Offline required** | Tesseract (+ custom parsing) | - | LLMs require internet |
 
 ---
 
@@ -378,9 +408,12 @@ export interface IOCRService {
 
 ## 🚀 Current Implementation
 
-**Active Provider:** Ollama + LLaVA
-**Implementation:** `src/infrastructure/services/ocr/OllamaVisionOCRService.ts`
-**Fallback:** MockOCRService (for testing without Ollama)
+**Active Provider:** Google Gemini Vision (gemini-2.0-flash)
+**Implementation:** `src/infrastructure/services/ocr/GeminiVisionOCRService.ts`
+**Status:** Production-ready (Feature 009 completed)
+**Testing:** Successfully tested with Spanish grocery receipts (15/15 products extracted correctly)
+**Alternative:** OllamaVisionOCRService (available but not recommended for receipts)
+**Fallback:** MockOCRService (for testing without API keys)
 
 ---
 
@@ -405,5 +438,5 @@ export interface IOCRService {
 
 ---
 
-**Last Updated:** 2024-01-21
-**Status:** Active (Ollama implementation in progress)
+**Last Updated:** 2025-11-30
+**Status:** Active (Gemini implementation complete in Feature 009)
