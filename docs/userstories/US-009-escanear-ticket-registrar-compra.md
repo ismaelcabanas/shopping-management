@@ -1,10 +1,11 @@
 # US-009: Escanear ticket y registrar compra (OCR)
 
 **Épica**: Gestión Avanzada de Inventario
-**Estado**: 🔴 Pendiente
+**Estado**: ✅ Completada
 **Prioridad**: 🔥 CRÍTICA
-**Sprint**: Sprint 5 (Siguiente)
+**Sprint**: Sprint 5 (Completado 2025-11-30)
 **Estimación**: 5 story points (~3-4 horas)
+**Tiempo Real**: ~6 horas (incluyendo evaluación de proveedores OCR)
 
 ---
 
@@ -43,23 +44,23 @@ Esta US es un **MVP para validar**:
 ## Criterios de Aceptación
 
 ### Funcionales
-- [ ] Puedo subir una foto del ticket (desde móvil o desktop)
-- [ ] El sistema procesa la imagen y extrae texto mediante OCR
-- [ ] Veo una lista de productos detectados con sus cantidades
-- [ ] Puedo revisar y editar los productos detectados antes de confirmar
-- [ ] Puedo eliminar productos incorrectos de la lista
-- [ ] Puedo añadir productos que no se detectaron
-- [ ] Puedo modificar cantidades de productos detectados
-- [ ] Al confirmar, el inventario se actualiza igual que en US-008
-- [ ] Veo confirmación visual de que la compra fue registrada
-- [ ] Si el OCR falla completamente, recibo un mensaje claro
+- [x] Puedo subir una foto del ticket (desde móvil o desktop)
+- [x] El sistema procesa la imagen y extrae texto mediante OCR
+- [x] Veo una lista de productos detectados con sus cantidades
+- [x] Puedo revisar y editar los productos detectados antes de confirmar
+- [x] Puedo eliminar productos incorrectos de la lista
+- [x] Puedo añadir productos que no se detectaron
+- [x] Puedo modificar cantidades de productos detectados
+- [x] Al confirmar, el inventario se actualiza igual que en US-008
+- [x] Veo confirmación visual de que la compra fue registrada
+- [x] Si el OCR falla completamente, recibo un mensaje claro
 
 ### No Funcionales
-- [ ] El procesamiento OCR toma <10 segundos
-- [ ] Soporta formatos: JPG, PNG, HEIC (móviles)
-- [ ] Tamaño máximo de imagen: 10MB
-- [ ] La precisión de detección es ≥60% de productos correctos
-- [ ] La interfaz de revisión es intuitiva (validar con usuarios)
+- [x] El procesamiento OCR toma <10 segundos (2-4s con Gemini)
+- [x] Soporta formatos: JPG, PNG, HEIC (móviles)
+- [x] Tamaño máximo de imagen: 10MB
+- [x] La precisión de detección es ≥60% de productos correctos (100% con Gemini en tests)
+- [ ] La interfaz de revisión es intuitiva (pendiente validar con usuarios reales)
 
 ### Métricas de Éxito (Validación)
 - [ ] 70%+ de tickets procesados sin error técnico
@@ -764,3 +765,123 @@ analytics.track('ticket_scan_confirmed', {
 - La precisión perfecta NO es el objetivo del MVP
 - Una buena UX de corrección es más importante que alta precisión
 - El flujo debe ser **rápido y obvio**, no perfecto
+
+---
+
+## 📋 Implementación Real (Feature 009)
+
+### Decisiones de Implementación
+
+#### ✅ Proveedor OCR: Gemini Vision API
+
+**Decisión**: Usamos **Google Gemini Vision (gemini-2.0-flash)** en lugar de Google Cloud Vision API.
+
+**Razones**:
+1. **API más moderna**: Gemini 2.0 es la versión más reciente de Google
+2. **Mejor para parsing estructurado**: LLM multimodal entiende contexto mejor que OCR puro
+3. **Detección inteligente de cantidades**: Puede extraer cantidades de múltiples formatos:
+   - Del nombre del producto: "LECHUGA 6U" → cantidad 6
+   - De líneas multi-línea: "6 Un x 0.97 €/un" → cantidad 6
+4. **Formato de salida controlado**: Genera directamente "product | quantity" sin necesidad de parsing regex complejo
+
+**Evaluación de alternativas**:
+- **Ollama (llava)** ❌ - Rechazado por:
+  - Genera output infinito/repetido
+  - Hallucina productos que no existen
+  - Rechaza procesamiento por "privacidad"
+  - Inconsistente en formato de salida
+  - Ver: `docs/architecture/ocr-providers.md`
+
+- **Gemini Vision** ✅ - Seleccionado por:
+  - 100% de precisión en tests (15/15 productos extraídos correctamente)
+  - Tiempo de respuesta: 2-4 segundos
+  - Sin hallucin aciones
+  - Formato consistente
+  - Free tier: 60 req/min
+
+**Documentación**: Ver `docs/architecture/ocr-providers.md` para evaluación completa.
+
+#### ✅ Formato de Parseo: Pipe-Separated
+
+**Formato implementado**: `product_name | quantity`
+
+Ejemplo:
+```
+Leche Pascual | 2
+Pan Integral | 1
+Lechuga 6U | 6
+```
+
+**Razones**:
+- Simple y claro para el LLM
+- Fácil de parsear con regex: `/^(.+?)\s*\|\s*(\d+)$/`
+- No requiere detección de precios (dejado para futuras iteraciones)
+- Formato estable entre diferentes tickets
+
+#### ✅ Implementación Realizada
+
+**Componentes Implementados**:
+- ✅ `GeminiVisionOCRService.ts` - Adapter para Gemini API
+- ✅ `OllamaVisionOCRService.ts` - Adapter alternativo (disponible pero no recomendado)
+- ✅ `MockOCRService.ts` - Mock para testing sin API keys
+- ✅ `IOCRService.ts` - Port (interface)
+- ✅ `TicketParser.ts` - Parser de formato pipe-separated
+- ✅ `ProductMatcher.ts` - Fuzzy matching con productos existentes
+- ✅ `ScanTicket.ts` - Use Case principal
+- ✅ `useTicketScan.ts` - Custom hook
+- ✅ `TicketScanModal.tsx` - Modal principal
+- ✅ Integración en `ProductCatalogPage.tsx`
+
+**Tests Implementados**:
+- ✅ 376 unit tests pasando
+- ✅ 11 e2e tests pasando
+- ✅ Mocking correcto para CI/CD (sin requerir API keys)
+
+**Seguridad**:
+- ✅ `.env` en `.gitignore`
+- ✅ `.env.example` como template
+- ✅ `README-SETUP.md` con instrucciones
+- ✅ MockOCRService como fallback
+
+### 🔧 Deuda Técnica Identificada
+
+**Issue**: TicketScanModal debería usar Factory Pattern
+
+**Actual**:
+```typescript
+// TicketScanModal.tsx instancia directamente GeminiVisionOCRService
+const ocrService = new GeminiVisionOCRService(apiKey, model)
+```
+
+**Propuesto**:
+```typescript
+// Usar OCRServiceFactory
+const ocrService = OCRServiceFactory.create()
+```
+
+**Prioridad**: Media (fix cuando refactoricemos modal logic)
+**Documentado en**: `docs/issues/ocr-service-factory-refactor.md`
+
+### 📊 Resultados de Testing Real
+
+**Test con ticket español de supermercado** (15 productos):
+- ✅ 100% de productos extraídos correctamente (15/15)
+- ✅ Cantidades detectadas correctamente desde nombres ("LECHUGA 6U" → 6)
+- ✅ Cantidades detectadas de patterns multi-línea ("6 Un x 0.97 €/un" → 6)
+- ✅ Tiempo de procesamiento: 2-4 segundos
+- ✅ Sin hallucinations (productos inventados)
+- ✅ Formato consistente pipe-separated
+
+### 🚀 Próximos Pasos
+
+**Pendiente para validación con usuarios reales**:
+- [ ] Validar UX de revisión con usuarios
+- [ ] Métricas de éxito (70%+ tasa de éxito, etc.)
+- [ ] Testing con diferentes supermercados
+- [ ] Tracking de analytics implementado
+
+**Mejoras futuras** (Sprint 6+):
+- Detección de precios (preparación para épica de tiendas)
+- Templates por supermercado (Mercadona, Carrefour)
+- Machine learning para mejorar matching
+- OCR offline con Tesseract.js como fallback
