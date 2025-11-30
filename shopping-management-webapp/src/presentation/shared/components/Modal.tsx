@@ -159,6 +159,7 @@ export function Modal({
         className={`
           relative bg-white rounded-lg shadow-2xl w-full
           ${sizeClasses[size]}
+          max-h-[90vh] flex flex-col
           animate-scale-in
           transition-all
           ${className}
@@ -167,7 +168,7 @@ export function Modal({
       >
         {/* Header with title and close button */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
+          <div className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0">
             {title && (
               <h2
                 id={`modal-title-${titleId}`}
@@ -190,7 +191,7 @@ export function Modal({
         )}
 
         {/* Content */}
-        <div className="p-6">{children}</div>
+        <div className="p-6 overflow-y-auto flex-1">{children}</div>
       </div>
     </div>
   )
