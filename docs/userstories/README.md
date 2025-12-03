@@ -43,7 +43,13 @@ Cada archivo incluye:
 | [US-007](./US-007-eliminar-producto.md) | Eliminar un producto del sistema | 🟢 Completado | Sprint 4 | 13 |
 | [US-008](./US-008-registrar-compra-actualizar-inventario.md) | Registrar compra y actualizar inventario | 🟢 Completado | Sprint 4 | 25+ |
 
-**Total de tests automatizados**: 278+ tests
+### Épica 3: Automatización de Compras
+
+| ID | Título | Estado | Sprint | Tests |
+|----|--------|--------|--------|-------|
+| [US-009](./US-009-escanear-ticket-registrar-compra.md) | Escanear ticket y registrar compra (OCR) | 🟢 Completado | Sprint 5 | 40+ |
+
+**Total de tests automatizados**: 387+ tests (376 unit + 11 e2e)
 
 ---
 
@@ -64,64 +70,146 @@ Cada archivo incluye:
 **🎯 CRUD Completo**: ✅ Create, Read, Update, Delete
 **🛒 Gestión de Compras**: ✅ Registro de compras con actualización automática de inventario
 
-### 📸 Épica 3: Automatización de Compras (Sprint 5 - CRÍTICA) 🔥
-- 🔴 **[US-009](./US-009-escanear-ticket-registrar-compra.md)**: Escanear ticket y registrar compra (OCR) (5 SP, ~3-4h) 🔥
-- 🔴 **US-010**: Mejorar matching de productos (OCR v2) (5 SP, ~3-4h)
+### 📸 Épica 3: Automatización de Compras ✅ PARCIALMENTE COMPLETADA
+- ✅ **[US-009](./US-009-escanear-ticket-registrar-compra.md)**: Escanear ticket y registrar compra (OCR) (5 SP, ~6h) 🎉
+- 🔴 **US-010**: Mejorar matching de productos con catálogo (5 SP, ~3-5h) 🔥 CRÍTICA
+  - **Como** usuario con catálogo estático de productos
+  - **Quiero** que los productos del ticket se normalicen automáticamente con mi catálogo
+  - **Para** evitar duplicados y mantener mi inventario limpio
+  - **Problema Actual**:
+    - "PLATANO GABECERAS CANARIO" no matchea con "Plátanos" → crea duplicado ❌
+    - "TOMATE ROJO RAMA" no matchea con "Tomates" → crea duplicado ❌
+    - "KIWI ZESPRI" no matchea con "Kiwis" → crea duplicado ❌
+    - "HUEVOS SUELTAS GALLINERO AL" no matchea con "Huevos" → crea duplicado ❌
+  - **Solución Propuesta**:
+    - Normalización avanzada: singulares/plurales, marcas, descripciones
+    - Matching por primera palabra clave
+    - Threshold más flexible (60% vs 80% actual)
+    - UI de revisión manual de matches antes de confirmar
+  - **Componentes**:
+    - `ProductMatcher.ts` (mejorar algoritmo)
+    - `MatchReviewModal.tsx` (nuevo - UI de revisión)
+    - Tests con casos reales del usuario
 
-**🎯 Objetivo**: Reducir friction del registro de compras de 10 min → <3 min
-**⚠️ Validación Crítica**: Esta épica determina el éxito del producto
+**✅ Logro Sprint 5**: OCR implementado con 100% precisión usando Gemini Vision API
+**🎯 Impacto**: Reducción de friction del registro de compras de 10 min → 2-4 segundos
+**📊 Resultados**: 387+ tests (376 unit + 11 e2e), 15/15 productos extraídos correctamente
+**⚠️ Problema Detectado**: Matching de productos crea duplicados - necesita mejora urgente antes de continuar
 
-### 🔄 Épica 4: Gestión de Consumo (Alta Prioridad)
-- 🔴 **US-011**: Registrar consumo de productos (3 SP, ~2-3h)
+### 🔄 Épica 4: Gestión de Consumo (🔥 ALTA PRIORIDAD - Sprint 6)
+- 🔴 **US-011**: Registrar consumo de productos (3 SP, ~2-3h) ⭐⭐⭐⭐⭐
+  - **Como** usuario que usó un producto
+  - **Quiero** registrar su consumo desde el catálogo
+  - **Para** que el inventario refleje lo que realmente tengo
+  - **Impacto**: Sin consumo, el inventario es estático y pierde utilidad
+
 - 🔴 **US-012**: Ver historial de consumo (2 SP, ~1-2h)
-- 🔴 **US-013**: Alertas de stock bajo (3 SP, ~2-3h)
-- 🔴 **US-014**: Añadir automáticamente a lista de compras (5 SP, ~3-4h)
+  - **Como** usuario
+  - **Quiero** ver cuándo y cuánto he consumido de cada producto
+  - **Para** entender mis patrones de uso
 
-**🎯 CRUD Completo del Ciclo**: Comprar → Almacenar → **Consumir** → Alertar
+- 🔴 **US-013**: Alertas de stock bajo (3 SP, ~2-3h) ⭐⭐⭐⭐
+  - **Como** usuario
+  - **Quiero** ver alertas visuales cuando un producto está bajo de stock
+  - **Para** saber qué necesito comprar sin revisarlo todo
+  - **Features**: Badge rojo, filtro "stock bajo", contador
 
-### 📊 Épica 5: Inteligencia de Consumo (Media Prioridad)
-- 🔴 **US-015**: Calcular tasa de consumo promedio (3 SP)
-- 🔴 **US-016**: Predecir cuándo se agotará un producto (5 SP)
-- 🔴 **US-017**: Sugerir cantidad óptima de compra (5 SP)
+- 🔴 **US-014**: Lista de compras automática (5 SP, ~3-4h) ⭐⭐⭐⭐⭐
+  - **Como** usuario
+  - **Quiero** generar automáticamente una lista de compras
+  - **Para** no tener que recordar qué productos me faltan
+  - **Features**: Añade productos con stock < minimum_stock, cantidad sugerida, integración con RegisterPurchase
+  - **Impacto**: 🚀 ALTO - Cierra el ciclo completo del producto
 
-### 🏪 Épica 6: Gestión de Tiendas (Baja Prioridad)
-- 🔴 **US-018**: Crear una tienda (3 SP)
-- 🔴 **US-019**: Registrar precio de producto en tienda (3 SP)
-- 🔴 **US-020**: Comparar precios entre tiendas (5 SP)
+**🎯 Objetivo Épica 4**: Completar el ciclo → Comprar → Almacenar → **Consumir** → Alertar → Lista Automática
+**⚠️ CRÍTICO**: Sin consumo, el sistema no genera valor sostenible
 
-### 📝 Épica 7: Lista de Compras Inteligente (Futuro)
-- 🔴 **US-021**: Generar lista de compras automática (5 SP)
-- 🔴 **US-022**: Optimizar lista por tienda más económica (8 SP)
+### 📊 Épica 5: Inteligencia de Consumo (Media Prioridad - Sprint 7+)
+- 🔴 **US-015**: Dashboard con estadísticas (5 SP, ~3-4h) ⭐⭐⭐⭐
+  - **Como** usuario
+  - **Quiero** ver estadísticas de mi inventario
+  - **Para** entender mis patrones de consumo
+  - **Features**: Total productos, valor inventario, top 5 consumidos, tendencias, gráficas
+  - **Stack**: Recharts o Chart.js para visualizaciones
+
+- 🔴 **US-016**: Predicción de agotamiento (5 SP, ~3-4h) ⭐⭐⭐
+  - **Como** usuario
+  - **Quiero** saber cuándo se agotará un producto
+  - **Para** planificar mi próxima compra
+  - **Features**: Tasa de consumo promedio, predicción de fecha, alertas proactivas
+  - **Tech**: Regresión lineal simple sobre historial
+
+- 🔴 **US-017**: Sugerir cantidad óptima de compra (5 SP, ~3-4h)
+  - **Como** usuario
+  - **Quiero** que el sistema sugiera cuánto comprar
+  - **Para** no quedarme sin stock ni sobre-comprar
+
+**🎯 Objetivo Épica 5**: Agregar inteligencia predictiva basada en datos de consumo
+
+### 🏪 Épica 6: Gestión de Tiendas (Baja Prioridad - Sprint 8+)
+- 🔴 **US-018**: Crear y gestionar tiendas (3 SP, ~2-3h)
+  - Crear tiendas (Mercadona, Carrefour, Lidl)
+  - Asignar tienda al registrar compra
+  - Ver historial de compras por tienda
+
+- 🔴 **US-019**: Historial de precios por tienda (5 SP, ~3-4h)
+  - Registrar precio por producto al comprar
+  - Ver gráfica de evolución de precios
+  - Comparar precios entre tiendas
+
+- 🔴 **US-020**: Comparación de precios entre tiendas (5 SP, ~3-4h)
+  - Calcular costo de lista de compras por tienda
+  - Sugerir tienda más económica
+
+**🎯 Objetivo Épica 6**: Optimización de precios (visión original del proyecto)
+**⚠️ Nota**: Requiere datos de múltiples compras, menor prioridad que cerrar ciclo básico
+
+### 💡 Quick Wins (Mejoras Rápidas - Alta Relación Impacto/Esfuerzo)
+- 🔴 **QW-001**: Búsqueda y filtros en catálogo (2 SP, ~1-2h) ⭐⭐⭐⭐
+  - Buscador por nombre, filtro por categoría, ordenar por stock/nombre/fecha
+
+- 🔴 **QW-002**: Exportar/Importar datos (3 SP, ~2-3h) ⭐⭐⭐
+  - Exportar inventario a CSV/JSON, importar productos, backup automático
+
+- 🔴 **QW-003**: Modo oscuro (1 SP, ~30 min) ⭐⭐
+  - Toggle en HomePage, persistencia, mejora accesibilidad
+
+- 🔴 **QW-004**: PWA (Progressive Web App) (3 SP, ~2-3h) ⭐⭐⭐⭐
+  - Instalar app en móvil, funciona offline, notificaciones push
+
+**🎯 Objetivo Quick Wins**: Mejoras rápidas de UX sin cambios arquitectónicos grandes
 
 ---
 
 ## Estadísticas del Proyecto
 
 ### Por Estado
-- **Completadas**: 8 historias (36%)
+- **Completadas**: 9 historias (35%) ⬆️ +1 desde Sprint 5
 - **En Progreso**: 0 historias (0%)
-- **Pendientes**: 14 historias (64%)
-- **Total**: 22 historias planificadas
+- **Pendientes**: 17 historias (65%)
+- **Total**: 26 historias planificadas (incluyendo Quick Wins)
 
 ### Por Épica
 - **Épica 1** (Gestión Inventario): 5/5 completadas ✅
 - **Épica 2** (Gestión Avanzada): 3/3 completadas ✅
-- **Épica 3** (Automatización Compras): 0/2 completadas 🔥
-- **Épica 4** (Gestión Consumo): 0/4 completadas
+- **Épica 3** (Automatización Compras): 1/2 completadas (50%) ⭐
+- **Épica 4** (Gestión Consumo): 0/4 completadas 🔥 ALTA PRIORIDAD
 - **Épica 5** (Inteligencia Consumo): 0/3 completadas
 - **Épica 6** (Tiendas): 0/3 completadas
-- **Épica 7** (Lista Inteligente): 0/2 completadas
+- **Quick Wins**: 0/4 completadas
 
 ### Por Prioridad
-- 🔥 **Crítica**: 1 historia (US-009 - OCR)
-- 🔴 **Alta**: 7 historias (Épica 3-4)
-- 🟡 **Media**: 3 historias (Épica 5)
-- 🟢 **Baja**: 3 historias (Épica 6-7)
+- 🔥 **Crítica**: 1 historia (US-010 - Matching está roto, BLOQUEANTE)
+- 🔥 **Alta**: 5 historias (US-011, US-013, US-014, US-015, QW-001, QW-004)
+- 🟡 **Media**: 5 historias (US-012, US-016, US-017, QW-002)
+- 🟢 **Baja**: 6 historias (US-018, US-019, US-020, QW-003)
 
 ### Cobertura de Tests
-- **Total tests**: 278+ tests
+- **Total tests**: 387+ tests ⬆️ +109 desde Sprint 4
+- **Unit tests**: 376 tests
+- **E2E tests**: 11 tests
 - **Metodología**: Test-Driven Development (TDD)
-- **Cobertura**: ~85%
+- **Cobertura**: ~90% (mejorada con OCR tests)
 
 ---
 
@@ -259,15 +347,45 @@ Añadir la nueva historia a la tabla correspondiente.
 - Historias completadas: 3
 - Story points: 10 (US-006: 3 SP, US-007: 2 SP, US-008: 5 SP)
 
-### Sprint 5 (Planificado - CRÍTICO) 🔥
-- **US-009**: Escanear ticket (OCR) - 5 SP 🔥
-- **US-011**: Registrar consumo - 3 SP
-- **US-012**: Ver historial consumo - 2 SP
-- **Total planificado**: 10 SP
+### Sprint 5 ✅ COMPLETADO
+- ✅ **US-009**: Escanear ticket (OCR) - 5 SP (real: 6h)
+- **Story points completados**: 5 SP
 
-**Objetivo Sprint 5**: Validar OCR como factor crítico de éxito + cerrar ciclo de consumo
+**✅ Logro**: OCR con 100% precisión usando Gemini Vision API
+**📊 Resultados**: 387+ tests, 15/15 productos extraídos, 2-4s de respuesta
+**🎯 Impacto**: Reducción de friction del registro de compras de 10 min → 2-4 segundos
 
-**Velocity promedio**: ~9 story points/sprint
+### Sprint 6 (Propuesto - CRÍTICO) 🔥
+**Objetivo**: Arreglar matching y empezar ciclo de consumo
+
+**⚠️ IMPORTANTE**: US-010 debe completarse PRIMERO (matching está roto)
+
+**Opción A - Arreglar Matching + Consumo (8 SP, ~5-8h):**
+- 🔴 **US-010**: Mejorar matching productos - 5 SP 🔥 CRÍTICA (PRIMERO)
+- 🔴 **US-011**: Registrar consumo - 3 SP ⭐⭐⭐⭐⭐
+
+**Opción B - Solo Arreglar Matching (5 SP, ~3-5h):**
+- 🔴 **US-010**: Mejorar matching productos - 5 SP 🔥 CRÍTICA
+  - Parte 1: Mejorar algoritmo (3 SP, ~2-3h)
+  - Parte 2: UI revisión manual (2 SP, ~1-2h)
+
+**Opción C - Arreglar Matching + Quick Win (7 SP, ~4-7h):**
+- 🔴 **US-010**: Mejorar matching productos - 5 SP 🔥 CRÍTICA
+- 🔴 **QW-001**: Búsqueda y filtros - 2 SP ⭐⭐⭐⭐
+
+**Recomendación**: Opción A (arregla matching crítico + avanza en consumo)
+
+### Sprint 7+ (Roadmap Futuro)
+**Sprint 7 - Inteligencia de Datos:**
+- US-015: Dashboard estadísticas (5 SP)
+- US-016: Predicción agotamiento (5 SP)
+
+**Sprint 8 - Optimización:**
+- US-018: Gestión tiendas (3 SP)
+- US-019: Historial precios (5 SP)
+- QW-004: PWA (3 SP)
+
+**Velocity promedio**: 9 SP/sprint (basado en Sprints 1-5)
 
 ---
 
@@ -291,6 +409,62 @@ Baja Prioridad + Bajo Valor → Backlog
 
 ---
 
+## Roadmap Visual
+
+```
+✅ Sprint 1-2: Inventario Básico (CRUD de productos)
+✅ Sprint 3-4: Gestión Avanzada (Editar, Eliminar, Compras)
+✅ Sprint 5: Automatización OCR (Escanear tickets)
+
+📍 ESTAMOS AQUÍ
+
+🔥 Sprint 6 (CRÍTICO): Gestión de Consumo
+    ├─ US-011: Registrar consumo ⭐⭐⭐⭐⭐
+    ├─ US-013: Alertas stock bajo ⭐⭐⭐⭐
+    └─ US-014: Lista automática ⭐⭐⭐⭐⭐
+
+    ⚠️ Sin consumo, el inventario es estático y pierde valor
+    ✅ Con consumo, el ciclo está completo: Comprar → Almacenar → Consumir → Alertar
+
+📊 Sprint 7: Inteligencia de Datos
+    ├─ US-015: Dashboard estadísticas
+    └─ US-016: Predicción agotamiento
+
+🏪 Sprint 8+: Optimización de Precios
+    ├─ US-018: Gestión de tiendas
+    ├─ US-019: Historial precios
+    └─ US-020: Comparación precios
+
+💡 Quick Wins (Paralelizables)
+    ├─ QW-001: Búsqueda y filtros ⭐⭐⭐⭐
+    ├─ QW-002: Export/Import datos
+    ├─ QW-003: Modo oscuro
+    └─ QW-004: PWA (móvil) ⭐⭐⭐⭐
+```
+
+### Decisión Recomendada para Sprint 6
+
+**Opción A (Recomendada)**: Completar Épica 4 completa
+- **Tiempo**: 7-9 horas
+- **Story Points**: 11 SP
+- **Impacto**: 🚀 MÁXIMO - Cierra ciclo completo del producto
+- **Riesgo**: Bajo (similar a features ya implementadas)
+- **Resultado**: Producto funcionalmente completo y sostenible
+
+**Alternativa B**: Solo US-011 (Consumo)
+- **Tiempo**: 2-3 horas
+- **Story Points**: 3 SP
+- **Impacto**: 🟡 Medio - Habilita futuras features pero no cierra ciclo
+- **Ventaja**: Entrega más rápida, validación incremental
+
+**Alternativa C**: Quick Wins (UX)
+- **Tiempo**: 2-3 horas
+- **Story Points**: 3 SP
+- **Impacto**: 🟢 Bajo - Mejoras cosméticas sin cambiar funcionalidad core
+- **Ventaja**: Satisfacción inmediata, bajo riesgo
+
+---
+
 ## Referencias
 
 - [ARCHITECTURE_ANALYSIS.md](../ARCHITECTURE_ANALYSIS.md) - Análisis arquitectónico completo
@@ -306,3 +480,10 @@ Para sugerir nuevas historias, reportar issues, o discutir cambios:
 - Crear issue en GitHub
 - Discutir en planning meetings
 - Proponer en retrospectivas
+
+---
+
+**Última actualización**: Sprint 5 completado (2025-11-30)
+**Próximo hito**: Sprint 6 - Completar ciclo de consumo
+**Tests actuales**: 387+ tests (90% cobertura)
+**Historias completadas**: 9/26 (35%)
