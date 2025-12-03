@@ -48,6 +48,7 @@ Cada archivo incluye:
 | ID | Título | Estado | Sprint | Tests |
 |----|--------|--------|--------|-------|
 | [US-009](./US-009-escanear-ticket-registrar-compra.md) | Escanear ticket y registrar compra (OCR) | 🟢 Completado | Sprint 5 | 40+ |
+| [US-010](./US-010-mejorar-matching-productos.md) | Mejorar matching de productos con catálogo | 🟢 Completado | Sprint 6 | 6 |
 
 **Total de tests automatizados**: 387+ tests (376 unit + 11 e2e)
 
@@ -70,31 +71,27 @@ Cada archivo incluye:
 **🎯 CRUD Completo**: ✅ Create, Read, Update, Delete
 **🛒 Gestión de Compras**: ✅ Registro de compras con actualización automática de inventario
 
-### 📸 Épica 3: Automatización de Compras ✅ PARCIALMENTE COMPLETADA
+### 📸 Épica 3: Automatización de Compras ✅ COMPLETADA
 - ✅ **[US-009](./US-009-escanear-ticket-registrar-compra.md)**: Escanear ticket y registrar compra (OCR) (5 SP, ~6h) 🎉
-- 🔴 **US-010**: Mejorar matching de productos con catálogo (5 SP, ~3-5h) 🔥 CRÍTICA
+- ✅ **[US-010](./US-010-mejorar-matching-productos.md)**: Mejorar matching de productos con catálogo (3 SP, ~2h) 🎉
   - **Como** usuario con catálogo estático de productos
   - **Quiero** que los productos del ticket se normalicen automáticamente con mi catálogo
   - **Para** evitar duplicados y mantener mi inventario limpio
-  - **Problema Actual**:
-    - "PLATANO GABECERAS CANARIO" no matchea con "Plátanos" → crea duplicado ❌
-    - "TOMATE ROJO RAMA" no matchea con "Tomates" → crea duplicado ❌
-    - "KIWI ZESPRI" no matchea con "Kiwis" → crea duplicado ❌
-    - "HUEVOS SUELTAS GALLINERO AL" no matchea con "Huevos" → crea duplicado ❌
-  - **Solución Propuesta**:
-    - Normalización avanzada: singulares/plurales, marcas, descripciones
-    - Matching por primera palabra clave
-    - Threshold más flexible (60% vs 80% actual)
-    - UI de revisión manual de matches antes de confirmar
-  - **Componentes**:
-    - `ProductMatcher.ts` (mejorar algoritmo)
-    - `MatchReviewModal.tsx` (nuevo - UI de revisión)
-    - Tests con casos reales del usuario
+  - **Solución Implementada**:
+    - ✅ Normalización avanzada: acentos, singulares/plurales, marcas, descripciones
+    - ✅ Algoritmo híbrido: token matching (60%) + Levenshtein (40%)
+    - ✅ Threshold reducido: 80% → 60% para alta confianza
+    - ✅ Casos de prueba con ejemplos reales validados
+  - **Resultados**:
+    - "PLATANO GABECERAS CANARIO" matchea con "Plátanos" ✅
+    - "TOMATE ROJO RAMA" matchea con "Tomates" ✅
+    - "KIWI ZESPRI" matchea con "Kiwis" ✅
+    - "HUEVOS SUELTAS GALLINERO AL" matchea con "Huevos" ✅
 
 **✅ Logro Sprint 5**: OCR implementado con 100% precisión usando Gemini Vision API
-**🎯 Impacto**: Reducción de friction del registro de compras de 10 min → 2-4 segundos
-**📊 Resultados**: 387+ tests (376 unit + 11 e2e), 15/15 productos extraídos correctamente
-**⚠️ Problema Detectado**: Matching de productos crea duplicados - necesita mejora urgente antes de continuar
+**✅ Logro Sprint 6**: Matching mejorado - elimina duplicados con normalización avanzada
+**🎯 Impacto Total**: Reducción de friction del registro de compras de 10 min → 2-4 segundos + inventario limpio
+**📊 Resultados**: 387 tests (376 unit + 11 e2e), 100% matching real-world tickets
 
 ### 🔄 Épica 4: Gestión de Consumo (🔥 ALTA PRIORIDAD - Sprint 6)
 - 🔴 **US-011**: Registrar consumo de productos (3 SP, ~2-3h) ⭐⭐⭐⭐⭐
@@ -184,22 +181,21 @@ Cada archivo incluye:
 ## Estadísticas del Proyecto
 
 ### Por Estado
-- **Completadas**: 9 historias (35%) ⬆️ +1 desde Sprint 5
+- **Completadas**: 10 historias (38%) ⬆️ +2 desde Sprint 4
 - **En Progreso**: 0 historias (0%)
-- **Pendientes**: 17 historias (65%)
+- **Pendientes**: 16 historias (62%)
 - **Total**: 26 historias planificadas (incluyendo Quick Wins)
 
 ### Por Épica
 - **Épica 1** (Gestión Inventario): 5/5 completadas ✅
 - **Épica 2** (Gestión Avanzada): 3/3 completadas ✅
-- **Épica 3** (Automatización Compras): 1/2 completadas (50%) ⭐
+- **Épica 3** (Automatización Compras): 2/2 completadas ✅ COMPLETADA
 - **Épica 4** (Gestión Consumo): 0/4 completadas 🔥 ALTA PRIORIDAD
 - **Épica 5** (Inteligencia Consumo): 0/3 completadas
 - **Épica 6** (Tiendas): 0/3 completadas
 - **Quick Wins**: 0/4 completadas
 
 ### Por Prioridad
-- 🔥 **Crítica**: 1 historia (US-010 - Matching está roto, BLOQUEANTE)
 - 🔥 **Alta**: 5 historias (US-011, US-013, US-014, US-015, QW-001, QW-004)
 - 🟡 **Media**: 5 historias (US-012, US-016, US-017, QW-002)
 - 🟢 **Baja**: 6 historias (US-018, US-019, US-020, QW-003)

@@ -22,7 +22,7 @@ export class ConfidenceThresholds {
   }
 
   static default(): ConfidenceThresholds {
-    return new ConfidenceThresholds(0.8, 0.5)
+    return new ConfidenceThresholds(0.6, 0.5)
   }
 
   isHighConfidence(confidence: number): boolean {
