@@ -71,7 +71,7 @@ Cada archivo incluye:
 **🎯 CRUD Completo**: ✅ Create, Read, Update, Delete
 **🛒 Gestión de Compras**: ✅ Registro de compras con actualización automática de inventario
 
-### 📸 Épica 3: Automatización de Compras ✅ COMPLETADA
+### 📸 Épica 3: Automatización de Compras (🔥 ALTA PRIORIDAD - Sprint 7)
 - ✅ **[US-009](./US-009-escanear-ticket-registrar-compra.md)**: Escanear ticket y registrar compra (OCR) (5 SP, ~6h) 🎉
 - ✅ **[US-010](./US-010-mejorar-matching-productos.md)**: Mejorar matching de productos con catálogo (3 SP, ~2h) 🎉
   - **Como** usuario con catálogo estático de productos
@@ -87,31 +87,36 @@ Cada archivo incluye:
     - "TOMATE ROJO RAMA" matchea con "Tomates" ✅
     - "KIWI ZESPRI" matchea con "Kiwis" ✅
     - "HUEVOS SUELTAS GALLINERO AL" matchea con "Huevos" ✅
+- 🔴 **US-011**: Excluir productos del escaneo de ticket (2 SP, ~1-2h) ⭐⭐⭐⭐
+  - **Como** usuario que escanea tickets de compra
+  - **Quiero** poder eliminar productos del listado escaneado antes de confirmar
+  - **Para** añadir a mi inventario solo los productos relevantes para mi despensa
+  - **Features**: Botón papelera por producto, recalcular total, sin persistencia de exclusiones
 
 **✅ Logro Sprint 5**: OCR implementado con 100% precisión usando Gemini Vision API
 **✅ Logro Sprint 6**: Matching mejorado - elimina duplicados con normalización avanzada
 **🎯 Impacto Total**: Reducción de friction del registro de compras de 10 min → 2-4 segundos + inventario limpio
 **📊 Resultados**: 387 tests (376 unit + 11 e2e), 100% matching real-world tickets
 
-### 🔄 Épica 4: Gestión de Consumo (🔥 ALTA PRIORIDAD - Sprint 6)
-- 🔴 **US-011**: Registrar consumo de productos (3 SP, ~2-3h) ⭐⭐⭐⭐⭐
+### 🔄 Épica 4: Gestión de Consumo (🔥 ALTA PRIORIDAD - Sprint 7+)
+- 🔴 **US-012**: Registrar consumo de productos (3 SP, ~2-3h) ⭐⭐⭐⭐⭐
   - **Como** usuario que usó un producto
   - **Quiero** registrar su consumo desde el catálogo
   - **Para** que el inventario refleje lo que realmente tengo
   - **Impacto**: Sin consumo, el inventario es estático y pierde utilidad
 
-- 🔴 **US-012**: Ver historial de consumo (2 SP, ~1-2h)
+- 🔴 **US-013**: Ver historial de consumo (2 SP, ~1-2h)
   - **Como** usuario
   - **Quiero** ver cuándo y cuánto he consumido de cada producto
   - **Para** entender mis patrones de uso
 
-- 🔴 **US-013**: Alertas de stock bajo (3 SP, ~2-3h) ⭐⭐⭐⭐
+- 🔴 **US-014**: Alertas de stock bajo (3 SP, ~2-3h) ⭐⭐⭐⭐
   - **Como** usuario
   - **Quiero** ver alertas visuales cuando un producto está bajo de stock
   - **Para** saber qué necesito comprar sin revisarlo todo
   - **Features**: Badge rojo, filtro "stock bajo", contador
 
-- 🔴 **US-014**: Lista de compras automática (5 SP, ~3-4h) ⭐⭐⭐⭐⭐
+- 🔴 **US-015**: Lista de compras automática (5 SP, ~3-4h) ⭐⭐⭐⭐⭐
   - **Como** usuario
   - **Quiero** generar automáticamente una lista de compras
   - **Para** no tener que recordar qué productos me faltan
@@ -121,40 +126,40 @@ Cada archivo incluye:
 **🎯 Objetivo Épica 4**: Completar el ciclo → Comprar → Almacenar → **Consumir** → Alertar → Lista Automática
 **⚠️ CRÍTICO**: Sin consumo, el sistema no genera valor sostenible
 
-### 📊 Épica 5: Inteligencia de Consumo (Media Prioridad - Sprint 7+)
-- 🔴 **US-015**: Dashboard con estadísticas (5 SP, ~3-4h) ⭐⭐⭐⭐
+### 📊 Épica 5: Inteligencia de Consumo (Media Prioridad - Sprint 8+)
+- 🔴 **US-016**: Dashboard con estadísticas (5 SP, ~3-4h) ⭐⭐⭐⭐
   - **Como** usuario
   - **Quiero** ver estadísticas de mi inventario
   - **Para** entender mis patrones de consumo
   - **Features**: Total productos, valor inventario, top 5 consumidos, tendencias, gráficas
   - **Stack**: Recharts o Chart.js para visualizaciones
 
-- 🔴 **US-016**: Predicción de agotamiento (5 SP, ~3-4h) ⭐⭐⭐
+- 🔴 **US-017**: Predicción de agotamiento (5 SP, ~3-4h) ⭐⭐⭐
   - **Como** usuario
   - **Quiero** saber cuándo se agotará un producto
   - **Para** planificar mi próxima compra
   - **Features**: Tasa de consumo promedio, predicción de fecha, alertas proactivas
   - **Tech**: Regresión lineal simple sobre historial
 
-- 🔴 **US-017**: Sugerir cantidad óptima de compra (5 SP, ~3-4h)
+- 🔴 **US-018**: Sugerir cantidad óptima de compra (5 SP, ~3-4h)
   - **Como** usuario
   - **Quiero** que el sistema sugiera cuánto comprar
   - **Para** no quedarme sin stock ni sobre-comprar
 
 **🎯 Objetivo Épica 5**: Agregar inteligencia predictiva basada en datos de consumo
 
-### 🏪 Épica 6: Gestión de Tiendas (Baja Prioridad - Sprint 8+)
-- 🔴 **US-018**: Crear y gestionar tiendas (3 SP, ~2-3h)
+### 🏪 Épica 6: Gestión de Tiendas (Baja Prioridad - Sprint 9+)
+- 🔴 **US-019**: Crear y gestionar tiendas (3 SP, ~2-3h)
   - Crear tiendas (Mercadona, Carrefour, Lidl)
   - Asignar tienda al registrar compra
   - Ver historial de compras por tienda
 
-- 🔴 **US-019**: Historial de precios por tienda (5 SP, ~3-4h)
+- 🔴 **US-020**: Historial de precios por tienda (5 SP, ~3-4h)
   - Registrar precio por producto al comprar
   - Ver gráfica de evolución de precios
   - Comparar precios entre tiendas
 
-- 🔴 **US-020**: Comparación de precios entre tiendas (5 SP, ~3-4h)
+- 🔴 **US-021**: Comparación de precios entre tiendas (5 SP, ~3-4h)
   - Calcular costo de lista de compras por tienda
   - Sugerir tienda más económica
 
@@ -181,24 +186,24 @@ Cada archivo incluye:
 ## Estadísticas del Proyecto
 
 ### Por Estado
-- **Completadas**: 10 historias (38%) ⬆️ +2 desde Sprint 4
+- **Completadas**: 10 historias (37%) ⬆️ +2 desde Sprint 4
 - **En Progreso**: 0 historias (0%)
-- **Pendientes**: 16 historias (62%)
-- **Total**: 26 historias planificadas (incluyendo Quick Wins)
+- **Pendientes**: 17 historias (63%)
+- **Total**: 27 historias planificadas (incluyendo Quick Wins)
 
 ### Por Épica
 - **Épica 1** (Gestión Inventario): 5/5 completadas ✅
 - **Épica 2** (Gestión Avanzada): 3/3 completadas ✅
-- **Épica 3** (Automatización Compras): 2/2 completadas ✅ COMPLETADA
+- **Épica 3** (Automatización Compras): 2/3 completadas (US-011 pendiente)
 - **Épica 4** (Gestión Consumo): 0/4 completadas 🔥 ALTA PRIORIDAD
 - **Épica 5** (Inteligencia Consumo): 0/3 completadas
 - **Épica 6** (Tiendas): 0/3 completadas
 - **Quick Wins**: 0/4 completadas
 
 ### Por Prioridad
-- 🔥 **Alta**: 5 historias (US-011, US-013, US-014, US-015, QW-001, QW-004)
-- 🟡 **Media**: 5 historias (US-012, US-016, US-017, QW-002)
-- 🟢 **Baja**: 6 historias (US-018, US-019, US-020, QW-003)
+- 🔥 **Alta**: 6 historias (US-011, US-012, US-014, US-015, QW-001, QW-004)
+- 🟡 **Media**: 5 historias (US-013, US-016, US-017, US-018, QW-002)
+- 🟢 **Baja**: 6 historias (US-019, US-020, US-021, QW-003)
 
 ### Cobertura de Tests
 - **Total tests**: 387+ tests ⬆️ +109 desde Sprint 4
