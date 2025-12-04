@@ -407,4 +407,143 @@ describe('RegisterPurchaseModal', () => {
       });
     });
   });
+
+  describe('US-011: Exclude products from scanned list', () => {
+    it('should display trash icon button for each scanned product', () => {
+      const initialItems = [
+        { productId: '00000000-0000-0000-0000-000000000001', quantity: 3 },
+        { productId: '00000000-0000-0000-0000-000000000002', quantity: 2 },
+      ];
+
+      render(
+        <RegisterPurchaseModal
+          isOpen={true}
+          products={mockProducts}
+          onSave={mockOnSave}
+          onCancel={mockOnCancel}
+          initialItems={initialItems}
+        />
+      );
+
+      // Should have trash icon buttons (one per product)
+      const deleteButtons = screen.getAllByRole('button', { name: /eliminar/i });
+      expect(deleteButtons).toHaveLength(2);
+
+      // Verify buttons have accessible labels
+      deleteButtons.forEach(button => {
+        expect(button).toHaveAccessibleName(/eliminar/i);
+      });
+    });
+
+    it('should remove product from list when delete button is clicked', async () => {
+      const initialItems = [
+        { productId: '00000000-0000-0000-0000-000000000001', quantity: 3 },
+        { productId: '00000000-0000-0000-0000-000000000002', quantity: 2 },
+      ];
+
+      render(
+        <RegisterPurchaseModal
+          isOpen={true}
+          products={mockProducts}
+          onSave={mockOnSave}
+          onCancel={mockOnCancel}
+          initialItems={initialItems}
+        />
+      );
+
+      // Verify both products are displayed
+      expect(screen.getByText(/Leche - 3/)).toBeInTheDocument();
+      expect(screen.getByText(/Pan - 2/)).toBeInTheDocument();
+
+      // Click delete button for first product (Leche)
+      const deleteButtons = screen.getAllByRole('button', { name: /eliminar/i });
+      fireEvent.click(deleteButtons[0]);
+
+      // Leche should be removed from the list
+      await waitFor(() => {
+        expect(screen.queryByText(/Leche - 3/)).not.toBeInTheDocument();
+      });
+
+      // Pan should still be in the list
+      expect(screen.getByText(/Pan - 2/)).toBeInTheDocument();
+    });
+
+    it('should not include removed products when saving', async () => {
+      const initialItems = [
+        { productId: '00000000-0000-0000-0000-000000000001', quantity: 3 },
+        { productId: '00000000-0000-0000-0000-000000000002', quantity: 2 },
+      ];
+
+      render(
+        <RegisterPurchaseModal
+          isOpen={true}
+          products={mockProducts}
+          onSave={mockOnSave}
+          onCancel={mockOnCancel}
+          initialItems={initialItems}
+        />
+      );
+
+      // Remove first product (Leche)
+      const deleteButtons = screen.getAllByRole('button', { name: /eliminar/i });
+      fireEvent.click(deleteButtons[0]);
+
+      // Wait for removal
+      await waitFor(() => {
+        expect(screen.queryByText(/Leche - 3/)).not.toBeInTheDocument();
+      });
+
+      // Click confirm
+      const confirmButton = screen.getByTestId('confirm-purchase-button');
+      fireEvent.click(confirmButton);
+
+      // onSave should only be called with Pan (not Leche)
+      await waitFor(() => {
+        expect(mockOnSave).toHaveBeenCalledWith([
+          { productId: '00000000-0000-0000-0000-000000000002', quantity: 2 },
+        ]);
+      });
+    });
+
+    it('should allow removing multiple products sequentially', async () => {
+      const initialItems = [
+        { productId: '00000000-0000-0000-0000-000000000001', quantity: 3 },
+        { productId: '00000000-0000-0000-0000-000000000002', quantity: 2 },
+      ];
+
+      render(
+        <RegisterPurchaseModal
+          isOpen={true}
+          products={mockProducts}
+          onSave={mockOnSave}
+          onCancel={mockOnCancel}
+          initialItems={initialItems}
+        />
+      );
+
+      // Verify both products are displayed
+      expect(screen.getByText(/Leche - 3/)).toBeInTheDocument();
+      expect(screen.getByText(/Pan - 2/)).toBeInTheDocument();
+
+      // Remove both products
+      const deleteButtons = screen.getAllByRole('button', { name: /eliminar/i });
+      fireEvent.click(deleteButtons[0]); // Remove Leche
+
+      await waitFor(() => {
+        expect(screen.queryByText(/Leche - 3/)).not.toBeInTheDocument();
+      });
+
+      // After removing first product, get delete buttons again
+      const remainingDeleteButtons = screen.getAllByRole('button', { name: /eliminar/i });
+      fireEvent.click(remainingDeleteButtons[0]); // Remove Pan
+
+      await waitFor(() => {
+        expect(screen.queryByText(/Pan - 2/)).not.toBeInTheDocument();
+      });
+
+      // Confirm button should be disabled (no products left)
+      const confirmButton = screen.getByTestId('confirm-purchase-button');
+      expect(confirmButton).toBeDisabled();
+    });
+  });
 });
