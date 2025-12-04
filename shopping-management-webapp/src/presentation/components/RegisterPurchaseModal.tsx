@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Trash2 } from 'lucide-react';
 import type { Product } from '../../domain/model/Product';
 import type { PurchaseItemInput } from '../../application/use-cases/RegisterPurchase';
 import { Modal } from '../shared/components/Modal';
@@ -246,8 +247,9 @@ export function RegisterPurchaseModal({
                     variant="ghost"
                     size="sm"
                     className="text-danger hover:text-danger-hover"
+                    aria-label="Eliminar producto"
                   >
-                    Eliminar
+                    <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
               ))}
