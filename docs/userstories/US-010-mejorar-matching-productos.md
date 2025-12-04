@@ -218,8 +218,9 @@ Se implementó un algoritmo híbrido que combina:
 
 ## Referencias
 
-- **Propuesta OpenSpec**: `openspec/changes/improve-product-matching/proposal.md`
-- **Especificación**: `openspec/changes/improve-product-matching/specs/product-matching/spec.md`
-- **Tasks Implementados**: `openspec/changes/improve-product-matching/tasks.md`
+- **Propuesta OpenSpec (archivada)**: `openspec/changes/archive/2025-12-04-improve-product-matching/proposal.md`
+- **Especificación (archivada)**: `openspec/changes/archive/2025-12-04-improve-product-matching/specs/product-matching/spec.md`
+- **Especificación permanente**: `openspec/specs/product-matching/spec.md`
+- **Tasks Implementados**: `openspec/changes/archive/2025-12-04-improve-product-matching/tasks.md`
 - **Tests**: `src/test/domain/services/ProductMatcher.test.ts`
 - **Código**: `src/domain/services/ProductMatcher.ts`, `src/domain/model/ConfidenceThresholds.ts`
