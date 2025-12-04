@@ -115,4 +115,81 @@ describe('TicketResultsView', () => {
 
     expect(mockOnCancel).toHaveBeenCalled()
   })
+
+  describe('US-011: Product exclusion from scanned list', () => {
+    it('should display trash icon button for each product', () => {
+      const items = [mockMatchedItem, mockLowConfidenceItem]
+      render(<TicketResultsView items={items} onConfirm={vi.fn()} onCancel={vi.fn()} />)
+
+      const deleteButtons = screen.getAllByRole('button', { name: /eliminar producto/i })
+      expect(deleteButtons).toHaveLength(2)
+    })
+
+    it('should remove product from list when delete button is clicked', async () => {
+      const user = userEvent.setup()
+      const items = [mockMatchedItem, mockLowConfidenceItem]
+      render(<TicketResultsView items={items} onConfirm={vi.fn()} onCancel={vi.fn()} />)
+
+      // Verify both products are displayed
+      expect(screen.getByText('Leche Entera')).toBeInTheDocument()
+      expect(screen.getByText('Pan de Molde')).toBeInTheDocument()
+
+      // Click delete button for first product
+      const deleteButtons = screen.getAllByRole('button', { name: /eliminar producto/i })
+      await user.click(deleteButtons[0])
+
+      // First product should be removed
+      expect(screen.queryByText('Leche Entera')).not.toBeInTheDocument()
+      // Second product should still be there
+      expect(screen.getByText('Pan de Molde')).toBeInTheDocument()
+    })
+
+    it('should update product count when products are removed', async () => {
+      const user = userEvent.setup()
+      const items = [mockMatchedItem, mockLowConfidenceItem, mockUnmatchedItem]
+      render(<TicketResultsView items={items} onConfirm={vi.fn()} onCancel={vi.fn()} />)
+
+      // Initial count should be 3
+      expect(screen.getByText(/productos detectados \(3\)/i)).toBeInTheDocument()
+
+      // Remove one product
+      const deleteButtons = screen.getAllByRole('button', { name: /eliminar producto/i })
+      await user.click(deleteButtons[0])
+
+      // Count should be 2
+      expect(screen.getByText(/productos detectados \(2\)/i)).toBeInTheDocument()
+    })
+
+    it('should only confirm remaining products after deletions', async () => {
+      const user = userEvent.setup()
+      const mockOnConfirm = vi.fn()
+      const items = [mockMatchedItem, mockLowConfidenceItem]
+      render(<TicketResultsView items={items} onConfirm={mockOnConfirm} onCancel={vi.fn()} />)
+
+      // Remove first product
+      const deleteButtons = screen.getAllByRole('button', { name: /eliminar producto/i })
+      await user.click(deleteButtons[0])
+
+      // Click confirm
+      const confirmButton = screen.getByRole('button', { name: /confirmar/i })
+      await user.click(confirmButton)
+
+      // onConfirm should only be called with remaining item
+      expect(mockOnConfirm).toHaveBeenCalledWith([mockLowConfidenceItem])
+    })
+
+    it('should disable confirm button when all products are removed', async () => {
+      const user = userEvent.setup()
+      const items = [mockMatchedItem]
+      render(<TicketResultsView items={items} onConfirm={vi.fn()} onCancel={vi.fn()} />)
+
+      // Remove the only product
+      const deleteButton = screen.getByRole('button', { name: /eliminar producto/i })
+      await user.click(deleteButton)
+
+      // Confirm button should be disabled
+      const confirmButton = screen.getByRole('button', { name: /confirmar/i })
+      expect(confirmButton).toBeDisabled()
+    })
+  })
 })

@@ -1,4 +1,5 @@
-import { CheckCircle, AlertCircle, XCircle } from 'lucide-react'
+import { useState } from 'react'
+import { CheckCircle, AlertCircle, XCircle, Trash2 } from 'lucide-react'
 import { Button } from '../shared/components/Button'
 import type { MatchedDetectedItem } from '../../application/dtos/TicketScanResult'
 
@@ -9,6 +10,7 @@ interface TicketResultsViewProps {
 }
 
 export function TicketResultsView({ items, onConfirm, onCancel }: TicketResultsViewProps) {
+  const [displayedItems, setDisplayedItems] = useState<MatchedDetectedItem[]>(items)
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'matched':
@@ -29,11 +31,15 @@ export function TicketResultsView({ items, onConfirm, onCancel }: TicketResultsV
     return item.productName
   }
 
+  const handleRemoveItem = (itemId: string) => {
+    setDisplayedItems(displayedItems.filter(item => item.id !== itemId))
+  }
+
   return (
     <div className="flex flex-col space-y-4">
       <div className="text-center">
         <h3 className="text-lg font-semibold text-gray-700 mb-2">
-          Productos Detectados ({items.length})
+          Productos Detectados ({displayedItems.length})
         </h3>
         <p className="text-sm text-gray-500">
           Revisa y confirma los productos detectados en el ticket
@@ -41,7 +47,7 @@ export function TicketResultsView({ items, onConfirm, onCancel }: TicketResultsV
       </div>
 
       <div className="max-h-96 overflow-y-auto space-y-2">
-        {items.map((item) => (
+        {displayedItems.map((item) => (
           <div
             key={item.id}
             data-status={item.status}
@@ -68,6 +74,16 @@ export function TicketResultsView({ items, onConfirm, onCancel }: TicketResultsV
             <div className="flex-shrink-0 text-sm font-semibold text-gray-700">
               {item.quantity}
             </div>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleRemoveItem(item.id)}
+              className="text-danger hover:text-danger-hover flex-shrink-0"
+              aria-label="Eliminar producto"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
           </div>
         ))}
       </div>
@@ -78,8 +94,9 @@ export function TicketResultsView({ items, onConfirm, onCancel }: TicketResultsV
         </Button>
         <Button
           variant="primary"
-          onClick={() => onConfirm(items)}
+          onClick={() => onConfirm(displayedItems)}
           fullWidth
+          disabled={displayedItems.length === 0}
         >
           Confirmar
         </Button>
