@@ -26,9 +26,7 @@ export class ScanTicket {
     const startTime = Date.now()
 
     const rawText = await this.ocrService.extractText(command.imageFile)
-
     const rawItems = this.parser.parseText(rawText)
-
     const products = await this.productRepository.findAll()
     const matchedItems = rawItems.map(item => this.matcher.match(item, products))
 

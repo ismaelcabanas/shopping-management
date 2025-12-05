@@ -1,18 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { TicketScanModal } from '../../../presentation/components/TicketScanModal'
-
-// Mock GeminiVisionOCRService to avoid API key requirement in tests
-vi.mock('../../../infrastructure/services/ocr/GeminiVisionOCRService', () => ({
-  GeminiVisionOCRService: vi.fn().mockImplementation(() => ({
-    extractText: vi.fn().mockResolvedValue('Mock product | 1'),
-    getProviderName: vi.fn().mockReturnValue('mock-gemini')
-  }))
-}))
+import { MockOCRService } from '../../../infrastructure/services/MockOCRService'
+import { LocalStorageProductRepository } from '../../../infrastructure/repositories/LocalStorageProductRepository'
 
 describe('TicketScanModal', () => {
+  let mockOcrService: MockOCRService
+  let mockProductRepository: LocalStorageProductRepository
+
   beforeEach(() => {
     vi.clearAllMocks()
+    mockOcrService = new MockOCRService('Mock product | 1')
+    mockProductRepository = new LocalStorageProductRepository()
   })
 
   it('should not render modal when closed', () => {
@@ -24,6 +23,8 @@ describe('TicketScanModal', () => {
         isOpen={false}
         onClose={mockOnClose}
         onConfirm={mockOnConfirm}
+        ocrService={mockOcrService}
+        productRepository={mockProductRepository}
       />
     )
 
@@ -39,6 +40,8 @@ describe('TicketScanModal', () => {
         isOpen={true}
         onClose={mockOnClose}
         onConfirm={mockOnConfirm}
+        ocrService={mockOcrService}
+        productRepository={mockProductRepository}
       />
     )
 
@@ -47,7 +50,15 @@ describe('TicketScanModal', () => {
   })
 
   it('should have file input for uploading tickets', () => {
-    render(<TicketScanModal isOpen={true} onClose={vi.fn()} onConfirm={vi.fn()} />)
+    render(
+      <TicketScanModal
+        isOpen={true}
+        onClose={vi.fn()}
+        onConfirm={vi.fn()}
+        ocrService={mockOcrService}
+        productRepository={mockProductRepository}
+      />
+    )
 
     const input = screen.getByLabelText(/selecciona una imagen del ticket/i, { selector: 'input' })
     expect(input).toHaveAttribute('type', 'file')

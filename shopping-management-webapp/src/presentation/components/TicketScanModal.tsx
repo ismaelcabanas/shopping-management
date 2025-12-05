@@ -4,26 +4,28 @@ import { TicketUploadView } from './TicketUploadView'
 import { TicketProcessingView } from './TicketProcessingView'
 import { TicketResultsView } from './TicketResultsView'
 import { useTicketScan } from '../hooks/useTicketScan'
-import { GeminiVisionOCRService } from '../../infrastructure/services/ocr/GeminiVisionOCRService'
-import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository'
 import type { MatchedDetectedItem } from '../../application/dtos/TicketScanResult'
+import type { OCRService } from '../../application/ports/OCRService'
+import type { ProductRepository } from '../../domain/repositories/ProductRepository'
 
 interface TicketScanModalProps {
   isOpen: boolean
   onClose: () => void
   onConfirm: (items: MatchedDetectedItem[]) => void
+  ocrService: OCRService
+  productRepository: ProductRepository
 }
 
 type ViewState = 'upload' | 'processing' | 'results'
 
-export function TicketScanModal({ isOpen, onClose, onConfirm }: TicketScanModalProps) {
+export function TicketScanModal({
+  isOpen,
+  onClose,
+  onConfirm,
+  ocrService,
+  productRepository
+}: TicketScanModalProps) {
   const [currentView, setCurrentView] = useState<ViewState>('upload')
-
-  // Initialize services
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY
-  const model = import.meta.env.VITE_GEMINI_MODEL || 'gemini-2.0-flash'
-  const ocrService = new GeminiVisionOCRService(apiKey, model)
-  const productRepository = new LocalStorageProductRepository()
 
   const { scanResult, isProcessing, error, scanTicket, resetScan } = useTicketScan(
     ocrService,

@@ -7,7 +7,9 @@ export class MockOCRService implements OCRService {
     this.mockText = mockText
   }
 
-  async extractText(): Promise<string> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async extractText(_imageFile: File): Promise<string> {
+    // Ignore the imageFile parameter for mock
     return Promise.resolve(this.mockText)
   }
 

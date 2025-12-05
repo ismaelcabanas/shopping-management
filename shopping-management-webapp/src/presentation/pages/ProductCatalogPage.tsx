@@ -10,6 +10,8 @@ import { ConfirmDialog } from '../shared/components/ConfirmDialog';
 import { GetProductsWithInventory } from '../../application/use-cases/GetProductsWithInventory';
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository';
 import { LocalStorageInventoryRepository } from '../../infrastructure/repositories/LocalStorageInventoryRepository';
+import { GeminiVisionOCRService } from '../../infrastructure/services/ocr/GeminiVisionOCRService';
+import { MockOCRServiceForE2E } from '../../infrastructure/services/MockOCRServiceForE2E';
 import { useProducts } from '../hooks/useProducts';
 import { useInventory } from '../hooks/useInventory';
 import { Button } from '../shared/components/Button';
@@ -33,6 +35,14 @@ export function ProductCatalogPage() {
 
   const { updateProduct, deleteProduct } = useProducts();
   const { addProduct, registerPurchase } = useInventory();
+
+  // Initialize services for TicketScanModal
+  // Use mock service if in E2E test mode
+  const isE2ETestMode = typeof window !== 'undefined' && localStorage.getItem('e2e_test_mode') === 'true';
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  const model = import.meta.env.VITE_GEMINI_MODEL || 'gemini-2.0-flash';
+  const ocrService = isE2ETestMode ? new MockOCRServiceForE2E() : new GeminiVisionOCRService(apiKey, model);
+  const productRepository = new LocalStorageProductRepository();
 
   useEffect(() => {
     loadProducts();
@@ -303,6 +313,8 @@ export function ProductCatalogPage() {
         isOpen={isTicketScanOpen}
         onClose={() => setIsTicketScanOpen(false)}
         onConfirm={handleTicketScanConfirm}
+        ocrService={ocrService}
+        productRepository={productRepository}
       />
 
       {/* Delete Confirmation Dialog */}
