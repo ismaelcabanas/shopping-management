@@ -13,6 +13,35 @@ Web application for intelligent personal inventory management and shopping optim
 - Vitest + React Testing Library (testing)
 - Playwright (E2E testing)
 
+## Features
+
+### Inventory Management
+
+Manage your personal inventory of products with real-time stock tracking.
+
+### Purchase Registration
+
+Register purchases in two convenient ways:
+
+#### Manual Entry
+Add products manually by selecting them from your catalog and specifying quantities.
+
+#### Ticket Scanning (OCR)
+Use your device camera to scan shopping receipts. The system will:
+1. Extract products and quantities from the ticket image
+2. Match detected products with your existing catalog
+3. Display the detected items for review
+4. **Allow you to exclude unwanted products** before confirming the purchase
+   - Click the trash icon button next to any scanned product to remove it from the list
+   - The product count updates dynamically as you remove items
+   - Only the remaining products will be added to your inventory when you confirm
+5. Create new products automatically for unmatched items
+
+This feature is useful when:
+- The OCR detects products you don't want to track
+- You want to exclude non-food items from a mixed shopping ticket
+- You need to remove duplicates or misdetected items
+
 ## Prerequisites
 
 - Node.js 18+ and npm (or yarn/pnpm)

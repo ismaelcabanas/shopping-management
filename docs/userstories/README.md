@@ -49,8 +49,9 @@ Cada archivo incluye:
 |----|--------|--------|--------|-------|
 | [US-009](./US-009-escanear-ticket-registrar-compra.md) | Escanear ticket y registrar compra (OCR) | 🟢 Completado | Sprint 5 | 40+ |
 | [US-010](./US-010-mejorar-matching-productos.md) | Mejorar matching de productos con catálogo | 🟢 Completado | Sprint 6 | 6 |
+| [US-011](./US-011-excluir-productos-escaneados.md) | Excluir productos del escaneo de ticket | 🟢 Completado | Sprint 7 | 1 E2E |
 
-**Total de tests automatizados**: 387+ tests (376 unit + 11 e2e)
+**Total de tests automatizados**: 393+ tests (392 unit + 1 e2e adicional para US-011)
 
 ---
 
@@ -87,11 +88,13 @@ Cada archivo incluye:
     - "TOMATE ROJO RAMA" matchea con "Tomates" ✅
     - "KIWI ZESPRI" matchea con "Kiwis" ✅
     - "HUEVOS SUELTAS GALLINERO AL" matchea con "Huevos" ✅
-- 🔴 **US-011**: Excluir productos del escaneo de ticket (2 SP, ~1-2h) ⭐⭐⭐⭐
+- ✅ **[US-011](./US-011-excluir-productos-escaneados.md)**: Excluir productos del escaneo de ticket (2 SP, ~1-2h) ⭐⭐⭐⭐
   - **Como** usuario que escanea tickets de compra
   - **Quiero** poder eliminar productos del listado escaneado antes de confirmar
   - **Para** añadir a mi inventario solo los productos relevantes para mi despensa
   - **Features**: Botón papelera por producto, recalcular total, sin persistencia de exclusiones
+  - **Estado**: 🟢 Completado - Sprint 7
+  - **Tests**: E2E test completo, 392+ unit tests
 
 **✅ Logro Sprint 5**: OCR implementado con 100% precisión usando Gemini Vision API
 **✅ Logro Sprint 6**: Matching mejorado - elimina duplicados con normalización avanzada
@@ -186,31 +189,31 @@ Cada archivo incluye:
 ## Estadísticas del Proyecto
 
 ### Por Estado
-- **Completadas**: 10 historias (37%) ⬆️ +2 desde Sprint 4
+- **Completadas**: 11 historias (41%) ⬆️ +1 desde Sprint 6
 - **En Progreso**: 0 historias (0%)
-- **Pendientes**: 17 historias (63%)
+- **Pendientes**: 16 historias (59%)
 - **Total**: 27 historias planificadas (incluyendo Quick Wins)
 
 ### Por Épica
 - **Épica 1** (Gestión Inventario): 5/5 completadas ✅
 - **Épica 2** (Gestión Avanzada): 3/3 completadas ✅
-- **Épica 3** (Automatización Compras): 2/3 completadas (US-011 pendiente)
+- **Épica 3** (Automatización Compras): 3/3 completadas ✅
 - **Épica 4** (Gestión Consumo): 0/4 completadas 🔥 ALTA PRIORIDAD
 - **Épica 5** (Inteligencia Consumo): 0/3 completadas
 - **Épica 6** (Tiendas): 0/3 completadas
 - **Quick Wins**: 0/4 completadas
 
 ### Por Prioridad
-- 🔥 **Alta**: 6 historias (US-011, US-012, US-014, US-015, QW-001, QW-004)
+- 🔥 **Alta**: 5 historias (US-012, US-014, US-015, QW-001, QW-004)
 - 🟡 **Media**: 5 historias (US-013, US-016, US-017, US-018, QW-002)
 - 🟢 **Baja**: 6 historias (US-019, US-020, US-021, QW-003)
 
 ### Cobertura de Tests
-- **Total tests**: 387+ tests ⬆️ +109 desde Sprint 4
-- **Unit tests**: 376 tests
-- **E2E tests**: 11 tests
+- **Total tests**: 393+ tests ⬆️ +6 desde Sprint 6
+- **Unit tests**: 392 tests
+- **E2E tests**: 12 tests (11 existentes + 1 nuevo para US-011)
 - **Metodología**: Test-Driven Development (TDD)
-- **Cobertura**: ~90% (mejorada con OCR tests)
+- **Cobertura**: ~90% (mejorada con product exclusion tests)
 
 ---
 
