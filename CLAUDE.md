@@ -126,4 +126,76 @@ shopping-manager/  (Monorepo Root)
 |
 └── ...
 
+---
+
+## 7. Estructura de Documentación (Documentation Structure)
+
+La documentación del proyecto sigue una estructura organizada para facilitar la navegación y el seguimiento del progreso.
+
+### Documentos Principales
+
+- **`docs/ROADMAP.md`**: Vista general de alto nivel del proyecto
+  - Estado de las épicas
+  - Próximas prioridades (top 3-5)
+  - Métricas de progreso
+  - Lectura rápida (<1 minuto)
+
+- **`docs/CHANGELOG.md`**: Historial de releases y features completadas
+  - Organizado por sprint/fecha
+  - Links a user stories
+  - Formato [Keep a Changelog](https://keepachangelog.com/)
+
+- **`docs/userstories/README.md`**: Índice completo de historias de usuario
+  - Links a historias completadas y pendientes
+  - Estadísticas del proyecto
+  - Patrones establecidos
+
+### Organización de Historias de Usuario
+
+```
+docs/userstories/
+├── README.md                  # Índice principal
+├── completed/                 # Historias completadas (11)
+│   ├── README.md              # Índice de completadas
+│   ├── epic-1/                # Gestión de Inventario (5 stories)
+│   │   ├── README.md
+│   │   ├── US-001-ver-pagina-bienvenida.md
+│   │   └── ...
+│   ├── epic-2/                # Gestión Avanzada (3 stories)
+│   │   ├── README.md
+│   │   └── ...
+│   └── epic-3/                # Automatización de Compras (3 stories)
+│       ├── README.md
+│       └── ...
+└── backlog/                   # Historias pendientes (16)
+    ├── README.md              # Índice de backlog
+    ├── high-priority/         # Alta prioridad (5 stories)
+    │   ├── US-012-registrar-consumo.md
+    │   ├── US-014-alertas-stock-bajo.md
+    │   ├── US-015-lista-compras-automatica.md
+    │   ├── QW-001-busqueda-filtros.md
+    │   └── QW-004-pwa.md
+    ├── medium-priority/       # Media prioridad (5 stories)
+    │   ├── US-013-historial-consumo.md
+    │   ├── US-016-dashboard-estadisticas.md
+    │   └── ...
+    └── low-priority/          # Baja prioridad (4 stories)
+        ├── US-019-gestionar-tiendas.md
+        └── ...
+```
+
+### Navegación Rápida
+
+**Para ver el estado del proyecto** → `docs/ROADMAP.md`
+**Para ver qué se completó** → `docs/CHANGELOG.md`
+**Para ver todas las historias** → `docs/userstories/README.md`
+**Para buscar una historia específica** → Navegar por `completed/` o `backlog/` según prioridad
+
+### Actualización de Documentación
+
+- **ROADMAP.md**: Actualizar después de cada sprint
+- **CHANGELOG.md**: Actualizar al completar cada historia
+- **README.md**: Actualizar al crear nuevas historias
+- Las historias completadas se mueven de `backlog/` a `completed/epic-X/`
+
 
