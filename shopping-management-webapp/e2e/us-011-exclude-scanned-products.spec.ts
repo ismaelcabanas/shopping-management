@@ -1,9 +1,10 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './setup/msw-setup';
 
 test.describe('US-011: Exclude Products from Scanned Ticket', () => {
   test.beforeEach(async ({ page, context }) => {
     // Setup localStorage BEFORE any page loads using context.addInitScript
     // IMPORTANT: LocalStorageClient uses 'shopping_manager_' prefix!
+    // NOTE: MSW is automatically started in main.tsx when VITE_ENABLE_MSW=true
     await context.addInitScript(() => {
       const products = [
         { id: 'a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d', name: 'Milk', unitType: 'units' },
@@ -22,20 +23,23 @@ test.describe('US-011: Exclude Products from Scanned Ticket', () => {
       // Use the same prefix as LocalStorageClient
       localStorage.setItem('shopping_manager_products', JSON.stringify(products));
       localStorage.setItem('shopping_manager_inventory', JSON.stringify(inventory));
-
-      // Enable E2E test mode to use MockOCRService
-      localStorage.setItem('e2e_test_mode', 'true');
     });
 
     // Navigate to catalog page
     await page.goto('http://localhost:5173/catalog');
 
-    // Wait for page to be fully loaded
+    // Wait for page to be fully loaded and MSW to be initialized
     await page.waitForLoadState('domcontentloaded');
     await page.waitForLoadState('networkidle');
+
+    // Wait for MSW service worker to be active
+    await page.waitForTimeout(1000);
   });
 
   test('@smoke @critical - Exclude product from ticket scan and verify not added to inventory', async ({ page }) => {
+    // Enable console logging to debug MSW
+    page.on('console', msg => console.log('BROWSER:', msg.text()));
+
     // Given: I have products in my catalog (Milk=5, Bread=2, Rice=0, Eggs=10)
 
     // Wait for the "Scan Ticket" button to be visible
