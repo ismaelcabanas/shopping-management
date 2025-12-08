@@ -23,7 +23,8 @@ import { setupMSW, resetMSW, teardownMSW } from '../../src/mocks/node'
 export const test = base.extend({
   // Auto-fixture that runs before each test
   autoTestFixture: [
-    async (_, use) => {
+    // eslint-disable-next-line no-empty-pattern
+    async ({}, use) => {
       // Setup: Reset handlers before each test
       resetMSW()
 
