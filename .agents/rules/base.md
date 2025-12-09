@@ -114,6 +114,11 @@ Before ANY commit:
 2. Lint second (catches code quality issues)
 3. Test last (validates functionality)
 
+**Pipeline Alignment:**
+Execute the same validation commands that run in the CI/CD pipeline to ensure
+local validation matches production checks. This prevents pipeline failures
+and reduces commit corrections (amends/reverts).
+
 ## 10. Quick Reference for All AI Agents
 
 When working on this project:
