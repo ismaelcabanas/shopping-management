@@ -2,30 +2,26 @@
 
 ## 1. Domain Model & Business Logic
 
-- [ ] 1.1 Define StockLevel type
+- [x] 1.1 Define StockLevel type
   - Create `StockLevel.ts` value object
-  - Define 4 levels: 'alto', 'medio', 'bajo', 'vacio'
+  - Define 4 levels: 'high', 'medium', 'low', 'empty'
   - Add validation logic
   - Write unit tests
 
-- [ ] 1.2 Create ConsumptionRecord entity
-  - Create `ConsumptionRecord.ts` in domain/model
-  - Properties: id, productId, previousLevel, newLevel, timestamp
-  - Add factory method
-  - Write unit tests
-
-- [ ] 1.3 Extend InventoryItem
+- [ ] 1.2 Extend InventoryItem
   - Add `stockLevel` property
   - Add `lastUpdated` property
   - Update constructor
   - Write unit tests for new properties
 
-- [ ] 1.4 Create StockLevelCalculator service
+- [ ] 1.3 Create StockLevelCalculator service
   - Implement business logic for level decisions
   - Method: `shouldAddToShoppingList(level: StockLevel): boolean`
   - Method: `getLevelColor(level: StockLevel): string`
   - Method: `getLevelPercentage(level: StockLevel): number`
   - Write unit tests
+
+**Note:** ConsumptionRecord entity and history tracking removed from scope (simplified implementation)
 
 ## 2. Application Layer (Use Cases)
 
@@ -33,36 +29,18 @@
   - Create `UpdateStockLevel.ts` in application/use-cases
   - Input: productId, newStockLevel
   - Output: updated InventoryItem
-  - Business logic: update level, record history
+  - Business logic: update level and lastUpdated timestamp
   - Write unit tests
 
 - [ ] 2.2 Create GetProductsNeedingRestock use case
   - Create `GetProductsNeedingRestock.ts`
-  - Logic: filter products with 'bajo' or 'vacio' level
+  - Logic: filter products with 'low' or 'empty' level
   - Return list of products for shopping list
-  - Write unit tests
-
-- [ ] 2.3 Create GetConsumptionHistory use case
-  - Create `GetConsumptionHistory.ts`
-  - Input: productId (optional), dateRange (optional)
-  - Return list of ConsumptionRecords
   - Write unit tests
 
 ## 3. Infrastructure Layer
 
-- [ ] 3.1 Create ConsumptionRepository interface
-  - Define in domain/repositories/
-  - Methods: save, findByProductId, findAll, delete
-  - Document interface contract
-
-- [ ] 3.2 Implement LocalStorageConsumptionRepository
-  - Create in infrastructure/repositories/
-  - Implement all interface methods
-  - Use localStorage key: 'consumption_records'
-  - Handle serialization/deserialization
-  - Write integration tests
-
-- [ ] 3.3 Update LocalStorageInventoryRepository
+- [ ] 3.1 Update LocalStorageInventoryRepository
   - Add support for stockLevel field
   - Migrate existing data (add default 'alto' level)
   - Handle backward compatibility
@@ -99,17 +77,11 @@
 
 ## 5. Presentation Layer - Hooks
 
-- [ ] 5.1 Create useConsumption hook
+- [ ] 5.1 Create useStockLevel hook
   - State: loading, error
   - Methods: updateStockLevel, getProductsNeedingRestock
   - Encapsulate use case invocation
   - Error handling
-  - Write hook tests
-
-- [ ] 5.2 Create useConsumptionHistory hook
-  - State: history, loading, error
-  - Methods: fetchHistory, filterByProduct, filterByDateRange
-  - Encapsulate GetConsumptionHistory use case
   - Write hook tests
 
 ## 6. Shopping List Integration
@@ -141,14 +113,12 @@
 
 - [ ] 8.1 Unit tests for domain
   - StockLevel value object
-  - ConsumptionRecord entity
   - StockLevelCalculator service
   - Target: 100% coverage
 
 - [ ] 8.2 Unit tests for use cases
   - UpdateStockLevel
   - GetProductsNeedingRestock
-  - GetConsumptionHistory
   - Target: 95%+ coverage
 
 - [ ] 8.3 Component tests
@@ -158,7 +128,7 @@
   - Target: 90%+ coverage
 
 - [ ] 8.4 Integration tests
-  - useConsumption hook
+  - useStockLevel hook
   - Shopping list integration
   - Repository implementations
   - Target: 85%+ coverage
