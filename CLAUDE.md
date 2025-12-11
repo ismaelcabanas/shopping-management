@@ -87,17 +87,34 @@ Para asegurar un desarrollo desacoplado, mantenible y centrado en el negocio, la
 
 ## 5. Modelo de Datos del Dominio (Domain Data Model)
 
-1.  **Entidad `Product`:** `id`, `name`, `category`, `usual_consumption_rate`.
+1.  **Entidad `Product`:** `id`, `name`, `unit_type`.
 2.  **Entidad Agregada `InventoryItem` (Aggregate Root):**
-    * `product_id`, `current_stock`, `minimum_stock`, `unit_type` (kg, units, liters, etc.).
-3.  **Entidad `Store`:** `id`, `name`, `location`.
-4.  **Entidad `PriceHistory`:** `id`, `product_id`, `store_id`, `price`, `date`.
-5.  **Entidad Agregada `ShoppingList` (Aggregate Root):**
-    * `id`, `created_date`, `status`, `estimated_total`.
-    * Una lista de **`ShoppingListItem` (Value Objects):** `product_id`, `quantity_needed`, `estimated_price`.
-6.  **Entidad Agregada `Purchase` (Aggregate Root):**
+    * `product_id`, `current_stock`, `unit_type`.
+    * **`stockLevel`**: Value Object que representa el nivel de stock ('high', 'medium', 'low', 'empty').
+    * **`lastUpdated`**: Timestamp de última actualización del stock level.
+3.  **Value Object `StockLevel`:**
+    * Niveles: 'high' (75-100%), 'medium' (25-75%), 'low' (1-25%), 'empty' (0%).
+    * Lógica de negocio: productos con 'low' o 'empty' se agregan automáticamente a la shopping list.
+4.  **Entidad `ShoppingListItem` (Value Object):**
+    * `product_id`: Referencia al producto.
+    * `reason`: 'auto' (agregado automáticamente por stock bajo) o 'manual' (agregado por el usuario).
+    * `stockLevel`: Nivel de stock que causó la adición automática (opcional).
+    * `addedAt`: Timestamp de cuando se agregó a la lista.
+5.  **Entidad `Store`:** `id`, `name`, `location`.
+6.  **Entidad `PriceHistory`:** `id`, `product_id`, `store_id`, `price`, `date`.
+7.  **Entidad Agregada `Purchase` (Aggregate Root):**
     * `id`, `store_id`, `date`, `total_price`.
     * Una lista de **`PurchaseItem` (Value Objects):** `product_id`, `quantity`, `unit_price`.
+
+### Flujo Automático de Consumo (Consumption Tracking)
+
+El sistema implementa un flujo automático de gestión de stock:
+
+```
+Usuario actualiza stock level → Sistema detecta 'low'/'empty'
+    → Auto-agrega a Shopping List → Usuario ve badge de urgencia
+    → Usuario marca como "Comprado" → Quita de Shopping List
+```
 
 ---
 
