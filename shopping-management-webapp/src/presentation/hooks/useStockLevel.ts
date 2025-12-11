@@ -4,6 +4,7 @@ import { StockLevel } from '../../domain/model/StockLevel';
 import { UpdateStockLevel } from '../../application/use-cases/UpdateStockLevel';
 import { GetProductsNeedingRestock } from '../../application/use-cases/GetProductsNeedingRestock';
 import { LocalStorageInventoryRepository } from '../../infrastructure/repositories/LocalStorageInventoryRepository';
+import { LocalStorageShoppingListRepository } from '../../infrastructure/repositories/LocalStorageShoppingListRepository';
 import type { InventoryItem } from '../../domain/model/InventoryItem';
 
 export interface UseStockLevelReturn {
@@ -63,7 +64,11 @@ export function useStockLevel(): UseStockLevelReturn {
 
         // Initialize repositories and use case
         const inventoryRepository = new LocalStorageInventoryRepository();
-        const updateStockLevelUseCase = new UpdateStockLevel(inventoryRepository);
+        const shoppingListRepository = new LocalStorageShoppingListRepository();
+        const updateStockLevelUseCase = new UpdateStockLevel(
+          inventoryRepository,
+          shoppingListRepository
+        );
 
         // Execute use case
         await updateStockLevelUseCase.execute({

@@ -1,14 +1,17 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi, type Mock } from 'vitest'
 import { UpdateStockLevel, type UpdateStockLevelCommand } from '../../../application/use-cases/UpdateStockLevel'
 import type { InventoryRepository } from '../../../domain/repositories/InventoryRepository'
+import type { ShoppingListRepository } from '../../../domain/repositories/ShoppingListRepository'
 import { InventoryItem } from '../../../domain/model/InventoryItem'
 import { ProductId } from '../../../domain/model/ProductId'
 import { Quantity } from '../../../domain/model/Quantity'
 import { UnitType } from '../../../domain/model/UnitType'
 import { StockLevel } from '../../../domain/model/StockLevel'
+import type { ShoppingListItem } from '../../../domain/model/ShoppingListItem'
 
 describe('UpdateStockLevel', () => {
   let inventoryRepository: InventoryRepository
+  let shoppingListRepository: ShoppingListRepository
   let updateStockLevel: UpdateStockLevel
 
   const productId = ProductId.fromString('123e4567-e89b-12d3-a456-426614174000')
@@ -26,7 +29,14 @@ describe('UpdateStockLevel', () => {
       save: async () => {},
       findAll: async () => []
     }
-    updateStockLevel = new UpdateStockLevel(inventoryRepository)
+    shoppingListRepository = {
+      findAll: async () => [],
+      findByProductId: async () => null,
+      add: vi.fn(),
+      remove: vi.fn(),
+      exists: async () => false
+    }
+    updateStockLevel = new UpdateStockLevel(inventoryRepository, shoppingListRepository)
   })
 
   it('should update stock level for existing inventory item', async () => {
@@ -90,5 +100,76 @@ describe('UpdateStockLevel', () => {
 
     expect(savedItem).toBeDefined()
     expect(savedItem!.stockLevel.value).toBe('medium')
+  })
+
+  describe('Shopping List Integration', () => {
+    it('should add product to shopping list when stock level is low', async () => {
+      const command: UpdateStockLevelCommand = {
+        productId: '123e4567-e89b-12d3-a456-426614174000',
+        newStockLevel: 'low'
+      }
+
+      await updateStockLevel.execute(command)
+
+      expect(shoppingListRepository.add).toHaveBeenCalledOnce()
+      const addMock = shoppingListRepository.add as Mock
+      const addedItem = addMock.mock.calls[0][0] as ShoppingListItem
+      expect(addedItem.productId.equals(productId)).toBe(true)
+      expect(addedItem.reason).toBe('auto')
+      expect(addedItem.stockLevel).toBe('low')
+    })
+
+    it('should add product to shopping list when stock level is empty', async () => {
+      const command: UpdateStockLevelCommand = {
+        productId: '123e4567-e89b-12d3-a456-426614174000',
+        newStockLevel: 'empty'
+      }
+
+      await updateStockLevel.execute(command)
+
+      expect(shoppingListRepository.add).toHaveBeenCalledOnce()
+      const addMock = shoppingListRepository.add as Mock
+      const addedItem = addMock.mock.calls[0][0] as ShoppingListItem
+      expect(addedItem.stockLevel).toBe('empty')
+    })
+
+    it('should remove product from shopping list when stock level is high', async () => {
+      const command: UpdateStockLevelCommand = {
+        productId: '123e4567-e89b-12d3-a456-426614174000',
+        newStockLevel: 'high'
+      }
+
+      await updateStockLevel.execute(command)
+
+      expect(shoppingListRepository.remove).toHaveBeenCalledOnce()
+      expect(shoppingListRepository.remove).toHaveBeenCalledWith(productId)
+    })
+
+    it('should remove product from shopping list when stock level is medium', async () => {
+      const command: UpdateStockLevelCommand = {
+        productId: '123e4567-e89b-12d3-a456-426614174000',
+        newStockLevel: 'medium'
+      }
+
+      await updateStockLevel.execute(command)
+
+      expect(shoppingListRepository.remove).toHaveBeenCalledOnce()
+      expect(shoppingListRepository.remove).toHaveBeenCalledWith(productId)
+    })
+
+    it('should not add/remove from shopping list if update fails', async () => {
+      inventoryRepository.save = async () => {
+        throw new Error('Database error')
+      }
+
+      const command: UpdateStockLevelCommand = {
+        productId: '123e4567-e89b-12d3-a456-426614174000',
+        newStockLevel: 'low'
+      }
+
+      await expect(updateStockLevel.execute(command)).rejects.toThrow('Database error')
+      expect(shoppingListRepository.add).not.toHaveBeenCalled()
+      expect(shoppingListRepository.remove).not.toHaveBeenCalled()
+    })
   })
 })
