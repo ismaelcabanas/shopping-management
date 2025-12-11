@@ -6,6 +6,7 @@ import { HomePage } from './presentation/pages/HomePage'
 import { DashboardPage } from './presentation/pages/DashboardPage'
 import { ProductCatalogPage } from './presentation/pages/ProductCatalogPage'
 import { AddProductPage } from './presentation/pages/AddProductPage'
+import { ShoppingListPage } from './presentation/pages/ShoppingListPage'
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/catalog" element={<ProductCatalogPage />} />
         <Route path="/catalog/add" element={<AddProductPage />} />
+        <Route path="/shopping-list" element={<ShoppingListPage />} />
       </Routes>
     </BrowserRouter>
   )

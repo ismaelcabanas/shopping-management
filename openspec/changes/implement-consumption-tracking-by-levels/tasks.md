@@ -97,10 +97,17 @@
   - All 472 tests passing ✅
   - Build successful ✅
 
-- [ ] 6.2 Update ShoppingList UI component
-  - Show products from shopping list repository
-  - Display badge to indicate auto-added vs manual
-  - Write component tests
+- [x] 6.2 Update ShoppingList UI component
+  - Created useShoppingList hook (5 tests passing ✅)
+  - Created ShoppingListPage component (7 tests passing ✅)
+  - Implemented Opción A (simple & practical):
+    - Stock level badges: "Stock bajo" (yellow), "Sin stock" (red)
+    - "Comprado" button to remove items
+    - Empty state with helpful message
+    - Auto-added products labeled
+    - Loading and error states
+  - All 484 tests passing ✅
+  - Build successful ✅
 
 ## 7. Initial Data Migration
 

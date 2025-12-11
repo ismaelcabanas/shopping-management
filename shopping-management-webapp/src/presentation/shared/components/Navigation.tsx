@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { Home, Package, LayoutDashboard, ShoppingCart } from 'lucide-react'
+import { Home, Package, LayoutDashboard, ShoppingCart, ShoppingBag } from 'lucide-react'
 
 export function Navigation() {
   const location = useLocation()
@@ -47,6 +47,18 @@ export function Navigation() {
             >
               <Package className="w-4 h-4" />
               <span>Mi Despensa</span>
+            </Link>
+            <Link
+              to="/shopping-list"
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                isActive('/shopping-list')
+                  ? 'bg-primary text-white'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+              data-testid="nav-shopping-list"
+            >
+              <ShoppingBag className="w-4 h-4" />
+              <span>Lista de Compras</span>
             </Link>
             <Link
               to="/dashboard"
