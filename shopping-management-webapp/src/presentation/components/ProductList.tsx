@@ -1,11 +1,13 @@
 import { ProductListItem } from './ProductListItem';
 import type { Product } from '../../domain/model/Product';
+import type { StockLevel } from '../../domain/model/StockLevel';
 
 export interface ProductWithInventory {
   id: string;
   name: string;
   quantity: number;
   unitType: string;
+  stockLevel?: StockLevel;
 }
 
 export interface ProductListProps {
@@ -13,6 +15,7 @@ export interface ProductListProps {
   isLoading?: boolean;
   onEditProduct?: (product: Product) => void;
   onDeleteProduct?: (productId: string) => void;
+  onUpdateStockLevel?: (productId: string) => void;
 }
 
 function SkeletonLoader() {
@@ -46,7 +49,13 @@ function EmptyState() {
   );
 }
 
-export function ProductList({ products, isLoading = false, onEditProduct, onDeleteProduct }: ProductListProps) {
+export function ProductList({
+  products,
+  isLoading = false,
+  onEditProduct,
+  onDeleteProduct,
+  onUpdateStockLevel
+}: ProductListProps) {
   if (isLoading) {
     return (
       <div data-testid="product-list-container" className="space-y-3">
@@ -70,8 +79,10 @@ export function ProductList({ products, isLoading = false, onEditProduct, onDele
           name={product.name}
           quantity={product.quantity}
           unitType={product.unitType}
+          stockLevel={product.stockLevel}
           onEdit={onEditProduct}
           onDelete={onDeleteProduct}
+          onUpdateStockLevel={onUpdateStockLevel}
         />
       ))}
     </div>
