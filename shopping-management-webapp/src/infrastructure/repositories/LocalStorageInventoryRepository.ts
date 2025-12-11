@@ -3,12 +3,15 @@ import { InventoryItem } from '../../domain/model/InventoryItem';
 import { ProductId } from '../../domain/model/ProductId';
 import { Quantity } from '../../domain/model/Quantity';
 import { UnitType } from '../../domain/model/UnitType';
+import { StockLevel } from '../../domain/model/StockLevel';
 import { LocalStorageClient } from '../storage/LocalStorageClient';
 
 interface InventoryItemDTO {
   productId: string;
   currentStock: number;
   unitType: string;
+  stockLevel?: string;
+  lastUpdated?: string;
 }
 
 export class LocalStorageInventoryRepository implements InventoryRepository {
@@ -58,6 +61,8 @@ export class LocalStorageInventoryRepository implements InventoryRepository {
       productId: item.productId.value,
       currentStock: item.currentStock.value,
       unitType: item.unitType.value,
+      stockLevel: item.stockLevel.value,
+      lastUpdated: item.lastUpdated.toISOString(),
     };
   }
 
@@ -65,6 +70,11 @@ export class LocalStorageInventoryRepository implements InventoryRepository {
     const productId = ProductId.fromString(dto.productId);
     const quantity = Quantity.create(dto.currentStock);
     const unitType = UnitType.create(dto.unitType);
-    return new InventoryItem(productId, quantity, unitType);
+
+    // Handle backward compatibility with old data format
+    const stockLevel = dto.stockLevel ? StockLevel.create(dto.stockLevel) : StockLevel.create('high');
+    const lastUpdated = dto.lastUpdated ? new Date(dto.lastUpdated) : new Date();
+
+    return new InventoryItem(productId, quantity, unitType, stockLevel, lastUpdated);
   }
 }
