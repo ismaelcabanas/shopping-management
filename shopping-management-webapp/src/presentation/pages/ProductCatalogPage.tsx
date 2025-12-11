@@ -6,6 +6,7 @@ import { ProductList, type ProductWithInventory } from '../components/ProductLis
 import { EditProductModal } from '../components/EditProductModal';
 import { RegisterPurchaseModal } from '../components/RegisterPurchaseModal';
 import { TicketScanModal } from '../components/TicketScanModal';
+import { UpdateStockModal } from '../components/UpdateStockModal';
 import { ConfirmDialog } from '../shared/components/ConfirmDialog';
 import { GetProductsWithInventory } from '../../application/use-cases/GetProductsWithInventory';
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository';
@@ -13,7 +14,10 @@ import { LocalStorageInventoryRepository } from '../../infrastructure/repositori
 import { GeminiVisionOCRService } from '../../infrastructure/services/ocr/GeminiVisionOCRService';
 import { useProducts } from '../hooks/useProducts';
 import { useInventory } from '../hooks/useInventory';
+import { useStockLevel } from '../hooks/useStockLevel';
 import { Button } from '../shared/components/Button';
+import { ProductId } from '../../domain/model/ProductId';
+import { StockLevel } from '../../domain/model/StockLevel';
 import type { Product } from '../../domain/model/Product';
 import type { PurchaseItemInput } from '../../application/use-cases/RegisterPurchase';
 import type { MatchedDetectedItem } from '../../application/dtos/TicketScanResult';
@@ -31,9 +35,12 @@ export function ProductCatalogPage() {
   const [productToDelete, setProductToDelete] = useState<{ id: string; name: string } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [initialPurchaseItems, setInitialPurchaseItems] = useState<PurchaseItemInput[] | undefined>(undefined);
+  const [isUpdateStockModalOpen, setIsUpdateStockModalOpen] = useState(false);
+  const [productToUpdateStock, setProductToUpdateStock] = useState<{ product: Product; currentLevel: StockLevel } | null>(null);
 
   const { updateProduct, deleteProduct } = useProducts();
   const { addProduct, registerPurchase } = useInventory();
+  const { updateStockLevel } = useStockLevel();
 
   // Initialize services for TicketScanModal
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
@@ -198,6 +205,46 @@ export function ProductCatalogPage() {
     }
   };
 
+  const handleUpdateStockLevel = (productId: string) => {
+    // Find the product
+    const productWithInventory = products.find(p => p.id === productId);
+    const fullProduct = allProducts.find(p => p.id.value === productId);
+
+    if (!productWithInventory || !fullProduct) {
+      toast.error('Producto no encontrado');
+      return;
+    }
+
+    const currentLevel = productWithInventory.stockLevel || StockLevel.create('high');
+
+    setProductToUpdateStock({
+      product: fullProduct,
+      currentLevel
+    });
+    setIsUpdateStockModalOpen(true);
+  };
+
+  const handleCloseUpdateStockModal = () => {
+    setIsUpdateStockModalOpen(false);
+    setProductToUpdateStock(null);
+  };
+
+  const handleSaveStockLevel = async (newLevel: StockLevel) => {
+    if (!productToUpdateStock) return;
+
+    try {
+      const productId = ProductId.fromString(productToUpdateStock.product.id.value);
+      await updateStockLevel(productId, newLevel);
+      await loadProducts(); // Refresh the list
+      setIsUpdateStockModalOpen(false);
+      setProductToUpdateStock(null);
+      toast.success('Nivel de stock actualizado correctamente');
+    } catch (error) {
+      console.error('Error updating stock level:', error);
+      toast.error('Error al actualizar el nivel de stock. Por favor, intenta de nuevo.');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -267,6 +314,7 @@ export function ProductCatalogPage() {
           isLoading={isLoading}
           onEditProduct={handleEditProduct}
           onDeleteProduct={handleDeleteProduct}
+          onUpdateStockLevel={handleUpdateStockLevel}
         />
       </div>
 
@@ -313,6 +361,17 @@ export function ProductCatalogPage() {
         ocrService={ocrService}
         productRepository={productRepository}
       />
+
+      {/* Update Stock Level Modal */}
+      {productToUpdateStock && (
+        <UpdateStockModal
+          isOpen={isUpdateStockModalOpen}
+          product={productToUpdateStock.product}
+          currentLevel={productToUpdateStock.currentLevel}
+          onConfirm={handleSaveStockLevel}
+          onCancel={handleCloseUpdateStockModal}
+        />
+      )}
 
       {/* Delete Confirmation Dialog */}
       <ConfirmDialog

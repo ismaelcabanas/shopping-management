@@ -74,18 +74,20 @@ describe('GetProductsWithInventory - Use Case Tests (TDD)', () => {
 
     // Assert
     expect(result).toHaveLength(2);
-    expect(result[0]).toEqual({
+    expect(result[0]).toMatchObject({
       id: 'a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d',
       name: 'Leche',
       quantity: 2,
       unitType: 'units',
     });
-    expect(result[1]).toEqual({
+    expect(result[0].stockLevel).toBeDefined();
+    expect(result[1]).toMatchObject({
       id: 'b2c3d4e5-f6a7-5b6c-9d0e-1f2a3b4c5d6e',
       name: 'Pan',
       quantity: 3,
       unitType: 'units',
     });
+    expect(result[1].stockLevel).toBeDefined();
   });
 
   it('should return products sorted alphabetically by name', async () => {

@@ -1,11 +1,13 @@
 import type { ProductRepository } from '../../domain/repositories/ProductRepository';
 import type { InventoryRepository } from '../../domain/repositories/InventoryRepository';
+import type { StockLevel } from '../../domain/model/StockLevel';
 
 export interface ProductWithInventory {
   id: string;
   name: string;
   quantity: number;
   unitType: string;
+  stockLevel?: StockLevel;
 }
 
 export class GetProductsWithInventory {
@@ -34,6 +36,7 @@ export class GetProductsWithInventory {
           name: product.name,
           quantity: inventoryItem?.currentStock.value ?? 0,
           unitType: product.unitType.value,
+          stockLevel: inventoryItem?.stockLevel,
         };
       })
     );
