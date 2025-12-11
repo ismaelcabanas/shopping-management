@@ -40,18 +40,18 @@ export const UpdateStockModal = ({
   const modalId = 'update-stock-modal-title';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" data-testid="update-stock-modal">
       <div
         className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full m-4"
         role="dialog"
         aria-modal="true"
         aria-labelledby={modalId}
       >
-        <h2 id={modalId} className="text-xl font-semibold mb-4">
+        <h2 id={modalId} className="text-xl font-semibold mb-4" data-testid="modal-title">
           {product.name}
         </h2>
 
-        <div className="mb-6">
+        <div className="mb-6" data-testid="current-stock-level">
           <p className="text-sm text-gray-600 mb-2">Current level:</p>
           <StockLevelIndicator level={currentLevel} size="large" showLabel={true} />
         </div>
@@ -71,6 +71,7 @@ export const UpdateStockModal = ({
                   checked={selectedLevel === level.value}
                   onChange={(e) => setSelectedLevel(e.target.value as StockLevelValue)}
                   className="w-4 h-4 text-blue-600"
+                  data-testid={`stock-level-${level.value}`}
                 />
                 <div className="flex-1">
                   <div className="font-medium">{level.label}</div>
@@ -85,12 +86,14 @@ export const UpdateStockModal = ({
           <button
             onClick={onCancel}
             className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+            data-testid="cancel-update-button"
           >
             Cancel
           </button>
           <button
             onClick={handleConfirm}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            data-testid="confirm-update-button"
           >
             Confirm
           </button>

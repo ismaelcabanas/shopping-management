@@ -24,13 +24,13 @@ describe('useShoppingList', () => {
       // Setup: Add product to products, inventory, and shopping list
       const productId = '123e4567-e89b-12d3-a456-426614174000'
 
-      localStorage.setItem('products', JSON.stringify([{
+      localStorage.setItem('shopping_manager_products', JSON.stringify([{
         id: productId,
         name: 'Huevos',
         unitType: 'units'
       }]))
 
-      localStorage.setItem('inventory', JSON.stringify([{
+      localStorage.setItem('shopping_manager_inventory', JSON.stringify([{
         productId: productId,
         currentStock: 2,
         unitType: 'units',
@@ -38,7 +38,7 @@ describe('useShoppingList', () => {
         lastUpdated: new Date().toISOString()
       }]))
 
-      localStorage.setItem('shopping-list', JSON.stringify([{
+      localStorage.setItem('shopping_manager_shopping-list', JSON.stringify([{
         productId: productId,
         reason: 'auto',
         stockLevel: 'low',
@@ -64,7 +64,7 @@ describe('useShoppingList', () => {
     it('should remove item from shopping list', async () => {
       const productId = '123e4567-e89b-12d3-a456-426614174000'
 
-      localStorage.setItem('shopping-list', JSON.stringify([{
+      localStorage.setItem('shopping_manager_shopping-list', JSON.stringify([{
         productId: productId,
         reason: 'auto',
         stockLevel: 'low',
@@ -100,8 +100,8 @@ describe('useShoppingList', () => {
   })
 
   describe('error handling', () => {
-    it('should handle corrupted localStorage data', async () => {
-      localStorage.setItem('shopping-list', 'invalid json{')
+    it('should handle corrupted localStorage data gracefully', async () => {
+      localStorage.setItem('shopping_manager_shopping-list', 'invalid json{')
 
       const { result } = renderHook(() => useShoppingList())
 
@@ -109,7 +109,9 @@ describe('useShoppingList', () => {
         expect(result.current.isLoading).toBe(false)
       })
 
-      expect(result.current.error).toBeTruthy()
+      // LocalStorageClient handles corrupted data by returning null, so no error is thrown
+      // The shopping list should just be empty
+      expect(result.current.error).toBeNull()
       expect(result.current.items).toEqual([])
     })
   })

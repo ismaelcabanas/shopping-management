@@ -23,13 +23,13 @@ describe('ShoppingListPage', () => {
     // Setup: Add product and shopping list item
     const productId = '123e4567-e89b-12d3-a456-426614174000'
 
-    localStorage.setItem('products', JSON.stringify([{
+    localStorage.setItem('shopping_manager_products', JSON.stringify([{
       id: productId,
       name: 'Huevos',
       unitType: 'units'
     }]))
 
-    localStorage.setItem('shopping-list', JSON.stringify([{
+    localStorage.setItem('shopping_manager_shopping-list', JSON.stringify([{
       productId: productId,
       reason: 'auto',
       stockLevel: 'low',
@@ -49,13 +49,13 @@ describe('ShoppingListPage', () => {
   it('should display "Stock bajo" badge for low stock items', async () => {
     const productId = '123e4567-e89b-12d3-a456-426614174000'
 
-    localStorage.setItem('products', JSON.stringify([{
+    localStorage.setItem('shopping_manager_products', JSON.stringify([{
       id: productId,
       name: 'Huevos',
       unitType: 'units'
     }]))
 
-    localStorage.setItem('shopping-list', JSON.stringify([{
+    localStorage.setItem('shopping_manager_shopping-list', JSON.stringify([{
       productId: productId,
       reason: 'auto',
       stockLevel: 'low',
@@ -72,13 +72,13 @@ describe('ShoppingListPage', () => {
   it('should display "Sin stock" badge for empty stock items', async () => {
     const productId = '123e4567-e89b-12d3-a456-426614174000'
 
-    localStorage.setItem('products', JSON.stringify([{
+    localStorage.setItem('shopping_manager_products', JSON.stringify([{
       id: productId,
       name: 'Café',
       unitType: 'units'
     }]))
 
-    localStorage.setItem('shopping-list', JSON.stringify([{
+    localStorage.setItem('shopping_manager_shopping-list', JSON.stringify([{
       productId: productId,
       reason: 'auto',
       stockLevel: 'empty',
@@ -96,13 +96,13 @@ describe('ShoppingListPage', () => {
     const user = userEvent.setup()
     const productId = '123e4567-e89b-12d3-a456-426614174000'
 
-    localStorage.setItem('products', JSON.stringify([{
+    localStorage.setItem('shopping_manager_products', JSON.stringify([{
       id: productId,
       name: 'Huevos',
       unitType: 'units'
     }]))
 
-    localStorage.setItem('shopping-list', JSON.stringify([{
+    localStorage.setItem('shopping_manager_shopping-list', JSON.stringify([{
       productId: productId,
       reason: 'auto',
       stockLevel: 'low',
@@ -127,12 +127,12 @@ describe('ShoppingListPage', () => {
     const productId1 = '123e4567-e89b-12d3-a456-426614174000'
     const productId2 = '123e4567-e89b-12d3-a456-426614174001'
 
-    localStorage.setItem('products', JSON.stringify([
+    localStorage.setItem('shopping_manager_products', JSON.stringify([
       { id: productId1, name: 'Huevos', unitType: 'units' },
       { id: productId2, name: 'Leche', unitType: 'liters' }
     ]))
 
-    localStorage.setItem('shopping-list', JSON.stringify([
+    localStorage.setItem('shopping_manager_shopping-list', JSON.stringify([
       {
         productId: productId1,
         reason: 'auto',

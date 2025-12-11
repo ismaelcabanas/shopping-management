@@ -3,6 +3,7 @@ import type { ShoppingListItem, StockLevelValue } from '../../domain/model/Shopp
 import type { ProductId } from '../../domain/model/ProductId'
 import { ProductId as ProductIdClass } from '../../domain/model/ProductId'
 import { ShoppingListItem as ShoppingListItemClass } from '../../domain/model/ShoppingListItem'
+import { LocalStorageClient } from '../storage/LocalStorageClient'
 
 interface ShoppingListItemDTO {
   productId: string
@@ -13,14 +14,18 @@ interface ShoppingListItemDTO {
 
 export class LocalStorageShoppingListRepository implements ShoppingListRepository {
   private readonly STORAGE_KEY = 'shopping-list'
+  private readonly storage: LocalStorageClient
+
+  constructor() {
+    this.storage = new LocalStorageClient()
+  }
 
   async findAll(): Promise<ShoppingListItem[]> {
-    const data = localStorage.getItem(this.STORAGE_KEY)
-    if (!data) {
+    const items = this.storage.get<ShoppingListItemDTO[]>(this.STORAGE_KEY)
+    if (!items) {
       return []
     }
 
-    const items: ShoppingListItemDTO[] = JSON.parse(data)
     return items.map(dto => this.dtoToDomain(dto))
   }
 
@@ -58,7 +63,7 @@ export class LocalStorageShoppingListRepository implements ShoppingListRepositor
 
   private save(items: ShoppingListItem[]): void {
     const dtos = items.map(item => this.domainToDTO(item))
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(dtos))
+    this.storage.set(this.STORAGE_KEY, dtos)
   }
 
   private domainToDTO(item: ShoppingListItem): ShoppingListItemDTO {
