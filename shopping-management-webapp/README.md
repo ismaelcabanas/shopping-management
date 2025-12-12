@@ -19,6 +19,21 @@ Web application for intelligent personal inventory management and shopping optim
 
 Manage your personal inventory of products with real-time stock tracking.
 
+### Consumption Tracking ✨ NEW
+
+Track product consumption with a simple 4-level stock system:
+- **Alto** (High - Green): Plenty in stock
+- **Medio** (Medium - Yellow): Normal level
+- **Bajo** (Low - Red): Buy soon - automatically added to shopping list
+- **Vacío** (Empty - Gray): Out of stock
+
+**Key Features:**
+- Quick updates: 2 taps, <5 seconds
+- Automatic shopping list management
+- Visual progress bars with color indicators
+- Urgency badges on shopping list
+- Complete product lifecycle: Buy → Store → Consume → Alert → Shop
+
 ### Purchase Registration
 
 Register purchases in two convenient ways:

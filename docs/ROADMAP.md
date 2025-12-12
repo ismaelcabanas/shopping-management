@@ -1,8 +1,8 @@
 # Roadmap - Shopping Manager
 
-**Last Updated**: 2025-12-06
-**Progress**: 11/27 stories (41%)
-**Current Focus**: Épica 4 - Gestión de Consumo
+**Last Updated**: 2025-12-12
+**Progress**: 12/27 stories (44%)
+**Current Focus**: Épica 4 - Gestión de Consumo (Iteration 2)
 
 ---
 
@@ -13,33 +13,43 @@
 | 📦 Épica 1: Gestión de Inventario | 5/5 | ✅ Complete | - |
 | 🔧 Épica 2: Gestión Avanzada | 3/3 | ✅ Complete | - |
 | 📸 Épica 3: Automatización de Compras | 3/3 | ✅ Complete | - |
-| 🔄 **Épica 4: Gestión de Consumo** | 0/4 | 🚧 Next | 🔥 High |
+| 🔄 **Épica 4: Gestión de Consumo** | 1/4 | 🚧 In Progress | 🔥 High |
 | 📊 Épica 5: Inteligencia de Consumo | 0/6 | ⏳ Backlog | 🟡 Medium |
 | 🏪 Épica 6: Gestión de Tiendas | 0/3 | ⏳ Backlog | 🟢 Low |
 | ✨ Quick Wins | 0/3 | ⏳ Backlog | 🟡 Medium |
 
 ---
 
-## 🔥 Next Up (Épica 4)
+## 🔥 Next Up (Épica 4 - Iteration 2)
 
-1. [US-012: Registrar consumo de productos](./userstories/backlog/high-priority/US-012-registrar-consumo.md) ⭐⭐⭐⭐⭐
-2. [US-014: Alertas de stock bajo](./userstories/backlog/high-priority/US-014-alertas-stock-bajo.md) ⭐⭐⭐⭐
-3. [US-015: Lista de compras automática](./userstories/backlog/high-priority/US-015-lista-compras-automatica.md) ⭐⭐⭐⭐⭐
+**Completed in Iteration 1** ✅
+- ✅ [US-012: Registrar consumo de productos (by levels)](./userstories/completed/epic-4/US-012-registrar-consumo.md) - Sprint 8
 
-**Why Important**: Without consumption tracking, inventory is static and loses value. This completes the product lifecycle: Buy → Store → **Consume** → Alert → Auto-generate list.
+**Next Stories**:
+1. [US-014: Alertas de stock bajo](./userstories/backlog/high-priority/US-014-alertas-stock-bajo.md) ⭐⭐⭐⭐
+2. [US-015: Lista de compras automática](./userstories/backlog/high-priority/US-015-lista-compras-automatica.md) ⭐⭐⭐⭐⭐
+
+**Milestone Achieved**: Complete product lifecycle now functional: Buy → Store → **Consume** → Alert → Auto-generate list ✅
 
 ---
 
 ## 📊 Progress
 
-- **Velocity**: ~2 stories/sprint
-- **Total Tests**: 393+ (392 unit + 12 e2e)
+- **Velocity**: ~1-2 stories/sprint
+- **Total Tests**: 484 unit/integration + 8 E2E (critical flows)
 - **Architecture**: Clean Architecture + DDD
-- **Tech Debt**: 2 items tracked in OpenSpec
+- **Tech Debt**: Minimal (tracked in OpenSpec)
 
 ---
 
 ## 🎉 Recent Achievements
+
+### Sprint 8 (Dec 2025) - 🌟 Major Milestone
+- ✅ **US-012: Registrar consumo de productos (Consumption Tracking)**
+- Feature: 4-level stock system (Alto, Medio, Bajo, Vacío)
+- Feature: Automatic shopping list management
+- Feature: Visual indicators + urgency badges
+- **Impact**: Complete product lifecycle now functional ✅
 
 ### Sprint 7 (Dec 2025)
 - ✅ US-011: Excluir productos del escaneo de ticket
@@ -48,10 +58,6 @@
 ### Sprint 6 (Nov 2025)
 - ✅ US-010: Mejorar matching de productos
 - Feature: Advanced product name normalization (60% confidence threshold)
-
-### Sprint 5 (Nov 2025)
-- ✅ US-009: Escanear ticket y registrar compra (OCR)
-- Feature: OCR with Gemini Vision API (100% accuracy)
 
 See [CHANGELOG.md](./CHANGELOG.md) for full release history.
 

@@ -8,8 +8,8 @@ Este directorio contiene las historias de usuario del proyecto Shopping Manager,
 
 - **[📊 ROADMAP](../ROADMAP.md)** - Project roadmap and high-level overview (< 1 min read)
 - **[📝 CHANGELOG](../CHANGELOG.md)** - Release history and shipped features
-- **[✅ Completed Stories](./completed/)** - What's been built (11 stories)
-- **[📋 Backlog](./backlog/)** - What's next (16 stories)
+- **[✅ Completed Stories](./completed/)** - What's been built (12 stories)
+- **[📋 Backlog](./backlog/)** - What's next (15 stories)
 
 ---
 
@@ -32,7 +32,7 @@ Cada archivo incluye:
 
 ---
 
-## Historias Completadas ✅ (11/27)
+## Historias Completadas ✅ (12/27)
 
 ### Épica 1: Gestión de Inventario Personal ✅
 
@@ -64,14 +64,21 @@ Cada archivo incluye:
 
 **🎯 Achievement**: OCR with 100% precision + Smart product matching
 
+### Épica 4: Gestión de Consumo 🔄
+
+| ID | Título | Sprint | Tests |
+|----|--------|--------|-------|
+| [US-012](./completed/epic-4/US-012-registrar-consumo.md) | Registrar consumo de productos (by levels) | Sprint 8 | 484 unit + 8 E2E |
+
+**🎯 Achievement**: Complete product lifecycle (Buy → Store → Consume → Alert → Shop)
+
 ---
 
-## Backlog 📋 (16 stories)
+## Backlog 📋 (15 stories)
 
-### 🔥 High Priority (5 stories)
+### 🔥 High Priority (4 stories)
 
-**Épica 4: Gestión de Consumo** (Critical - closes product lifecycle)
-- [US-012: Registrar consumo de productos](./backlog/high-priority/US-012-registrar-consumo.md) ⭐⭐⭐⭐⭐
+**Épica 4: Gestión de Consumo - Second Iteration** (Analytics + Portions)
 - [US-014: Alertas de stock bajo](./backlog/high-priority/US-014-alertas-stock-bajo.md) ⭐⭐⭐⭐
 - [US-015: Lista de compras automática](./backlog/high-priority/US-015-lista-compras-automatica.md) ⭐⭐⭐⭐⭐
 

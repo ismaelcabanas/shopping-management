@@ -6,6 +6,42 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Sprint 8 - 2025-12-12
+
+### Added
+- **[US-012](./userstories/completed/epic-4/US-012-registrar-consumo.md)**: Registrar consumo de productos (Consumption Tracking by Levels)
+  - Feature: 4-level stock tracking system (Alto, Medio, Bajo, Vacío)
+  - Quick stock updates via modal (2 taps, <5 seconds)
+  - Automatic shopping list management based on stock levels
+  - Visual indicators: color-coded progress bars (green/yellow/red/gray)
+  - Urgency badges in shopping list ("Stock bajo", "Sin stock")
+  - Auto-add products to shopping list when stock is Low/Empty
+  - Auto-remove from list when stock returns to High/Medium
+
+### Technical
+- New domain entities: `StockLevel` value object, `ShoppingListItem` entity
+- New use cases: `UpdateStockLevel`, `GetProductsNeedingRestock`
+- New repositories: `LocalStorageShoppingListRepository` with proper prefixing
+- New components: `StockLevelIndicator`, `UpdateStockModal`, `ShoppingListPage`
+- New hooks: `useStockLevel`, `useShoppingList`
+- LocalStorage prefix standardization (`shopping_manager_*`)
+
+### Tests
+- 484 unit/integration tests (all passing) ✅
+- 8/10 E2E tests passing (critical flows validated) ✅
+- Comprehensive test coverage across all layers
+
+### Documentation
+- User guide: `docs/user-guides/consumption-tracking.md`
+- Technical documentation in `CLAUDE.md`
+- OpenSpec archived: `2025-12-12-implement-consumption-tracking-by-levels`
+
+### Milestone
+- ✅ Complete product lifecycle: Buy → Store → Consume → Alert → Shop
+- ✅ Épica 4 (Gestión de Consumo) - First iteration complete
+
+---
+
 ## Sprint 7 - 2025-12-05
 
 ### Added
