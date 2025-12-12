@@ -171,10 +171,11 @@
 
 ## 10. Documentation
 
-- [ ] 10.1 Update CLAUDE.md
-  - Document new domain concepts
-  - Add consumption tracking to architecture
-  - Update conventions if needed
+- [x] 10.1 Update CLAUDE.md
+  - Document new domain concepts ✅
+  - Add consumption tracking to architecture ✅
+  - Update conventions (LocalStorage prefixes) ✅
+  - Document use cases, repositories, and components ✅
 
 - [x] 10.2 User documentation
   - Created comprehensive user guide: docs/user-guides/consumption-tracking.md
