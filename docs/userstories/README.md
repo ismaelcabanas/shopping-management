@@ -74,11 +74,16 @@ Cada archivo incluye:
 
 ---
 
-## Backlog 📋 (15 stories)
+## Backlog 📋 (18 stories)
 
-### 🔥 High Priority (4 stories)
+### 🔥 High Priority (7 stories)
 
-**Épica 4: Gestión de Consumo - Second Iteration** (Analytics + Portions)
+**Post-Sprint 8 UX Improvements** (From manual testing feedback)
+- [QW-005: Dashboard con vista de acción](./backlog/high-priority/QW-005-dashboard-accionable.md) ⭐⭐⭐⭐ (2 SP)
+- [US-022: Marcar productos en lista de compra](./backlog/high-priority/US-022-lista-compra-checkbox.md) ⭐⭐⭐⭐⭐ (3 SP)
+- [US-023: Validar compras contra lista](./backlog/high-priority/US-023-validar-compras.md) ⭐⭐⭐⭐⭐ (3 SP)
+
+**Épica 4: Gestión de Consumo** (Deferred until after UX fixes)
 - [US-014: Alertas de stock bajo](./backlog/high-priority/US-014-alertas-stock-bajo.md) ⭐⭐⭐⭐
 - [US-015: Lista de compras automática](./backlog/high-priority/US-015-lista-compras-automatica.md) ⭐⭐⭐⭐⭐
 
@@ -114,13 +119,13 @@ Cada archivo incluye:
 ## Estadísticas del Proyecto
 
 ### Progress
-- **Completadas**: 11/27 (41%)
-- **Alta prioridad**: 5 stories
+- **Completadas**: 12/30 (40%)
+- **Alta prioridad**: 7 stories
 - **Media prioridad**: 5 stories
 - **Baja prioridad**: 4 stories
 
 ### Testing
-- **Total tests**: 393+ (392 unit + 12 e2e)
+- **Total tests**: 492+ (484 unit + 8 e2e)
 - **Methodology**: Test-Driven Development (TDD)
 - **Coverage**: ~90%
 
@@ -128,8 +133,8 @@ Cada archivo incluye:
 - ✅ **Épica 1** (Gestión Inventario): 5/5
 - ✅ **Épica 2** (Gestión Avanzada): 3/3
 - ✅ **Épica 3** (Automatización Compras): 3/3
-- 🚧 **Épica 4** (Gestión Consumo): 0/4 - **NEXT**
-- ⏳ **Épica 5** (Inteligencia Consumo): 0/4
+- 🚧 **Épica 4** (Gestión Consumo): 1/4
+- ⏳ **Épica 5** (Inteligencia Consumo): 0/6
 - ⏳ **Épica 6** (Gestión Tiendas): 0/3
 - ⏳ **Quick Wins**: 0/4
 
@@ -270,6 +275,6 @@ Add the new story to the appropriate section.
 
 ---
 
-**Last updated**: Sprint 7 (2025-12-06)
-**Next milestone**: Épica 4 - Gestión de Consumo
-**Tests**: 393+ (392 unit + 12 e2e)
+**Last updated**: Sprint 8 (2025-12-12)
+**Next milestone**: UX Improvements (QW-005, US-022, US-023)
+**Tests**: 492+ (484 unit + 8 e2e)

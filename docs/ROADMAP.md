@@ -1,8 +1,8 @@
 # Roadmap - Shopping Manager
 
 **Last Updated**: 2025-12-12
-**Progress**: 12/27 stories (44%)
-**Current Focus**: Épica 4 - Gestión de Consumo (Iteration 2)
+**Progress**: 12/30 stories (40%)
+**Current Focus**: UX Improvements post-Sprint 8
 
 ---
 
@@ -16,20 +16,25 @@
 | 🔄 **Épica 4: Gestión de Consumo** | 1/4 | 🚧 In Progress | 🔥 High |
 | 📊 Épica 5: Inteligencia de Consumo | 0/6 | ⏳ Backlog | 🟡 Medium |
 | 🏪 Épica 6: Gestión de Tiendas | 0/3 | ⏳ Backlog | 🟢 Low |
-| ✨ Quick Wins | 0/3 | ⏳ Backlog | 🟡 Medium |
+| ✨ Quick Wins | 0/4 | ⏳ Backlog | 🟡 Medium |
 
 ---
 
-## 🔥 Next Up (Épica 4 - Iteration 2)
+## 🔥 Next Up - UX Improvements (Post-Sprint 8 Feedback)
 
-**Completed in Iteration 1** ✅
-- ✅ [US-012: Registrar consumo de productos (by levels)](./userstories/completed/epic-4/US-012-registrar-consumo.md) - Sprint 8
+**Completed in Sprint 8** ✅
+- ✅ [US-012: Registrar consumo de productos (by levels)](./userstories/completed/epic-4/US-012-registrar-consumo.md)
 
-**Next Stories**:
-1. [US-014: Alertas de stock bajo](./userstories/backlog/high-priority/US-014-alertas-stock-bajo.md) ⭐⭐⭐⭐
-2. [US-015: Lista de compras automática](./userstories/backlog/high-priority/US-015-lista-compras-automatica.md) ⭐⭐⭐⭐⭐
+**High Priority - UX Improvements** (Based on manual testing):
+1. [QW-005: Dashboard con vista de acción](./userstories/backlog/high-priority/QW-005-dashboard-accionable.md) ⭐⭐⭐⭐ (2 SP)
+2. [US-022: Marcar productos en lista de compra](./userstories/backlog/high-priority/US-022-lista-compra-checkbox.md) ⭐⭐⭐⭐⭐ (3 SP)
+3. [US-023: Validar compras contra lista](./userstories/backlog/high-priority/US-023-validar-compras.md) ⭐⭐⭐⭐⭐ (3 SP)
 
-**Milestone Achieved**: Complete product lifecycle now functional: Buy → Store → **Consume** → Alert → Auto-generate list ✅
+**Epic 4 - Remaining Stories** (Deferred after UX fixes):
+- [US-014: Alertas de stock bajo](./userstories/backlog/high-priority/US-014-alertas-stock-bajo.md) ⭐⭐⭐⭐
+- [US-015: Lista de compras automática](./userstories/backlog/high-priority/US-015-lista-compras-automatica.md) ⭐⭐⭐⭐⭐
+
+**Milestone Achieved**: Complete product lifecycle functional + UX refinement needed ✅
 
 ---
 
