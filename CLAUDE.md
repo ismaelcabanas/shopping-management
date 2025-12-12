@@ -116,6 +116,40 @@ Usuario actualiza stock level → Sistema detecta 'low'/'empty'
     → Usuario marca como "Comprado" → Quita de Shopping List
 ```
 
+#### Implementación Técnica
+
+**Use Cases (Application Layer):**
+- `UpdateStockLevel`: Actualiza el nivel de stock de un producto y gestiona automáticamente su presencia en la shopping list
+  - Input: `productId`, `newStockLevel`
+  - Output: `InventoryItem` actualizado
+  - Side effect: Agrega/remueve producto de shopping list según reglas de negocio
+
+- `GetProductsNeedingRestock`: Obtiene productos que necesitan reposición
+  - Input: ninguno
+  - Output: Lista de `InventoryItem` con stock 'low' o 'empty'
+  - Usado para generar reportes y validaciones
+
+**Repositories (Infrastructure Layer):**
+- `LocalStorageInventoryRepository`: Gestiona persistencia de `InventoryItem` en LocalStorage
+  - Usa `LocalStorageClient` con prefijo 'shopping_manager_inventory'
+  - Maneja backward compatibility (defaults: stockLevel='high', lastUpdated=now)
+
+- `LocalStorageShoppingListRepository`: Gestiona persistencia de `ShoppingListItem`
+  - Usa `LocalStorageClient` con prefijo 'shopping_manager_shopping-list'
+  - Soporta items automáticos (reason='auto') y manuales (reason='manual')
+
+**Components (Presentation Layer):**
+- `StockLevelIndicator`: Muestra indicador visual del nivel de stock (progress bar coloreado)
+- `UpdateStockModal`: Modal para actualizar nivel de stock (4 opciones radio buttons)
+- `ShoppingListPage`: Página con lista de compras y badges de urgencia
+- `useStockLevel`: Hook para gestionar operaciones de stock level
+- `useShoppingList`: Hook para gestionar operaciones de shopping list
+
+**Convenciones de Prefijos LocalStorage:**
+- Todos los repositorios deben usar `LocalStorageClient` para acceso a localStorage
+- Prefijo obligatorio: `'shopping_manager_'` (ej: `'shopping_manager_products'`)
+- Tests E2E y unitarios deben usar los mismos prefijos
+
 ---
 
 ## 6. Estructura del Proyecto (Project Structure)
