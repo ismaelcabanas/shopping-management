@@ -1,8 +1,8 @@
 import { useShoppingList } from '../hooks/useShoppingList'
-import { CheckCircle } from 'lucide-react'
+import { cn } from '../../lib/utils'
 
 export function ShoppingListPage() {
-  const { items, isLoading, error, markAsPurchased } = useShoppingList()
+  const { items, isLoading, error, toggleChecked } = useShoppingList()
 
   if (isLoading) {
     return (
@@ -62,28 +62,43 @@ export function ShoppingListPage() {
                 key={item.productId.value}
                 className="px-4 py-4 hover:bg-gray-50 transition-colors"
               >
-                <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  {/* Checkbox */}
+                  <input
+                    type="checkbox"
+                    checked={item.checked}
+                    onChange={() => toggleChecked(item.productId)}
+                    className="w-5 h-5 min-w-[44px] min-h-[44px] cursor-pointer rounded border-gray-300 text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                    aria-label={`Marcar ${item.productName} como comprado`}
+                  />
+
+                  {/* Product info with conditional styling */}
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-medium text-gray-900">
+                      <h3
+                        className={cn(
+                          "text-lg font-medium text-gray-900",
+                          item.checked && "line-through opacity-60"
+                        )}
+                      >
                         {item.productName}
                       </h3>
-                      {getStockLevelBadge(item.stockLevel)}
+                      {/* Badge always visible (opacity-100) */}
+                      <span className="opacity-100">
+                        {getStockLevelBadge(item.stockLevel)}
+                      </span>
                     </div>
                     {item.stockLevel && (
-                      <p className="text-sm text-gray-500 mt-1">
+                      <p
+                        className={cn(
+                          "text-sm text-gray-500 mt-1",
+                          item.checked && "opacity-60"
+                        )}
+                      >
                         Agregado automáticamente
                       </p>
                     )}
                   </div>
-                  <button
-                    onClick={() => markAsPurchased(item.productId)}
-                    className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                    aria-label={`Marcar ${item.productName} como comprado`}
-                  >
-                    <CheckCircle size={18} />
-                    <span>Comprado</span>
-                  </button>
                 </div>
               </li>
             ))}

@@ -34,7 +34,9 @@ describe('UpdateStockLevel', () => {
       findByProductId: async () => null,
       add: vi.fn(),
       remove: vi.fn(),
-      exists: async () => false
+      exists: async () => false,
+      toggleChecked: vi.fn(),
+      getCheckedItems: async () => []
     }
     updateStockLevel = new UpdateStockLevel(inventoryRepository, shoppingListRepository)
   })
