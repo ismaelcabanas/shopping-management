@@ -7,4 +7,6 @@ export interface ShoppingListRepository {
   add(item: ShoppingListItem): Promise<void>
   remove(productId: ProductId): Promise<void>
   exists(productId: ProductId): Promise<boolean>
+  toggleChecked(productId: ProductId): Promise<void>
+  getCheckedItems(): Promise<ShoppingListItem[]>
 }

@@ -10,6 +10,7 @@ interface ShoppingListItemDTO {
   reason: 'auto' | 'manual'
   stockLevel?: StockLevelValue
   addedAt: string
+  checked?: boolean
 }
 
 export class LocalStorageShoppingListRepository implements ShoppingListRepository {
@@ -61,6 +62,19 @@ export class LocalStorageShoppingListRepository implements ShoppingListRepositor
     return item !== null
   }
 
+  async toggleChecked(productId: ProductId): Promise<void> {
+    const items = await this.findAll()
+    const updatedItems = items.map(item =>
+      item.productId.equals(productId) ? item.toggleChecked() : item
+    )
+    this.save(updatedItems)
+  }
+
+  async getCheckedItems(): Promise<ShoppingListItem[]> {
+    const items = await this.findAll()
+    return items.filter(item => item.checked)
+  }
+
   private save(items: ShoppingListItem[]): void {
     const dtos = items.map(item => this.domainToDTO(item))
     this.storage.set(this.STORAGE_KEY, dtos)
@@ -71,17 +85,23 @@ export class LocalStorageShoppingListRepository implements ShoppingListRepositor
       productId: item.productId.value,
       reason: item.reason,
       stockLevel: item.stockLevel,
-      addedAt: item.addedAt.toISOString()
+      addedAt: item.addedAt.toISOString(),
+      checked: item.checked
     }
   }
 
   private dtoToDomain(dto: ShoppingListItemDTO): ShoppingListItem {
     const productId = ProductIdClass.fromString(dto.productId)
+    const checked = dto.checked ?? false // Backward compatibility: default to false
 
+    let item: ShoppingListItem
     if (dto.reason === 'auto' && dto.stockLevel) {
-      return ShoppingListItemClass.createAuto(productId, dto.stockLevel)
+      item = ShoppingListItemClass.createAuto(productId, dto.stockLevel)
+    } else {
+      item = ShoppingListItemClass.createManual(productId)
     }
 
-    return ShoppingListItemClass.createManual(productId)
+    // If checked is true, toggle it to restore the state
+    return checked ? item.toggleChecked() : item
   }
 }

@@ -125,4 +125,112 @@ describe('LocalStorageShoppingListRepository', () => {
       expect(exists).toBe(true)
     })
   })
+
+  describe('toggleChecked', () => {
+    it('should toggle checked state of existing item from false to true', async () => {
+      const productId = ProductId.fromString('123e4567-e89b-12d3-a456-426614174000')
+      const item = ShoppingListItem.createAuto(productId, 'low')
+
+      await repository.add(item)
+      await repository.toggleChecked(productId)
+
+      const found = await repository.findByProductId(productId)
+      expect(found?.checked).toBe(true)
+    })
+
+    it('should toggle checked state from true to false', async () => {
+      const productId = ProductId.fromString('123e4567-e89b-12d3-a456-426614174000')
+      const item = ShoppingListItem.createAuto(productId, 'low')
+
+      await repository.add(item)
+      await repository.toggleChecked(productId) // true
+      await repository.toggleChecked(productId) // false
+
+      const found = await repository.findByProductId(productId)
+      expect(found?.checked).toBe(false)
+    })
+
+    it('should do nothing when toggling non-existent item', async () => {
+      const productId = ProductId.fromString('123e4567-e89b-12d3-a456-426614174000')
+
+      await repository.toggleChecked(productId)
+
+      const found = await repository.findByProductId(productId)
+      expect(found).toBeNull()
+    })
+  })
+
+  describe('getCheckedItems', () => {
+    it('should return empty array when no items are checked', async () => {
+      const productId1 = ProductId.fromString('123e4567-e89b-12d3-a456-426614174000')
+      const productId2 = ProductId.fromString('123e4567-e89b-12d3-a456-426614174001')
+      const item1 = ShoppingListItem.createAuto(productId1, 'low')
+      const item2 = ShoppingListItem.createManual(productId2)
+
+      await repository.add(item1)
+      await repository.add(item2)
+
+      const checkedItems = await repository.getCheckedItems()
+
+      expect(checkedItems).toHaveLength(0)
+    })
+
+    it('should return only checked items', async () => {
+      const productId1 = ProductId.fromString('123e4567-e89b-12d3-a456-426614174000')
+      const productId2 = ProductId.fromString('123e4567-e89b-12d3-a456-426614174001')
+      const productId3 = ProductId.fromString('123e4567-e89b-12d3-a456-426614174002')
+      const item1 = ShoppingListItem.createAuto(productId1, 'low')
+      const item2 = ShoppingListItem.createManual(productId2)
+      const item3 = ShoppingListItem.createAuto(productId3, 'empty')
+
+      await repository.add(item1)
+      await repository.add(item2)
+      await repository.add(item3)
+
+      await repository.toggleChecked(productId1)
+      await repository.toggleChecked(productId3)
+
+      const checkedItems = await repository.getCheckedItems()
+
+      expect(checkedItems).toHaveLength(2)
+      expect(checkedItems[0].productId.value).toBe('123e4567-e89b-12d3-a456-426614174000')
+      expect(checkedItems[1].productId.value).toBe('123e4567-e89b-12d3-a456-426614174002')
+    })
+  })
+
+  describe('backward compatibility', () => {
+    it('should default checked to false for legacy data without checked field', async () => {
+      // Simulate legacy data directly in localStorage
+      const legacyData = [{
+        productId: '123e4567-e89b-12d3-a456-426614174000',
+        reason: 'auto',
+        stockLevel: 'low',
+        addedAt: new Date().toISOString()
+        // NO checked field
+      }]
+      localStorage.setItem('shopping_manager_shopping-list', JSON.stringify(legacyData))
+
+      const items = await repository.findAll()
+
+      expect(items).toHaveLength(1)
+      expect(items[0].checked).toBe(false)
+    })
+
+    it('should preserve checked = true from storage', async () => {
+      // Simulate data with checked field
+      const dataWithChecked = [{
+        productId: '123e4567-e89b-12d3-a456-426614174000',
+        reason: 'auto',
+        stockLevel: 'low',
+        addedAt: new Date().toISOString(),
+        checked: true
+      }]
+      localStorage.setItem('shopping_manager_shopping-list', JSON.stringify(dataWithChecked))
+
+      const items = await repository.findAll()
+
+      expect(items).toHaveLength(1)
+      expect(items[0].checked).toBe(true)
+    })
+  })
 })
