@@ -25,13 +25,20 @@ Advanced inventory features including editing, deletion, and purchase registrati
 
 OCR-powered receipt scanning with intelligent product matching and product exclusion features.
 
+### 🔄 [Epic 4: Gestión de Consumo](./epic-4/)
+**Stories**: 2/4 completed
+**Status**: In Progress
+**Completion**: Sprint 8-9
+
+Consumption tracking and automatic shopping list management based on stock levels with natural UX flow.
+
 ---
 
 ## Total Progress
 
-- **Total stories**: 11
-- **Total tests**: 393+ (392 unit + 12 e2e)
-- **Sprints**: 1-7
+- **Total stories**: 13
+- **Total tests**: 518+ (497 unit + 21 E2E)
+- **Sprints**: 1-9
 - **Architecture**: Clean Architecture + DDD throughout
 
 ---

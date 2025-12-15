@@ -1,11 +1,11 @@
 # Épica 4: Gestión de Consumo
 
-**Estado**: En Progreso (1/4 historias completadas)
+**Estado**: En Progreso (2/4 historias completadas)
 
 ## Descripción
 Sistema de seguimiento de consumo y gestión automática de lista de compras basado en niveles de stock.
 
-## Historias Completadas (1)
+## Historias Completadas (2)
 
 ### [US-012: Registrar consumo de productos](US-012-registrar-consumo.md)
 **Estado**: ✅ Completada (Sprint 8 - 2025-12-12)
@@ -23,21 +23,39 @@ Sistema de tracking de consumo usando 4 niveles de stock (Alto, Medio, Bajo, Vac
 
 ---
 
-## Historias Pendientes (3)
+### [US-022: Marcar productos en lista de compra](US-022-lista-compra-checkbox.md)
+**Estado**: ✅ Completada (Sprint 9 - 2025-12-15)
 
-Las siguientes historias implementarán la segunda iteración (tracking por porciones y analytics):
+**Descripción**: Sistema de checkboxes para gestión natural de lista de compras durante el proceso de compra en el supermercado.
 
-- **US-013**: Ver historial de consumo
+**Funcionalidades**:
+- Checkbox por item reemplazando botón "Comprado"
+- Items permanecen visibles al ser marcados (no desaparecen)
+- Diferenciación visual: line-through + opacity 0.6
+- Estado checked persistente en localStorage
+- Flujo natural replicando comportamiento real del supermercado
+
+**Implementación**:
+- Domain: Campo `checked: boolean` + método `toggleChecked()`
+- Infrastructure: DTO con backward compatibility
+- Presentation: Componente ShoppingListPage con checkbox UX
+
+**Tests**: 497 unit tests + 21 E2E tests ✅
+**OpenSpec**: Archived as `2025-12-15-add-shopping-list-checkbox`
+**Commits**: 4 commits implementing full feature
+
+---
+
+## Historias Pendientes (2)
+
 - **US-014**: Recibir alertas de stock bajo
 - **US-015**: Generar lista de compras automáticamente
 
-## Progreso de la Épica
+## Progreso
 
-```
-Completadas: 1/4 (25%)
-Sprint actual: 8
-Fecha inicio: 2025-12-12
-```
+Completadas: 2/4 (50%)
+Sprint actual: 9
+Próxima: US-014 o US-015 (después de completar US-023 y QW-005)
 
 ## Siguiente Iteración
 

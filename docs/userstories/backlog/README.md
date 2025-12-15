@@ -4,10 +4,11 @@ This directory contains pending user stories, organized by priority.
 
 ## By Priority
 
-### 🔥 [High Priority](./high-priority/) (5 stories)
-**Focus**: Critical features that close the product lifecycle
+### 🔥 [High Priority](./high-priority/) (6 stories)
+**Focus**: UX improvements and critical features
 
-- US-012: Registrar consumo de productos ⭐⭐⭐⭐⭐
+- US-023: Validar compras contra lista ⭐⭐⭐⭐⭐
+- QW-005: Dashboard con vista de acción ⭐⭐⭐⭐
 - US-014: Alertas de stock bajo ⭐⭐⭐⭐
 - US-015: Lista de compras automática ⭐⭐⭐⭐⭐
 - QW-001: Búsqueda y filtros ⭐⭐⭐⭐

@@ -6,6 +6,40 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Sprint 9 - 2025-12-15
+
+### Added
+- **[US-022](./userstories/completed/epic-4/US-022-lista-compra-checkbox.md)**: Marcar productos en lista de compra (Checkbox)
+  - Feature: Checkbox functionality replacing "Comprado" button
+  - Items remain visible when checked (no longer disappear)
+  - Visual differentiation: line-through + opacity 0.6 for checked items
+  - Urgency badges remain fully visible (opacity 1.0)
+  - Persistent checked state in localStorage
+  - Touch-friendly design: 44x44px minimum touch target
+  - Accessibility: aria-labels, keyboard navigation, focus indicators
+
+### Technical
+- New domain field: `checked: boolean` in ShoppingListItem entity
+- New repository methods: `toggleChecked()`, `getCheckedItems()`
+- Backward compatibility: legacy data defaults to checked=false
+- Created `cn()` utility for conditional class names
+- Hook `useShoppingList` extended with `toggleChecked` and `checkedCount`
+
+### Tests
+- 497 unit/integration tests passing (all layers covered)
+- 21 E2E tests passing (1 updated for new behavior)
+- Comprehensive backward compatibility tests
+
+### Documentation
+- OpenSpec archived: `2025-12-15-add-shopping-list-checkbox`
+- Tasks.md: 47/57 core tasks completed (82%)
+
+### Milestone
+- ✅ Natural shopping flow matching real-world behavior
+- ✅ Preparation for US-023 (purchase validation)
+
+---
+
 ## Sprint 8 - 2025-12-12
 
 ### Added

@@ -8,8 +8,8 @@ Este directorio contiene las historias de usuario del proyecto Shopping Manager,
 
 - **[📊 ROADMAP](../ROADMAP.md)** - Project roadmap and high-level overview (< 1 min read)
 - **[📝 CHANGELOG](../CHANGELOG.md)** - Release history and shipped features
-- **[✅ Completed Stories](./completed/)** - What's been built (12 stories)
-- **[📋 Backlog](./backlog/)** - What's next (15 stories)
+- **[✅ Completed Stories](./completed/)** - What's been built (13 stories)
+- **[📋 Backlog](./backlog/)** - What's next (17 stories)
 
 ---
 
@@ -32,7 +32,7 @@ Cada archivo incluye:
 
 ---
 
-## Historias Completadas ✅ (12/27)
+## Historias Completadas ✅ (13/30)
 
 ### Épica 1: Gestión de Inventario Personal ✅
 
@@ -69,21 +69,21 @@ Cada archivo incluye:
 | ID | Título | Sprint | Tests |
 |----|--------|--------|-------|
 | [US-012](./completed/epic-4/US-012-registrar-consumo.md) | Registrar consumo de productos (by levels) | Sprint 8 | 484 unit + 8 E2E |
+| [US-022](./completed/epic-4/US-022-lista-compra-checkbox.md) | Marcar productos en lista de compra | Sprint 9 | 497 unit + 21 E2E |
 
-**🎯 Achievement**: Complete product lifecycle (Buy → Store → Consume → Alert → Shop)
+**🎯 Achievement**: Complete product lifecycle + Natural shopping UX
 
 ---
 
-## Backlog 📋 (18 stories)
+## Backlog 📋 (17 stories)
 
-### 🔥 High Priority (7 stories)
+### 🔥 High Priority (6 stories)
 
-**Post-Sprint 8 UX Improvements** (From manual testing feedback)
-- [QW-005: Dashboard con vista de acción](./backlog/high-priority/QW-005-dashboard-accionable.md) ⭐⭐⭐⭐ (2 SP)
-- [US-022: Marcar productos en lista de compra](./backlog/high-priority/US-022-lista-compra-checkbox.md) ⭐⭐⭐⭐⭐ (3 SP)
+**Post-Sprint 9 Priorities**:
 - [US-023: Validar compras contra lista](./backlog/high-priority/US-023-validar-compras.md) ⭐⭐⭐⭐⭐ (3 SP)
+- [QW-005: Dashboard con vista de acción](./backlog/high-priority/QW-005-dashboard-accionable.md) ⭐⭐⭐⭐ (2 SP)
 
-**Épica 4: Gestión de Consumo** (Deferred until after UX fixes)
+**Épica 4: Gestión de Consumo** (Deferred):
 - [US-014: Alertas de stock bajo](./backlog/high-priority/US-014-alertas-stock-bajo.md) ⭐⭐⭐⭐
 - [US-015: Lista de compras automática](./backlog/high-priority/US-015-lista-compras-automatica.md) ⭐⭐⭐⭐⭐
 
@@ -119,13 +119,13 @@ Cada archivo incluye:
 ## Estadísticas del Proyecto
 
 ### Progress
-- **Completadas**: 12/30 (40%)
-- **Alta prioridad**: 7 stories
+- **Completadas**: 13/30 (43%)
+- **Alta prioridad**: 6 stories
 - **Media prioridad**: 5 stories
 - **Baja prioridad**: 4 stories
 
 ### Testing
-- **Total tests**: 492+ (484 unit + 8 e2e)
+- **Total tests**: 518+ (497 unit + 21 E2E)
 - **Methodology**: Test-Driven Development (TDD)
 - **Coverage**: ~90%
 
@@ -133,7 +133,7 @@ Cada archivo incluye:
 - ✅ **Épica 1** (Gestión Inventario): 5/5
 - ✅ **Épica 2** (Gestión Avanzada): 3/3
 - ✅ **Épica 3** (Automatización Compras): 3/3
-- 🚧 **Épica 4** (Gestión Consumo): 1/4
+- 🚧 **Épica 4** (Gestión Consumo): 2/4
 - ⏳ **Épica 5** (Inteligencia Consumo): 0/6
 - ⏳ **Épica 6** (Gestión Tiendas): 0/3
 - ⏳ **Quick Wins**: 0/4
@@ -275,6 +275,6 @@ Add the new story to the appropriate section.
 
 ---
 
-**Last updated**: Sprint 8 (2025-12-12)
-**Next milestone**: UX Improvements (QW-005, US-022, US-023)
-**Tests**: 492+ (484 unit + 8 e2e)
+**Last updated**: Sprint 9 (2025-12-15)
+**Next milestone**: Continue UX Improvements (US-023, QW-005)
+**Tests**: 518+ (497 unit + 21 E2E)

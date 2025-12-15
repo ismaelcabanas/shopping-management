@@ -1,7 +1,7 @@
 # US-022: Marcar Productos en Lista de Compra
 
 **Épica**: Gestión de Consumo (Epic 4)
-**Estado**: 🔴 Pendiente
+**Estado**: ✅ Completada (Sprint 9 - 2025-12-15)
 **Story Points**: 3 SP (~3h)
 **Prioridad**: ⭐⭐⭐⭐⭐
 **Feedback Source**: Testing manual post-Sprint 8 (2025-12-12)
@@ -149,25 +149,25 @@ interface ShoppingListItem {
 ## Definition of Done
 
 ### Tests
-- [ ] Test unitario: ShoppingListItem con campo `checked`
-- [ ] Test unitario: LocalStorageShoppingListRepository.toggleChecked()
-- [ ] Test unitario: useShoppingList.toggleChecked()
-- [ ] Test componente: ShoppingListPage muestra checkboxes
-- [ ] Test componente: Click en checkbox cambia estado
-- [ ] Test componente: Estado checked persiste en localStorage
+- [x] Test unitario: ShoppingListItem con campo `checked`
+- [x] Test unitario: LocalStorageShoppingListRepository.toggleChecked()
+- [x] Test unitario: useShoppingList.toggleChecked()
+- [x] Test componente: ShoppingListPage muestra checkboxes
+- [x] Test componente: Click en checkbox cambia estado
+- [x] Test componente: Estado checked persiste en localStorage
 
 ### Implementación
-- [ ] Checkbox visible en cada item
-- [ ] Estado checked persiste al recargar
-- [ ] Estilos visuales para items checked (opacidad)
-- [ ] Botón "Comprado" eliminado
-- [ ] Contador de items checked en botón "Registrar Compra"
+- [x] Checkbox visible en cada item
+- [x] Estado checked persiste al recargar
+- [x] Estilos visuales para items checked (opacidad)
+- [x] Botón "Comprado" eliminado
+- [x] Contador de items checked en botón "Registrar Compra"
 
 ### Validación
-- [ ] Funcional en desktop y mobile (responsive)
-- [ ] Touch target de checkbox ≥44x44px en mobile
-- [ ] Estado persiste entre navegaciones
-- [ ] Compatible con flujo existente de agregar/eliminar items
+- [x] Funcional en desktop y mobile (responsive)
+- [x] Touch target de checkbox ≥44x44px en mobile
+- [x] Estado persiste entre navegaciones
+- [x] Compatible con flujo existente de agregar/eliminar items
 
 ---
 
