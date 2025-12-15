@@ -19,7 +19,7 @@ describe('ShoppingListPage', () => {
     expect(screen.getByText(/Los productos con stock bajo se agregarán automáticamente/i)).toBeInTheDocument()
   })
 
-  it('should display shopping list items', async () => {
+  it('should display shopping list items with checkbox', async () => {
     // Setup: Add product and shopping list item
     const productId = '123e4567-e89b-12d3-a456-426614174000'
 
@@ -42,8 +42,9 @@ describe('ShoppingListPage', () => {
       expect(screen.getByText('1 producto')).toBeInTheDocument()
     })
 
-    // Product should be in the list (name may vary based on repository)
-    expect(screen.getByRole('button', { name: /Marcar .* como comprado/i })).toBeInTheDocument()
+    // Checkbox should be present for each product
+    expect(screen.getByRole('checkbox', { name: /Marcar .* como comprado/i })).toBeInTheDocument()
+    expect(screen.getByRole('checkbox')).not.toBeChecked()
   })
 
   it('should display "Stock bajo" badge for low stock items', async () => {
@@ -92,7 +93,7 @@ describe('ShoppingListPage', () => {
     })
   })
 
-  it('should remove item when "Comprado" button is clicked', async () => {
+  it('should toggle checkbox state when clicked', async () => {
     const user = userEvent.setup()
     const productId = '123e4567-e89b-12d3-a456-426614174000'
 
@@ -115,12 +116,18 @@ describe('ShoppingListPage', () => {
       expect(screen.getByText('1 producto')).toBeInTheDocument()
     })
 
-    const compradoButton = screen.getByRole('button', { name: /Marcar .* como comprado/i })
-    await user.click(compradoButton)
+    const checkbox = screen.getByRole('checkbox', { name: /Marcar .* como comprado/i })
+    expect(checkbox).not.toBeChecked()
+
+    // Click to check
+    await user.click(checkbox)
 
     await waitFor(() => {
-      expect(screen.getByText('No hay productos en la lista de compras')).toBeInTheDocument()
+      expect(checkbox).toBeChecked()
     })
+
+    // Item should remain visible (not removed)
+    expect(screen.getByText('Huevos')).toBeInTheDocument()
   })
 
   it('should display multiple items', async () => {
@@ -162,5 +169,49 @@ describe('ShoppingListPage', () => {
     render(<ShoppingListPage />)
 
     expect(screen.getByText('Cargando lista de compras...')).toBeInTheDocument()
+  })
+
+  it('should apply visual styling to checked items', async () => {
+    const user = userEvent.setup()
+    const productId = '123e4567-e89b-12d3-a456-426614174000'
+
+    localStorage.setItem('shopping_manager_products', JSON.stringify([{
+      id: productId,
+      name: 'Huevos',
+      unitType: 'units'
+    }]))
+
+    localStorage.setItem('shopping_manager_shopping-list', JSON.stringify([{
+      productId: productId,
+      reason: 'auto',
+      stockLevel: 'low',
+      addedAt: new Date().toISOString()
+    }]))
+
+    render(<ShoppingListPage />)
+
+    await waitFor(() => {
+      expect(screen.getByText('1 producto')).toBeInTheDocument()
+    })
+
+    const checkbox = screen.getByRole('checkbox')
+    const productName = screen.getByText('Huevos')
+
+    // Initially not checked - no strikethrough
+    expect(productName).not.toHaveClass('line-through')
+
+    // Click to check
+    await user.click(checkbox)
+
+    await waitFor(() => {
+      expect(checkbox).toBeChecked()
+    })
+
+    // After checking - should have strikethrough and reduced opacity
+    await waitFor(() => {
+      const checkedName = screen.getByText('Huevos')
+      expect(checkedName).toHaveClass('line-through')
+      expect(checkedName).toHaveClass('opacity-60')
+    })
   })
 })

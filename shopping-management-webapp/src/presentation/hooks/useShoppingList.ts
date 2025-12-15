@@ -10,6 +10,7 @@ export interface ShoppingListItemWithDetails {
   stockLevel?: StockLevelValue
   reason: 'auto' | 'manual'
   addedAt: Date
+  checked: boolean
 }
 
 export interface UseShoppingListReturn {
@@ -17,6 +18,8 @@ export interface UseShoppingListReturn {
   isLoading: boolean
   error: Error | null
   markAsPurchased: (productId: ProductId) => Promise<void>
+  toggleChecked: (productId: ProductId) => Promise<void>
+  checkedCount: number
   refresh: () => Promise<void>
 }
 
@@ -45,7 +48,8 @@ export function useShoppingList(): UseShoppingListReturn {
           productName: product?.name || 'Producto desconocido',
           stockLevel: item.stockLevel,
           reason: item.reason,
-          addedAt: item.addedAt
+          addedAt: item.addedAt,
+          checked: item.checked
         }
       })
 
@@ -70,9 +74,26 @@ export function useShoppingList(): UseShoppingListReturn {
     }
   }, [shoppingListRepository, loadShoppingList])
 
+  const toggleChecked = useCallback(async (productId: ProductId): Promise<void> => {
+    try {
+      await shoppingListRepository.toggleChecked(productId)
+      // Refresh the list after toggling
+      await loadShoppingList()
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Failed to toggle checked state')
+      setError(error)
+      throw err
+    }
+  }, [shoppingListRepository, loadShoppingList])
+
   const refresh = useCallback(async (): Promise<void> => {
     await loadShoppingList()
   }, [loadShoppingList])
+
+  // Compute checked count
+  const checkedCount = useMemo(() => {
+    return items.filter(item => item.checked).length
+  }, [items])
 
   // Load shopping list on mount
   useEffect(() => {
@@ -84,6 +105,8 @@ export function useShoppingList(): UseShoppingListReturn {
     isLoading,
     error,
     markAsPurchased,
+    toggleChecked,
+    checkedCount,
     refresh
   }
 }
