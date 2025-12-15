@@ -153,7 +153,7 @@ test.describe('US-012: Consumption Tracking by Levels', () => {
     await expect(milkListItem.locator('text=Stock bajo')).toBeVisible()
   })
 
-  test('@critical - Mark product as purchased removes it from shopping list', async ({ page }) => {
+  test('@critical - Check product in shopping list marks it as purchased', async ({ page }) => {
     // Given: Rice is in the shopping list with low stock
 
     // When: I navigate to shopping list
@@ -163,13 +163,19 @@ test.describe('US-012: Consumption Tracking by Levels', () => {
     // Then: Rice should be visible
     await expect(page.locator('text=Rice')).toBeVisible({ timeout: 10000 })
 
-    // When: I mark Rice as purchased
-    const compradoButton = page.getByRole('button', { name: /Marcar Rice como comprado/i })
-    await expect(compradoButton).toBeVisible()
-    await compradoButton.click()
+    // When: I check the checkbox for Rice
+    const riceCheckbox = page.getByRole('checkbox', { name: /Marcar Rice como comprado/i })
+    await expect(riceCheckbox).toBeVisible()
+    await expect(riceCheckbox).not.toBeChecked()
+    await riceCheckbox.click()
 
-    // Then: Rice should be removed from the list
-    await expect(page.locator('text=Rice')).not.toBeVisible({ timeout: 5000 })
+    // Then: Rice should remain visible but marked as checked
+    await expect(page.locator('text=Rice')).toBeVisible()
+    await expect(riceCheckbox).toBeChecked()
+
+    // And: Rice text should have line-through styling (visual feedback)
+    const riceText = page.locator('h3:has-text("Rice")')
+    await expect(riceText).toHaveClass(/line-through/)
   })
 
   test('@critical - Update stock from low to high removes from shopping list', async ({ page }) => {
