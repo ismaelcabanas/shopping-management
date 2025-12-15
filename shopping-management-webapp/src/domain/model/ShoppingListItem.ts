@@ -8,25 +8,38 @@ export class ShoppingListItem {
   readonly reason: ShoppingListReason
   readonly stockLevel?: StockLevelValue
   readonly addedAt: Date
+  readonly checked: boolean
 
   private constructor(
     productId: ProductId,
     reason: ShoppingListReason,
     stockLevel: StockLevelValue | undefined,
-    addedAt: Date
+    addedAt: Date,
+    checked: boolean = false
   ) {
     this.productId = productId
     this.reason = reason
     this.stockLevel = stockLevel
     this.addedAt = addedAt
+    this.checked = checked
   }
 
   static createAuto(productId: ProductId, stockLevel: StockLevelValue): ShoppingListItem {
-    return new ShoppingListItem(productId, 'auto', stockLevel, new Date())
+    return new ShoppingListItem(productId, 'auto', stockLevel, new Date(), false)
   }
 
   static createManual(productId: ProductId): ShoppingListItem {
-    return new ShoppingListItem(productId, 'manual', undefined, new Date())
+    return new ShoppingListItem(productId, 'manual', undefined, new Date(), false)
+  }
+
+  toggleChecked(): ShoppingListItem {
+    return new ShoppingListItem(
+      this.productId,
+      this.reason,
+      this.stockLevel,
+      this.addedAt,
+      !this.checked
+    )
   }
 
   isAutoAdded(): boolean {
