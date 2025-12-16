@@ -1,4 +1,4 @@
-# US-024: Modo Compra con Página Dedicada
+# US-024: Iniciar proceso de compra de lista de productos
 
 **Épica**: Gestión de Consumo (Epic 4)
 **Estado**: 🔴 Pendiente
@@ -12,7 +12,7 @@
 ## Historia de Usuario
 
 **Como** usuario que va a hacer la compra
-**Quiero** iniciar un "modo compra" que me lleve a una página dedicada para marcar productos conforme los añado al carrito
+**Quiero** iniciar la compra de mi lista de productos que me provea la lista de los productos de la compra para marcar productos conforme los añado al carrito
 **Para** tener una experiencia guiada que conecte mi lista de planificación con el registro final de la compra
 
 ---
