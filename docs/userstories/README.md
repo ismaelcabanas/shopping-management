@@ -80,7 +80,7 @@ Cada archivo incluye:
 ### 🔥 High Priority (6 stories)
 
 **Post-Sprint 9 Priorities**:
-- [US-023: Validar compras contra lista](./backlog/high-priority/US-023-validar-compras.md) ⭐⭐⭐⭐⭐ (3 SP)
+- [US-024: Modo Compra con Página Dedicada](./backlog/high-priority/US-024-shopping-mode.md) ⭐⭐⭐⭐⭐ (5 SP)
 - [QW-005: Dashboard con vista de acción](./backlog/high-priority/QW-005-dashboard-accionable.md) ⭐⭐⭐⭐ (2 SP)
 
 **Épica 4: Gestión de Consumo** (Deferred):

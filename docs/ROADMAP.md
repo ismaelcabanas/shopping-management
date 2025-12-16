@@ -26,7 +26,7 @@
 - ✅ [US-022: Marcar productos en lista de compra](./userstories/completed/epic-4/US-022-lista-compra-checkbox.md)
 
 **High Priority - Next Sprint**:
-1. [US-023: Validar compras contra lista](./userstories/backlog/high-priority/US-023-validar-compras.md) ⭐⭐⭐⭐⭐ (3 SP)
+1. [US-024: Modo Compra con Página Dedicada](./userstories/backlog/high-priority/US-024-shopping-mode.md) ⭐⭐⭐⭐⭐ (5 SP)
 2. [QW-005: Dashboard con vista de acción](./userstories/backlog/high-priority/QW-005-dashboard-accionable.md) ⭐⭐⭐⭐ (2 SP)
 
 **Epic 4 - Remaining Stories** (After UX completion):

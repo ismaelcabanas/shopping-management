@@ -55,7 +55,7 @@ Sistema de tracking de consumo usando 4 niveles de stock (Alto, Medio, Bajo, Vac
 
 Completadas: 2/4 (50%)
 Sprint actual: 9
-Próxima: US-014 o US-015 (después de completar US-023 y QW-005)
+Próxima: US-024 (Modo Compra) → Luego US-014 o US-015
 
 ## Siguiente Iteración
 

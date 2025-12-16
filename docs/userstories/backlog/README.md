@@ -7,7 +7,7 @@ This directory contains pending user stories, organized by priority.
 ### 🔥 [High Priority](./high-priority/) (6 stories)
 **Focus**: UX improvements and critical features
 
-- US-023: Validar compras contra lista ⭐⭐⭐⭐⭐
+- US-024: Modo Compra con Página Dedicada ⭐⭐⭐⭐⭐
 - QW-005: Dashboard con vista de acción ⭐⭐⭐⭐
 - US-014: Alertas de stock bajo ⭐⭐⭐⭐
 - US-015: Lista de compras automática ⭐⭐⭐⭐⭐

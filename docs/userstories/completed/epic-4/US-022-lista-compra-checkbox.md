@@ -202,5 +202,5 @@ Considerar dos opciones (decidir con usuario):
 ## Links Relacionados
 
 - [US-012: Registrar consumo de productos](../completed/epic-4/US-012-registrar-consumo.md)
-- [US-023: Validar compras contra lista](./US-023-validar-compras.md) - Historia siguiente
-- [QW-005: Dashboard accionable](./QW-005-dashboard-accionable.md)
+- [US-024: Modo Compra con Página Dedicada](../../backlog/high-priority/US-024-shopping-mode.md) - Historia siguiente
+- [QW-005: Dashboard accionable](../../backlog/high-priority/QW-005-dashboard-accionable.md)
