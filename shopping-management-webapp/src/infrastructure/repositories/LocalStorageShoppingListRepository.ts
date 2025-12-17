@@ -75,6 +75,26 @@ export class LocalStorageShoppingListRepository implements ShoppingListRepositor
     return items.filter(item => item.checked)
   }
 
+  async clear(): Promise<void> {
+    this.storage.remove(this.STORAGE_KEY)
+  }
+
+  async updateChecked(productId: ProductId, checked: boolean): Promise<void> {
+    const items = await this.findAll()
+    const updatedItems = items.map(item => {
+      if (item.productId.equals(productId)) {
+        // If checked state matches desired state, return as is
+        if (item.checked === checked) {
+          return item
+        }
+        // Toggle to reach desired state
+        return item.toggleChecked()
+      }
+      return item
+    })
+    this.save(updatedItems)
+  }
+
   private save(items: ShoppingListItem[]): void {
     const dtos = items.map(item => this.domainToDTO(item))
     this.storage.set(this.STORAGE_KEY, dtos)
