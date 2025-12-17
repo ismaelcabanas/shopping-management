@@ -1,12 +1,28 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import { ShoppingListPage } from '../../../presentation/pages/ShoppingListPage'
+import { BrowserRouter } from 'react-router-dom'
+
+// Mock react-router-dom navigate
+const mockNavigate = vi.fn()
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom')
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate
+  }
+})
 
 describe('ShoppingListPage', () => {
   beforeEach(() => {
     localStorage.clear()
+    mockNavigate.mockClear()
   })
+
+  const renderWithRouter = (component: React.ReactElement) => {
+    return render(<BrowserRouter>{component}</BrowserRouter>)
+  }
 
   it('should display empty state when no items in shopping list', async () => {
     render(<ShoppingListPage />)
@@ -19,7 +35,7 @@ describe('ShoppingListPage', () => {
     expect(screen.getByText(/Los productos con stock bajo se agregarán automáticamente/i)).toBeInTheDocument()
   })
 
-  it('should display shopping list items with checkbox', async () => {
+  it('should display shopping list items without checkbox in readonly mode', async () => {
     // Setup: Add product and shopping list item
     const productId = '123e4567-e89b-12d3-a456-426614174000'
 
@@ -36,15 +52,16 @@ describe('ShoppingListPage', () => {
       addedAt: new Date().toISOString()
     }]))
 
-    render(<ShoppingListPage />)
+    renderWithRouter(<ShoppingListPage />)
 
     await waitFor(() => {
       expect(screen.getByText('1 producto')).toBeInTheDocument()
     })
 
-    // Checkbox should be present for each product
-    expect(screen.getByRole('checkbox', { name: /Marcar .* como comprado/i })).toBeInTheDocument()
-    expect(screen.getByRole('checkbox')).not.toBeChecked()
+    // No checkboxes in readonly mode
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument()
+    // But "Iniciar Compra" button should be present
+    expect(screen.getByRole('button', { name: /Iniciar Compra/i })).toBeInTheDocument()
   })
 
   it('should display "Stock bajo" badge for low stock items', async () => {
@@ -93,42 +110,7 @@ describe('ShoppingListPage', () => {
     })
   })
 
-  it('should toggle checkbox state when clicked', async () => {
-    const user = userEvent.setup()
-    const productId = '123e4567-e89b-12d3-a456-426614174000'
-
-    localStorage.setItem('shopping_manager_products', JSON.stringify([{
-      id: productId,
-      name: 'Huevos',
-      unitType: 'units'
-    }]))
-
-    localStorage.setItem('shopping_manager_shopping-list', JSON.stringify([{
-      productId: productId,
-      reason: 'auto',
-      stockLevel: 'low',
-      addedAt: new Date().toISOString()
-    }]))
-
-    render(<ShoppingListPage />)
-
-    await waitFor(() => {
-      expect(screen.getByText('1 producto')).toBeInTheDocument()
-    })
-
-    const checkbox = screen.getByRole('checkbox', { name: /Marcar .* como comprado/i })
-    expect(checkbox).not.toBeChecked()
-
-    // Click to check
-    await user.click(checkbox)
-
-    await waitFor(() => {
-      expect(checkbox).toBeChecked()
-    })
-
-    // Item should remain visible (not removed)
-    expect(screen.getByText('Huevos')).toBeInTheDocument()
-  })
+  // Removed: Checkbox tests moved to ActiveShoppingPage (interactive mode)
 
   it('should display multiple items', async () => {
     const productId1 = '123e4567-e89b-12d3-a456-426614174000'
@@ -171,47 +153,100 @@ describe('ShoppingListPage', () => {
     expect(screen.getByText('Cargando lista de compras...')).toBeInTheDocument()
   })
 
-  it('should apply visual styling to checked items', async () => {
-    const user = userEvent.setup()
-    const productId = '123e4567-e89b-12d3-a456-426614174000'
+  // Removed: Checkbox styling tests moved to ActiveShoppingPage (interactive mode)
 
-    localStorage.setItem('shopping_manager_products', JSON.stringify([{
-      id: productId,
-      name: 'Huevos',
-      unitType: 'units'
-    }]))
+  describe('Readonly mode with "Iniciar Compra" button', () => {
+    it('should render "Iniciar Compra" button', async () => {
+      const productId = '123e4567-e89b-12d3-a456-426614174000'
 
-    localStorage.setItem('shopping_manager_shopping-list', JSON.stringify([{
-      productId: productId,
-      reason: 'auto',
-      stockLevel: 'low',
-      addedAt: new Date().toISOString()
-    }]))
+      localStorage.setItem('shopping_manager_products', JSON.stringify([{
+        id: productId,
+        name: 'Huevos',
+        unitType: 'units'
+      }]))
 
-    render(<ShoppingListPage />)
+      localStorage.setItem('shopping_manager_shopping-list', JSON.stringify([{
+        productId: productId,
+        reason: 'auto',
+        stockLevel: 'low',
+        addedAt: new Date().toISOString()
+      }]))
 
-    await waitFor(() => {
-      expect(screen.getByText('1 producto')).toBeInTheDocument()
+      renderWithRouter(<ShoppingListPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('1 producto')).toBeInTheDocument()
+      })
+
+      expect(screen.getByRole('button', { name: /Iniciar Compra/i })).toBeInTheDocument()
     })
 
-    const checkbox = screen.getByRole('checkbox')
-    const productName = screen.getByText('Huevos')
+    it('should NOT render checkboxes in readonly mode', async () => {
+      const productId = '123e4567-e89b-12d3-a456-426614174000'
 
-    // Initially not checked - no strikethrough
-    expect(productName).not.toHaveClass('line-through')
+      localStorage.setItem('shopping_manager_products', JSON.stringify([{
+        id: productId,
+        name: 'Huevos',
+        unitType: 'units'
+      }]))
 
-    // Click to check
-    await user.click(checkbox)
+      localStorage.setItem('shopping_manager_shopping-list', JSON.stringify([{
+        productId: productId,
+        reason: 'auto',
+        stockLevel: 'low',
+        addedAt: new Date().toISOString()
+      }]))
 
-    await waitFor(() => {
-      expect(checkbox).toBeChecked()
+      renderWithRouter(<ShoppingListPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('1 producto')).toBeInTheDocument()
+      })
+
+      expect(screen.queryByRole('checkbox')).not.toBeInTheDocument()
     })
 
-    // After checking - should have strikethrough and reduced opacity
-    await waitFor(() => {
-      const checkedName = screen.getByText('Huevos')
-      expect(checkedName).toHaveClass('line-through')
-      expect(checkedName).toHaveClass('opacity-60')
+    it('should navigate to /shopping/start when "Iniciar Compra" button clicked', async () => {
+      const user = userEvent.setup()
+      const productId = '123e4567-e89b-12d3-a456-426614174000'
+
+      localStorage.setItem('shopping_manager_products', JSON.stringify([{
+        id: productId,
+        name: 'Huevos',
+        unitType: 'units'
+      }]))
+
+      localStorage.setItem('shopping_manager_shopping-list', JSON.stringify([{
+        productId: productId,
+        reason: 'auto',
+        stockLevel: 'low',
+        addedAt: new Date().toISOString(),
+        checked: true
+      }]))
+
+      renderWithRouter(<ShoppingListPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('1 producto')).toBeInTheDocument()
+      })
+
+      const button = screen.getByRole('button', { name: /Iniciar Compra/i })
+      await user.click(button)
+
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith('/shopping/start')
+      })
+    })
+
+    it('should show empty state message when no items', async () => {
+      renderWithRouter(<ShoppingListPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Lista de Compras')).toBeInTheDocument()
+      })
+
+      expect(screen.getByText('No hay productos en la lista de compras')).toBeInTheDocument()
+      expect(screen.queryByRole('button', { name: /Iniciar Compra/i })).not.toBeInTheDocument()
     })
   })
 })
