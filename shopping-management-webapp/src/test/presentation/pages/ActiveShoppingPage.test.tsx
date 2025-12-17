@@ -4,6 +4,14 @@ import { userEvent } from '@testing-library/user-event'
 import { ActiveShoppingPage } from '../../../presentation/pages/ActiveShoppingPage'
 import { BrowserRouter } from 'react-router-dom'
 
+// Mock GeminiVisionOCRService to avoid API key requirement in tests
+vi.mock('../../../infrastructure/services/ocr/GeminiVisionOCRService', () => ({
+  GeminiVisionOCRService: vi.fn().mockImplementation(() => ({
+    extractText: vi.fn().mockResolvedValue('Mock product | 1'),
+    getProviderName: vi.fn().mockReturnValue('mock-gemini')
+  }))
+}))
+
 // Mock react-router-dom navigate
 const mockNavigate = vi.fn()
 vi.mock('react-router-dom', async () => {
