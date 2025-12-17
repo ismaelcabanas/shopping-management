@@ -14,6 +14,7 @@ interface TicketScanModalProps {
   onConfirm: (items: MatchedDetectedItem[]) => void
   ocrService: OCRService
   productRepository: ProductRepository
+  onComplete?: () => void | Promise<void>
 }
 
 type ViewState = 'upload' | 'processing' | 'results'
@@ -23,7 +24,8 @@ export function TicketScanModal({
   onClose,
   onConfirm,
   ocrService,
-  productRepository
+  productRepository,
+  onComplete
 }: TicketScanModalProps) {
   const [currentView, setCurrentView] = useState<ViewState>('upload')
 
@@ -57,8 +59,14 @@ export function TicketScanModal({
     await scanTicket(file)
   }
 
-  const handleConfirm = (items: MatchedDetectedItem[]) => {
+  const handleConfirm = async (items: MatchedDetectedItem[]) => {
     onConfirm(items)
+
+    // Call onComplete callback if provided (for post-purchase actions)
+    if (onComplete) {
+      await onComplete()
+    }
+
     onClose()
   }
 
