@@ -233,4 +233,80 @@ describe('LocalStorageShoppingListRepository', () => {
       expect(items[0].checked).toBe(true)
     })
   })
+
+  describe('clear', () => {
+    it('should remove all items from localStorage', async () => {
+      const productId1 = ProductId.fromString('123e4567-e89b-12d3-a456-426614174000')
+      const productId2 = ProductId.fromString('123e4567-e89b-12d3-a456-426614174001')
+      const item1 = ShoppingListItem.createAuto(productId1, 'low')
+      const item2 = ShoppingListItem.createManual(productId2)
+
+      await repository.add(item1)
+      await repository.add(item2)
+
+      await repository.clear()
+
+      const items = await repository.findAll()
+      expect(items).toHaveLength(0)
+    })
+
+    it('should not affect other localStorage keys', async () => {
+      const productId = ProductId.fromString('123e4567-e89b-12d3-a456-426614174000')
+      const item = ShoppingListItem.createAuto(productId, 'low')
+
+      await repository.add(item)
+      localStorage.setItem('shopping_manager_other-key', 'test-value')
+
+      await repository.clear()
+
+      expect(localStorage.getItem('shopping_manager_other-key')).toBe('test-value')
+    })
+  })
+
+  describe('updateChecked', () => {
+    it('should update specific item checked state to true', async () => {
+      const productId = ProductId.fromString('123e4567-e89b-12d3-a456-426614174000')
+      const item = ShoppingListItem.createAuto(productId, 'low')
+
+      await repository.add(item)
+      await repository.updateChecked(productId, true)
+
+      const found = await repository.findByProductId(productId)
+      expect(found?.checked).toBe(true)
+    })
+
+    it('should update specific item checked state to false', async () => {
+      const productId = ProductId.fromString('123e4567-e89b-12d3-a456-426614174000')
+      const item = ShoppingListItem.createAuto(productId, 'low')
+
+      await repository.add(item)
+      await repository.toggleChecked(productId) // Set to true first
+      await repository.updateChecked(productId, false)
+
+      const found = await repository.findByProductId(productId)
+      expect(found?.checked).toBe(false)
+    })
+
+    it('should persist checked state to localStorage', async () => {
+      const productId = ProductId.fromString('123e4567-e89b-12d3-a456-426614174000')
+      const item = ShoppingListItem.createAuto(productId, 'low')
+
+      await repository.add(item)
+      await repository.updateChecked(productId, true)
+
+      // Create new repository instance to verify persistence
+      const newRepository = new LocalStorageShoppingListRepository()
+      const found = await newRepository.findByProductId(productId)
+      expect(found?.checked).toBe(true)
+    })
+
+    it('should do nothing when updating non-existent item', async () => {
+      const productId = ProductId.fromString('123e4567-e89b-12d3-a456-426614174000')
+
+      await repository.updateChecked(productId, true)
+
+      const found = await repository.findByProductId(productId)
+      expect(found).toBeNull()
+    })
+  })
 })

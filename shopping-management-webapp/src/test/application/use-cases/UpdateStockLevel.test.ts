@@ -36,7 +36,9 @@ describe('UpdateStockLevel', () => {
       remove: vi.fn(),
       exists: async () => false,
       toggleChecked: vi.fn(),
-      getCheckedItems: async () => []
+      getCheckedItems: async () => [],
+      clear: vi.fn(),
+      updateChecked: vi.fn()
     }
     updateStockLevel = new UpdateStockLevel(inventoryRepository, shoppingListRepository)
   })

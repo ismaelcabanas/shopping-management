@@ -9,4 +9,6 @@ export interface ShoppingListRepository {
   exists(productId: ProductId): Promise<boolean>
   toggleChecked(productId: ProductId): Promise<void>
   getCheckedItems(): Promise<ShoppingListItem[]>
+  clear(): Promise<void>
+  updateChecked(productId: ProductId, checked: boolean): Promise<void>
 }
