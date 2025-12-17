@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useShoppingList } from '../hooks/useShoppingList'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
@@ -29,13 +29,9 @@ export function ActiveShoppingPage() {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY
   const model = import.meta.env.VITE_GEMINI_MODEL || 'gemini-2.0-flash'
   const ocrService = new GeminiVisionOCRService(apiKey, model)
-  const productRepository = new LocalStorageProductRepository()
+  const productRepository = useMemo(() => new LocalStorageProductRepository(), [])
 
-  useEffect(() => {
-    loadAllProducts()
-  }, [])
-
-  const loadAllProducts = async () => {
+  const loadAllProducts = useCallback(async () => {
     try {
       const prods = await productRepository.findAll()
       setAllProducts(prods)
@@ -43,7 +39,11 @@ export function ActiveShoppingPage() {
       console.error('Error loading all products:', error)
       setAllProducts([])
     }
-  }
+  }, [productRepository])
+
+  useEffect(() => {
+    loadAllProducts()
+  }, [loadAllProducts])
 
   if (isLoading) {
     return (
