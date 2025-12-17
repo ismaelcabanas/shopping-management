@@ -248,5 +248,4 @@ docs/userstories/
 - **CHANGELOG.md**: Actualizar al completar cada historia
 - **README.md**: Actualizar al crear nuevas historias
 - Las historias completadas se mueven de `backlog/` a `completed/epic-X/`
-
-
+- Commit after update documentation
