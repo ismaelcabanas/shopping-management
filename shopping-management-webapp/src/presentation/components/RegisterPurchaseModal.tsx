@@ -11,6 +11,7 @@ export interface RegisterPurchaseModalProps {
   onCancel: () => void;
   onSave: (items: PurchaseItemInput[]) => Promise<void>;
   initialItems?: PurchaseItemInput[];
+  onComplete?: () => void | Promise<void>;
 }
 
 interface PurchaseItemWithName extends PurchaseItemInput {
@@ -23,6 +24,7 @@ export function RegisterPurchaseModal({
   onCancel,
   onSave,
   initialItems,
+  onComplete,
 }: RegisterPurchaseModalProps) {
   const [productName, setProductName] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
@@ -123,6 +125,11 @@ export function RegisterPurchaseModal({
       setPurchaseItems([]);
       setProductName('');
       setQuantity('');
+
+      // Call onComplete callback if provided (for post-purchase actions)
+      if (onComplete) {
+        await onComplete();
+      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al guardar la compra';
       setError(errorMessage);
