@@ -7,6 +7,7 @@ import { DashboardPage } from './presentation/pages/DashboardPage'
 import { ProductCatalogPage } from './presentation/pages/ProductCatalogPage'
 import { AddProductPage } from './presentation/pages/AddProductPage'
 import { ShoppingListPage } from './presentation/pages/ShoppingListPage'
+import { ActiveShoppingPage } from './presentation/pages/ActiveShoppingPage'
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route path="/catalog" element={<ProductCatalogPage />} />
         <Route path="/catalog/add" element={<AddProductPage />} />
         <Route path="/shopping-list" element={<ShoppingListPage />} />
+        <Route path="/shopping/start" element={<ActiveShoppingPage />} />
       </Routes>
     </BrowserRouter>
   )
