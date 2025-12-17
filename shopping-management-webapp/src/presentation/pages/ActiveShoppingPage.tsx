@@ -1,10 +1,49 @@
+import { useState, useEffect } from 'react'
 import { useShoppingList } from '../hooks/useShoppingList'
 import { useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
 import { ShoppingListView } from '../components/ShoppingListView'
+import { RegisterPurchaseModal } from '../components/RegisterPurchaseModal'
+import { TicketScanModal } from '../components/TicketScanModal'
+import { RecalculateShoppingList } from '../../application/use-cases/RecalculateShoppingList'
+import { LocalStorageShoppingListRepository } from '../../infrastructure/repositories/LocalStorageShoppingListRepository'
+import { LocalStorageInventoryRepository } from '../../infrastructure/repositories/LocalStorageInventoryRepository'
+import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository'
+import { GeminiVisionOCRService } from '../../infrastructure/services/ocr/GeminiVisionOCRService'
+import { useInventory } from '../hooks/useInventory'
+import type { Product } from '../../domain/model/Product'
+import type { PurchaseItemInput } from '../../application/use-cases/RegisterPurchase'
+import type { MatchedDetectedItem } from '../../application/dtos/TicketScanResult'
 
 export function ActiveShoppingPage() {
   const { items, isLoading, error, toggleChecked } = useShoppingList()
   const navigate = useNavigate()
+  const { registerPurchase } = useInventory()
+
+  const [showTicketScanModal, setShowTicketScanModal] = useState(false)
+  const [showRegisterPurchaseModal, setShowRegisterPurchaseModal] = useState(false)
+  const [allProducts, setAllProducts] = useState<Product[]>([])
+  const [initialPurchaseItems, setInitialPurchaseItems] = useState<PurchaseItemInput[] | undefined>(undefined)
+
+  // Initialize services for TicketScanModal
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY
+  const model = import.meta.env.VITE_GEMINI_MODEL || 'gemini-2.0-flash'
+  const ocrService = new GeminiVisionOCRService(apiKey, model)
+  const productRepository = new LocalStorageProductRepository()
+
+  useEffect(() => {
+    loadAllProducts()
+  }, [])
+
+  const loadAllProducts = async () => {
+    try {
+      const prods = await productRepository.findAll()
+      setAllProducts(prods)
+    } catch (error) {
+      console.error('Error loading all products:', error)
+      setAllProducts([])
+    }
+  }
 
   if (isLoading) {
     return (
@@ -27,13 +66,57 @@ export function ActiveShoppingPage() {
   }
 
   const handleScanTicket = () => {
-    // TODO: Open TicketScanModal
-    console.log('Open TicketScanModal')
+    setShowTicketScanModal(true)
   }
 
   const handleRegisterManual = () => {
-    // TODO: Open RegisterPurchaseModal
-    console.log('Open RegisterPurchaseModal')
+    setShowRegisterPurchaseModal(true)
+  }
+
+  const handlePostPurchase = async () => {
+    try {
+      // Recalculate shopping list based on current inventory
+      const shoppingListRepo = new LocalStorageShoppingListRepository()
+      const inventoryRepo = new LocalStorageInventoryRepository()
+      const recalculateList = new RecalculateShoppingList(shoppingListRepo, inventoryRepo)
+
+      await recalculateList.execute()
+
+      // Show success message
+      toast.success('Compra registrada y lista actualizada')
+
+      // Navigate back to shopping list
+      navigate('/shopping-list')
+    } catch (error) {
+      console.error('Error in post-purchase flow:', error)
+      toast.error('Error al actualizar la lista')
+    }
+  }
+
+  const handleTicketScanConfirm = (items: MatchedDetectedItem[]) => {
+    // Convert MatchedDetectedItem[] to PurchaseItemInput[]
+    const purchaseItems: PurchaseItemInput[] = items.map(item => ({
+      productId: item.matchedProductId || item.productName,
+      quantity: item.quantity,
+    }))
+
+    // Close ticket scan modal
+    setShowTicketScanModal(false)
+
+    // Open register purchase modal with pre-filled items
+    setInitialPurchaseItems(purchaseItems)
+    setShowRegisterPurchaseModal(true)
+  }
+
+  const handleSaveRegisterPurchase = async (items: PurchaseItemInput[]) => {
+    await registerPurchase(items)
+    setShowRegisterPurchaseModal(false)
+    setInitialPurchaseItems(undefined)
+  }
+
+  const handleCloseRegisterPurchase = () => {
+    setShowRegisterPurchaseModal(false)
+    setInitialPurchaseItems(undefined)
   }
 
   return (
@@ -70,8 +153,24 @@ export function ActiveShoppingPage() {
         </div>
       )}
 
-      {/* TODO: Add TicketScanModal */}
-      {/* TODO: Add RegisterPurchaseModal */}
+      {/* Modals */}
+      <TicketScanModal
+        isOpen={showTicketScanModal}
+        onClose={() => setShowTicketScanModal(false)}
+        onConfirm={handleTicketScanConfirm}
+        ocrService={ocrService}
+        productRepository={productRepository}
+        onComplete={handlePostPurchase}
+      />
+
+      <RegisterPurchaseModal
+        isOpen={showRegisterPurchaseModal}
+        products={allProducts}
+        onCancel={handleCloseRegisterPurchase}
+        onSave={handleSaveRegisterPurchase}
+        initialItems={initialPurchaseItems}
+        onComplete={handlePostPurchase}
+      />
     </div>
   )
 }
