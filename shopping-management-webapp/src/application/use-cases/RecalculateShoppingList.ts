@@ -3,10 +3,16 @@ import type { InventoryRepository } from '../../domain/repositories/InventoryRep
 import { ShoppingListItem } from '../../domain/model/ShoppingListItem'
 
 export class RecalculateShoppingList {
+  private shoppingListRepository: ShoppingListRepository
+  private inventoryRepository: InventoryRepository
+
   constructor(
-    private readonly shoppingListRepository: ShoppingListRepository,
-    private readonly inventoryRepository: InventoryRepository
-  ) {}
+    shoppingListRepository: ShoppingListRepository,
+    inventoryRepository: InventoryRepository
+  ) {
+    this.shoppingListRepository = shoppingListRepository
+    this.inventoryRepository = inventoryRepository
+  }
 
   async execute(): Promise<void> {
     await this.shoppingListRepository.clear()

@@ -1,13 +1,10 @@
 import { useShoppingList } from '../hooks/useShoppingList'
 import { useNavigate } from 'react-router-dom'
 import { ShoppingListView } from '../components/ShoppingListView'
-import { useState } from 'react'
 
 export function ActiveShoppingPage() {
   const { items, isLoading, error, toggleChecked } = useShoppingList()
   const navigate = useNavigate()
-  const [showTicketScanModal, setShowTicketScanModal] = useState(false)
-  const [showRegisterPurchaseModal, setShowRegisterPurchaseModal] = useState(false)
 
   if (isLoading) {
     return (
@@ -30,11 +27,13 @@ export function ActiveShoppingPage() {
   }
 
   const handleScanTicket = () => {
-    setShowTicketScanModal(true)
+    // TODO: Open TicketScanModal
+    console.log('Open TicketScanModal')
   }
 
   const handleRegisterManual = () => {
-    setShowRegisterPurchaseModal(true)
+    // TODO: Open RegisterPurchaseModal
+    console.log('Open RegisterPurchaseModal')
   }
 
   return (

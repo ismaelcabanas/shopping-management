@@ -1,7 +1,11 @@
 import type { ShoppingListRepository } from '../../domain/repositories/ShoppingListRepository'
 
 export class StartShopping {
-  constructor(private readonly shoppingListRepository: ShoppingListRepository) {}
+  private shoppingListRepository: ShoppingListRepository
+
+  constructor(shoppingListRepository: ShoppingListRepository) {
+    this.shoppingListRepository = shoppingListRepository
+  }
 
   async execute(): Promise<void> {
     const items = await this.shoppingListRepository.findAll()
