@@ -31,10 +31,6 @@ export function ActiveShoppingPage() {
   const ocrService = new GeminiVisionOCRService(apiKey, model)
   const productRepository = new LocalStorageProductRepository()
 
-  useEffect(() => {
-    loadAllProducts()
-  }, [])
-
   const loadAllProducts = async () => {
     try {
       const prods = await productRepository.findAll()
@@ -44,6 +40,11 @@ export function ActiveShoppingPage() {
       setAllProducts([])
     }
   }
+
+  useEffect(() => {
+    loadAllProducts()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   if (isLoading) {
     return (

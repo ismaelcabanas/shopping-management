@@ -1,11 +1,11 @@
 # Épica 4: Gestión de Consumo
 
-**Estado**: En Progreso (2/4 historias completadas)
+**Estado**: En Progreso (3/4 historias completadas)
 
 ## Descripción
 Sistema de seguimiento de consumo y gestión automática de lista de compras basado en niveles de stock.
 
-## Historias Completadas (2)
+## Historias Completadas (3)
 
 ### [US-012: Registrar consumo de productos](US-012-registrar-consumo.md)
 **Estado**: ✅ Completada (Sprint 8 - 2025-12-12)
@@ -46,6 +46,31 @@ Sistema de tracking de consumo usando 4 niveles de stock (Alto, Medio, Bajo, Vac
 
 ---
 
+### [US-024: Modo de compra con página dedicada](US-024-modo-compra.md)
+**Estado**: ✅ Completada (Sprint 10 - 2025-12-18)
+
+**Descripción**: Flujo completo desde planificación hasta ejecución y registro de compras con página dedicada para el proceso activo de compra.
+
+**Funcionalidades**:
+- Página dedicada `/shopping/start` para sesión de compra activa
+- Workflow: Planning (readonly) → Active shopping → Purchase registration
+- Botón "Iniciar Compra" que resetea checkboxes
+- Recálculo automático de lista post-compra
+- Checkboxes como ayudas visuales (no restrictivos)
+- Integración natural con navegación del browser
+
+**Implementación**:
+- Presentation: `ActiveShoppingPage`, `ShoppingListView` (shared component)
+- Application: `StartShopping`, `RecalculateShoppingList` use cases
+- Infrastructure: Repository methods `clear()`, `updateChecked()`
+- Modal callbacks: `onComplete` for post-purchase flow
+
+**Tests**: 534 unit tests + 25 E2E tests ✅
+**OpenSpec**: Ready for archival as `add-shopping-mode`
+**Commits**: 5 commits implementing full workflow
+
+---
+
 ## Historias Pendientes (2)
 
 - **US-014**: Recibir alertas de stock bajo
@@ -53,9 +78,9 @@ Sistema de tracking de consumo usando 4 niveles de stock (Alto, Medio, Bajo, Vac
 
 ## Progreso
 
-Completadas: 2/4 (50%)
-Sprint actual: 9
-Próxima: US-024 (Modo Compra) → Luego US-014 o US-015
+Completadas: 3/4 (75%)
+Sprint actual: 10
+Próxima: US-014 (Alertas) o US-015 (Lista automática)
 
 ## Siguiente Iteración
 
