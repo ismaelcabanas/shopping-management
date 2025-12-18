@@ -6,6 +6,45 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Sprint 10 - 2025-12-18
+
+### Added
+- **[US-024](./userstories/completed/epic-4/US-024-modo-compra.md)**: Modo de Compra con Página Dedicada (Shopping Mode)
+  - Feature: Dedicated active shopping page at `/shopping/start`
+  - Workflow: Planning (`/shopping-list` readonly) → Active shopping → Purchase registration
+  - Button "Iniciar Compra" to start shopping session
+  - Checkbox reset at session start (clean state)
+  - Post-purchase automatic list recalculation
+  - Checkboxes as visual helpers (don't restrict purchases)
+  - Natural browser navigation (back/forward buttons work)
+
+### Technical
+- New page: `ActiveShoppingPage.tsx` for active shopping sessions
+- New component: `ShoppingListView.tsx` shared list rendering (readonly/active modes)
+- New use case: `StartShopping` - resets all checkboxes when starting session
+- New use case: `RecalculateShoppingList` - clears and rebuilds list from inventory
+- Repository methods: `clear()`, `updateChecked()`
+- Modal callbacks: `onComplete` for post-purchase flow
+- Route: `/shopping/start` for active shopping
+
+### Tests
+- 534 unit/integration tests passing (target: 530+) ✅
+- 25 E2E tests passing (target: 23+) ✅
+- 5 new E2E scenarios for shopping mode
+- Coverage: planning view, active shopping, cancel flow, empty list
+
+### Documentation
+- OpenSpec: `add-shopping-mode` (ready for archival)
+- Design decisions documented in design.md
+- Clear separation of concerns: planning vs execution
+
+### Milestone
+- ✅ Seamless workflow from planning to execution to recording
+- ✅ Reduced friction in purchase registration
+- ✅ Foundation for future purchase analytics
+
+---
+
 ## Sprint 9 - 2025-12-15
 
 ### Added

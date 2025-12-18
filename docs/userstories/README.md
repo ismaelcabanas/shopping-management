@@ -8,8 +8,8 @@ Este directorio contiene las historias de usuario del proyecto Shopping Manager,
 
 - **[📊 ROADMAP](../ROADMAP.md)** - Project roadmap and high-level overview (< 1 min read)
 - **[📝 CHANGELOG](../CHANGELOG.md)** - Release history and shipped features
-- **[✅ Completed Stories](./completed/)** - What's been built (13 stories)
-- **[📋 Backlog](./backlog/)** - What's next (17 stories)
+- **[✅ Completed Stories](./completed/)** - What's been built (14 stories)
+- **[📋 Backlog](./backlog/)** - What's next (16 stories)
 
 ---
 
@@ -32,7 +32,7 @@ Cada archivo incluye:
 
 ---
 
-## Historias Completadas ✅ (13/30)
+## Historias Completadas ✅ (14/30)
 
 ### Épica 1: Gestión de Inventario Personal ✅
 
@@ -70,17 +70,17 @@ Cada archivo incluye:
 |----|--------|--------|-------|
 | [US-012](./completed/epic-4/US-012-registrar-consumo.md) | Registrar consumo de productos (by levels) | Sprint 8 | 484 unit + 8 E2E |
 | [US-022](./completed/epic-4/US-022-lista-compra-checkbox.md) | Marcar productos en lista de compra | Sprint 9 | 497 unit + 21 E2E |
+| [US-024](./completed/epic-4/US-024-modo-compra.md) | Modo de compra con página dedicada | Sprint 10 | 534 unit + 25 E2E |
 
-**🎯 Achievement**: Complete product lifecycle + Natural shopping UX
+**🎯 Achievement**: Complete product lifecycle + Natural shopping UX + Seamless shopping workflow
 
 ---
 
-## Backlog 📋 (17 stories)
+## Backlog 📋 (16 stories)
 
-### 🔥 High Priority (6 stories)
+### 🔥 High Priority (5 stories)
 
-**Post-Sprint 9 Priorities**:
-- [US-024: Modo Compra con Página Dedicada](./backlog/high-priority/US-024-shopping-mode.md) ⭐⭐⭐⭐⭐ (5 SP)
+**Post-Sprint 10 Priorities**:
 - [QW-005: Dashboard con vista de acción](./backlog/high-priority/QW-005-dashboard-accionable.md) ⭐⭐⭐⭐ (2 SP)
 
 **Épica 4: Gestión de Consumo** (Deferred):
