@@ -9,7 +9,7 @@ import { RecalculateShoppingList } from '../../application/use-cases/Recalculate
 import { LocalStorageShoppingListRepository } from '../../infrastructure/repositories/LocalStorageShoppingListRepository'
 import { LocalStorageInventoryRepository } from '../../infrastructure/repositories/LocalStorageInventoryRepository'
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository'
-import { GeminiVisionOCRService } from '../../infrastructure/services/ocr/GeminiVisionOCRService'
+import { OCRServiceFactory } from '../../infrastructure/config/OCRServiceFactory'
 import { useInventory } from '../hooks/useInventory'
 import type { Product } from '../../domain/model/Product'
 import type { PurchaseItemInput } from '../../application/use-cases/RegisterPurchase'
@@ -26,9 +26,7 @@ export function ActiveShoppingPage() {
   const [initialPurchaseItems, setInitialPurchaseItems] = useState<PurchaseItemInput[] | undefined>(undefined)
 
   // Initialize services for TicketScanModal
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY
-  const model = import.meta.env.VITE_GEMINI_MODEL || 'gemini-2.0-flash'
-  const ocrService = new GeminiVisionOCRService(apiKey, model)
+  const ocrService = OCRServiceFactory.create()
   const productRepository = new LocalStorageProductRepository()
 
   const loadAllProducts = async () => {
