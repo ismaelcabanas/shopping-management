@@ -58,8 +58,8 @@ export class GeminiVisionOCRService implements OCRService {
                 text: prompt
               },
               {
-                inline_data: {
-                  mime_type: imageFile.type,
+                inlineData: {
+                  mimeType: imageFile.type,
                   data: base64Data
                 }
               }
