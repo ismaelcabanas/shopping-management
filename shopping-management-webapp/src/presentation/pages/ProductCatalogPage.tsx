@@ -11,7 +11,7 @@ import { ConfirmDialog } from '../shared/components/ConfirmDialog';
 import { GetProductsWithInventory } from '../../application/use-cases/GetProductsWithInventory';
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository';
 import { LocalStorageInventoryRepository } from '../../infrastructure/repositories/LocalStorageInventoryRepository';
-import { GeminiVisionOCRService } from '../../infrastructure/services/ocr/GeminiVisionOCRService';
+import { OCRServiceFactory } from '../../infrastructure/config/OCRServiceFactory';
 import { useProducts } from '../hooks/useProducts';
 import { useInventory } from '../hooks/useInventory';
 import { useStockLevel } from '../hooks/useStockLevel';
@@ -43,9 +43,7 @@ export function ProductCatalogPage() {
   const { updateStockLevel } = useStockLevel();
 
   // Initialize services for TicketScanModal
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-  const model = import.meta.env.VITE_GEMINI_MODEL || 'gemini-2.0-flash';
-  const ocrService = new GeminiVisionOCRService(apiKey, model);
+  const ocrService = OCRServiceFactory.create();
   const productRepository = new LocalStorageProductRepository();
 
   useEffect(() => {
