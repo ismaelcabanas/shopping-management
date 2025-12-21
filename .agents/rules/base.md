@@ -16,6 +16,23 @@ This document contains all development rules and guidelines for this project, ap
 - **Refactoring Awareness**: Highlight opportunities for refactoring and flag functions exceeding 20 lines.
 - **Pattern Detection**: Detect and highlight repeated code patterns.
 
+## 1.1 Task Management Strategy
+
+When working on features:
+
+- **TodoWrite Tool**: Use for high-level progress tracking (5-10 major milestones)
+  - Example: "Create use case", "Update components", "Run validation"
+  - Provides quick overview for user
+  - Updates in real-time during development
+
+- **OpenSpec tasks.md**: Use for detailed implementation checklist (50-100 specific tasks)
+  - Example: "Write failing test X", "Add import Y", "Update interface Z"
+  - Serves as comprehensive implementation guide
+  - Mark complete as you progress
+  - Commit updates with implementation
+
+Both tools serve different purposes and should be used together for complex features.
+
 ## 2. Code Quality & Coverage
 
 - **MANDATORY Validation**: Before EVERY commit, run tests and build. Zero tolerance for failures.
@@ -51,6 +68,11 @@ This document contains all development rules and guidelines for this project, ap
 - **Persistence**: Persist through multiple attempts until resolution.
 - **Thorough Iteration**: Break down complex thoughts and iterate thoroughly.
 - **Sequential Questions**: Only one question at a time; each question should build on previous answers.
+- **Task Tracking**: When working with OpenSpec changes that have a `tasks.md` file:
+  - Mark tasks as completed (`[x]`) immediately after finishing each task
+  - Do NOT batch task updates - update after each completion
+  - Before finalizing any feature, verify all tasks in `tasks.md` are marked complete
+  - Commit the updated `tasks.md` file along with implementation changes
 
 ## 6. Language Standards
 

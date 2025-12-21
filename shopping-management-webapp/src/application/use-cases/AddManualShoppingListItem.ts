@@ -25,10 +25,16 @@ export interface AddManualShoppingListItemCommand {
  * ```
  */
 export class AddManualShoppingListItem {
+  private readonly productRepository: ProductRepository
+  private readonly shoppingListRepository: ShoppingListRepository
+
   constructor(
-    private readonly productRepository: ProductRepository,
-    private readonly shoppingListRepository: ShoppingListRepository
-  ) {}
+    productRepository: ProductRepository,
+    shoppingListRepository: ShoppingListRepository
+  ) {
+    this.productRepository = productRepository
+    this.shoppingListRepository = shoppingListRepository
+  }
 
   async execute(command: AddManualShoppingListItemCommand): Promise<void> {
     const productId = ProductId.fromString(command.productId)
