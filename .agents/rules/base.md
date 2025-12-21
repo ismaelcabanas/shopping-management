@@ -141,6 +141,51 @@ Execute the same validation commands that run in the CI/CD pipeline to ensure
 local validation matches production checks. This prevents pipeline failures
 and reduces commit corrections (amends/reverts).
 
+## 9.1 Pre-Commit Validation Scope
+
+**IMPORTANT**: The pre-commit validation applies to **ALL commits**, regardless of file type:
+
+### Always Validate - Even When:
+- ✅ Changing only documentation files (README.md, docs/, etc.)
+- ✅ Updating rule files (.agents/rules/*.md)
+- ✅ Modifying configuration files (tsconfig.json, package.json, etc.)
+- ✅ Changing OpenSpec files (openspec/changes/, openspec/specs/)
+- ✅ Any combination of the above
+
+### Why Validate Non-Code Changes:
+1. **Hidden Code Changes**: You may have uncommitted code changes with errors
+2. **Configuration Impact**: Config changes can break the build or tests
+3. **Consistency**: Ensures every commit is in a working state
+4. **Rebase Safety**: Clean commits prevent issues during git rebase/merge
+
+### Validation Workflow for All Changes:
+
+```bash
+# ALWAYS run before ANY commit (even for docs-only changes)
+npm run build    # Catches any uncommitted code errors
+npm run lint     # Verifies code quality
+npm test         # Ensures functionality intact
+
+# Only commit when all three pass with ZERO errors
+git add <files>
+git commit -m "message"
+```
+
+### Common Mistake to Avoid:
+```bash
+# ❌ WRONG: Skipping validation for "simple" doc changes
+git add .agents/rules/base.md
+git commit -m "docs: update rules"  # NO VALIDATION!
+# → Breaks build due to undetected code errors
+
+# ✅ CORRECT: Always validate first
+npm run build && npm run lint && npm test  # ALL PASS ✓
+git add .agents/rules/base.md
+git commit -m "docs: update rules"
+```
+
+**Remember**: The cost of running validation (30-60 seconds) is trivial compared to the cost of fixing broken commits, failed CI pipelines, or problematic git history.
+
 ## 10. Quick Reference for All AI Agents
 
 When working on this project:
