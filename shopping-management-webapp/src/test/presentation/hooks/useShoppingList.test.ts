@@ -115,4 +115,113 @@ describe('useShoppingList', () => {
       expect(result.current.items).toEqual([])
     })
   })
+
+  describe('addManual', () => {
+    it('should expose addManual method', async () => {
+      const { result } = renderHook(() => useShoppingList())
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+
+      expect(result.current.addManual).toBeDefined()
+      expect(typeof result.current.addManual).toBe('function')
+    })
+
+    it('should add product to shopping list manually', async () => {
+      const productId = '123e4567-e89b-12d3-a456-426614174000'
+
+      localStorage.setItem('shopping_manager_products', JSON.stringify([{
+        id: productId,
+        name: 'Chocolate',
+        unitType: 'units'
+      }]))
+
+      const { result } = renderHook(() => useShoppingList())
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+
+      expect(result.current.items).toHaveLength(0)
+
+      // Add manually
+      await result.current.addManual(productId)
+
+      await waitFor(() => {
+        expect(result.current.items).toHaveLength(1)
+      })
+
+      expect(result.current.items[0].productId.value).toBe(productId)
+      expect(result.current.items[0].reason).toBe('manual')
+      expect(result.current.items[0].stockLevel).toBeUndefined()
+    })
+
+    it('should refresh shopping list after successful addition', async () => {
+      const productId = '123e4567-e89b-12d3-a456-426614174000'
+
+      localStorage.setItem('shopping_manager_products', JSON.stringify([{
+        id: productId,
+        name: 'Bread',
+        unitType: 'units'
+      }]))
+
+      const { result } = renderHook(() => useShoppingList())
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+
+      const initialItems = result.current.items.length
+
+      await result.current.addManual(productId)
+
+      await waitFor(() => {
+        expect(result.current.items.length).toBe(initialItems + 1)
+      })
+    })
+
+    it('should throw error when trying to add duplicate product', async () => {
+      const productId = '123e4567-e89b-12d3-a456-426614174000'
+
+      localStorage.setItem('shopping_manager_products', JSON.stringify([{
+        id: productId,
+        name: 'Milk',
+        unitType: 'units'
+      }]))
+
+      localStorage.setItem('shopping_manager_shopping-list', JSON.stringify([{
+        productId: productId,
+        reason: 'auto',
+        stockLevel: 'low',
+        addedAt: new Date().toISOString()
+      }]))
+
+      const { result } = renderHook(() => useShoppingList())
+
+      await waitFor(() => {
+        expect(result.current.items).toHaveLength(1)
+      })
+
+      // Try to add duplicate
+      await expect(result.current.addManual(productId))
+        .rejects.toThrow('Product already in shopping list')
+
+      // List should still have 1 item
+      expect(result.current.items).toHaveLength(1)
+    })
+
+    it('should throw error when product not found', async () => {
+      const nonExistentProductId = '999e4567-e89b-12d3-a456-426614174000'
+
+      const { result } = renderHook(() => useShoppingList())
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+
+      await expect(result.current.addManual(nonExistentProductId))
+        .rejects.toThrow('Product not found')
+    })
+  })
 })

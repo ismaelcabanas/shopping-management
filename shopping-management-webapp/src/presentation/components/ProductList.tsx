@@ -16,6 +16,8 @@ export interface ProductListProps {
   onEditProduct?: (product: Product) => void;
   onDeleteProduct?: (productId: string) => void;
   onUpdateStockLevel?: (productId: string) => void;
+  onAddToShoppingList?: (productId: string) => void;
+  productsInShoppingList?: Set<string>;
 }
 
 function SkeletonLoader() {
@@ -54,7 +56,9 @@ export function ProductList({
   isLoading = false,
   onEditProduct,
   onDeleteProduct,
-  onUpdateStockLevel
+  onUpdateStockLevel,
+  onAddToShoppingList,
+  productsInShoppingList = new Set()
 }: ProductListProps) {
   if (isLoading) {
     return (
@@ -83,6 +87,8 @@ export function ProductList({
           onEdit={onEditProduct}
           onDelete={onDeleteProduct}
           onUpdateStockLevel={onUpdateStockLevel}
+          onAddToShoppingList={onAddToShoppingList}
+          isInShoppingList={productsInShoppingList.has(product.id)}
         />
       ))}
     </div>

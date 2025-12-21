@@ -59,7 +59,7 @@ export class GeminiVisionOCRService implements OCRService {
               },
               {
                 inlineData: {
-                  mimeType: imageFile.type,
+              mimeType: imageFile.type,
                   data: base64Data
                 }
               }
