@@ -71,6 +71,34 @@
 - Keep minimal - only test happy paths and critical flows
 - Run separately from unit tests
 
+### Manual Testing Checklists
+
+When implementing user-facing features with OpenSpec:
+
+- **Include Manual Test Tasks**: The `tasks.md` should include specific manual testing tasks (section 1.6 or similar)
+- **Comprehensive Coverage**: Manual tests should cover:
+  - User interactions and workflows
+  - Visual feedback (toasts, disabled states, tooltips)
+  - Cross-page navigation and state persistence
+  - Keyboard navigation and accessibility
+  - Edge cases and error scenarios
+- **Detailed Steps**: Each manual test should describe specific actions and expected outcomes
+- **Verification Tracking**: Mark manual tests as complete `[x]` only after actual user testing
+- **Complement Automation**: Manual tests should complement, not replace, automated tests
+
+**Example:**
+```markdown
+- [ ] 1.6.1 Manual test: Add product with high stock to shopping list
+- [ ] 1.6.2 Manual test: Verify button becomes disabled after adding
+- [ ] 1.6.3 Manual test: Verify success toast appears
+```
+
+Manual testing is particularly valuable for:
+- UI/UX validation
+- Cross-component workflows
+- Accessibility verification
+- Real browser behavior validation
+
 ## Testing Strategy: When to Simplify vs When to Persist
 
 ### Pragmatic Testing Decisions
