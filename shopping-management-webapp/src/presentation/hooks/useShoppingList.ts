@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import { ProductId } from '../../domain/model/ProductId'
 import { LocalStorageShoppingListRepository } from '../../infrastructure/repositories/LocalStorageShoppingListRepository'
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository'
+import { AddManualShoppingListItem } from '../../application/use-cases/AddManualShoppingListItem'
 import type { StockLevelValue } from '../../domain/model/ShoppingListItem'
 
 export interface ShoppingListItemWithDetails {
@@ -19,6 +20,7 @@ export interface UseShoppingListReturn {
   error: Error | null
   markAsPurchased: (productId: ProductId) => Promise<void>
   toggleChecked: (productId: ProductId) => Promise<void>
+  addManual: (productId: string) => Promise<void>
   checkedCount: number
   refresh: () => Promise<void>
 }
@@ -86,6 +88,19 @@ export function useShoppingList(): UseShoppingListReturn {
     }
   }, [shoppingListRepository, loadShoppingList])
 
+  const addManual = useCallback(async (productId: string): Promise<void> => {
+    try {
+      const useCase = new AddManualShoppingListItem(productRepository, shoppingListRepository)
+      await useCase.execute({ productId })
+      // Refresh the list after adding
+      await loadShoppingList()
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Failed to add product to shopping list')
+      setError(error)
+      throw err
+    }
+  }, [productRepository, shoppingListRepository, loadShoppingList])
+
   const refresh = useCallback(async (): Promise<void> => {
     await loadShoppingList()
   }, [loadShoppingList])
@@ -106,6 +121,7 @@ export function useShoppingList(): UseShoppingListReturn {
     error,
     markAsPurchased,
     toggleChecked,
+    addManual,
     checkedCount,
     refresh
   }

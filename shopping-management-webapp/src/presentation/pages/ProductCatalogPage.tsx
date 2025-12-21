@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { ArrowLeft, Plus, ClipboardList, ShoppingCart, Camera } from 'lucide-react';
@@ -15,6 +15,7 @@ import { OCRServiceFactory } from '../../infrastructure/config/OCRServiceFactory
 import { useProducts } from '../hooks/useProducts';
 import { useInventory } from '../hooks/useInventory';
 import { useStockLevel } from '../hooks/useStockLevel';
+import { useShoppingList } from '../hooks/useShoppingList';
 import { Button } from '../shared/components/Button';
 import { ProductId } from '../../domain/model/ProductId';
 import { StockLevel } from '../../domain/model/StockLevel';
@@ -41,6 +42,12 @@ export function ProductCatalogPage() {
   const { updateProduct, deleteProduct } = useProducts();
   const { addProduct, registerPurchase } = useInventory();
   const { updateStockLevel } = useStockLevel();
+  const { items: shoppingListItems, addManual } = useShoppingList();
+
+  // Create a Set of product IDs that are in the shopping list for O(1) lookups
+  const productsInShoppingList = useMemo(() => {
+    return new Set(shoppingListItems.map(item => item.productId.value));
+  }, [shoppingListItems]);
 
   // Initialize services for TicketScanModal
   const ocrService = OCRServiceFactory.create();
@@ -243,6 +250,25 @@ export function ProductCatalogPage() {
     }
   };
 
+  const handleAddToShoppingList = async (productId: string) => {
+    try {
+      await addManual(productId);
+      toast.success('Producto añadido a la lista de la compra');
+    } catch (error) {
+      console.error('Error adding product to shopping list:', error);
+
+      // Handle specific error messages
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      if (errorMessage === 'Product already in shopping list') {
+        toast('Este producto ya está en tu lista de la compra', { icon: 'ℹ️' });
+      } else if (errorMessage === 'Product not found') {
+        toast.error('Producto no encontrado');
+      } else {
+        toast.error('Error al añadir a la lista. Por favor, intenta de nuevo.');
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -313,6 +339,8 @@ export function ProductCatalogPage() {
           onEditProduct={handleEditProduct}
           onDeleteProduct={handleDeleteProduct}
           onUpdateStockLevel={handleUpdateStockLevel}
+          onAddToShoppingList={handleAddToShoppingList}
+          productsInShoppingList={productsInShoppingList}
         />
       </div>
 

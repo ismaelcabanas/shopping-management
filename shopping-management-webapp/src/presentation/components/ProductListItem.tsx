@@ -1,4 +1,4 @@
-import { Pencil, Trash2, TrendingDown } from 'lucide-react';
+import { Pencil, Trash2, TrendingDown, ShoppingCart } from 'lucide-react';
 import { ProductId } from '../../domain/model/ProductId';
 import { UnitType } from '../../domain/model/UnitType';
 import { Product } from '../../domain/model/Product';
@@ -15,6 +15,8 @@ export interface ProductListItemProps {
   onEdit?: (product: ProductType) => void;
   onDelete?: (productId: string) => void;
   onUpdateStockLevel?: (productId: string) => void;
+  onAddToShoppingList?: (productId: string) => void;
+  isInShoppingList?: boolean;
 }
 
 export function ProductListItem({
@@ -25,7 +27,9 @@ export function ProductListItem({
   stockLevel,
   onEdit,
   onDelete,
-  onUpdateStockLevel
+  onUpdateStockLevel,
+  onAddToShoppingList,
+  isInShoppingList = false
 }: ProductListItemProps) {
   const formatQuantity = () => {
     const unitLabels: Record<string, string> = {
@@ -59,6 +63,12 @@ export function ProductListItem({
     }
   };
 
+  const handleAddToShoppingList = () => {
+    if (onAddToShoppingList) {
+      onAddToShoppingList(id);
+    }
+  };
+
   return (
     <div
       data-testid="product-list-item"
@@ -81,6 +91,22 @@ export function ProductListItem({
             >
               {formatQuantity()}
             </span>
+            {onAddToShoppingList && (
+              <button
+                data-testid="add-to-shopping-list-button"
+                onClick={handleAddToShoppingList}
+                disabled={isInShoppingList}
+                className={`p-2 rounded-lg transition-colors focus:outline-none focus:ring-2 ${
+                  isInShoppingList
+                    ? 'text-gray-400 cursor-not-allowed opacity-50'
+                    : 'text-gray-600 hover:text-green-600 hover:bg-green-50 focus:ring-green-500'
+                }`}
+                aria-label={`Añadir ${name} a la lista de la compra`}
+                title={isInShoppingList ? 'Ya en lista' : 'Añadir a lista de compra'}
+              >
+                <ShoppingCart className="w-4 h-4" />
+              </button>
+            )}
             {onUpdateStockLevel && (
               <button
                 data-testid="update-stock-level-button"
