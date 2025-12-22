@@ -1,8 +1,8 @@
 # Roadmap - Shopping Manager
 
-**Last Updated**: 2025-12-15
-**Progress**: 13/30 stories (43%)
-**Current Focus**: Sprint 9 - Shopping List UX Refinement
+**Last Updated**: 2025-12-22
+**Progress**: 14/30 stories (47%)
+**Current Focus**: Sprint 11 - Shopping List Management Features
 
 ---
 
@@ -13,40 +13,51 @@
 | 📦 Épica 1: Gestión de Inventario | 5/5 | ✅ Complete | - |
 | 🔧 Épica 2: Gestión Avanzada | 3/3 | ✅ Complete | - |
 | 📸 Épica 3: Automatización de Compras | 3/3 | ✅ Complete | - |
-| 🔄 **Épica 4: Gestión de Consumo** | 2/4 | 🚧 In Progress | 🔥 High |
+| 🔄 **Épica 4: Gestión de Consumo** | 4/4 | ✅ Complete | - |
 | 📊 Épica 5: Inteligencia de Consumo | 0/6 | ⏳ Backlog | 🟡 Medium |
 | 🏪 Épica 6: Gestión de Tiendas | 0/3 | ⏳ Backlog | 🟢 Low |
 | ✨ Quick Wins | 0/4 | ⏳ Backlog | 🟡 Medium |
 
 ---
 
-## 🔥 Next Up - Continue UX Improvements
+## 🔥 Next Up - Intelligence & Analytics
 
-**Completed in Sprint 9** ✅
-- ✅ [US-022: Marcar productos en lista de compra](./userstories/completed/epic-4/US-022-lista-compra-checkbox.md)
+**Completed in Sprint 11** ✅
+- ✅ **Manual Shopping List Management** (OpenSpec feature)
 
 **High Priority - Next Sprint**:
-1. [US-024: Modo Compra con Página Dedicada](./userstories/backlog/high-priority/US-024-shopping-mode.md) ⭐⭐⭐⭐⭐ (5 SP)
-2. [QW-005: Dashboard con vista de acción](./userstories/backlog/high-priority/QW-005-dashboard-accionable.md) ⭐⭐⭐⭐ (2 SP)
+1. [US-014: Alertas de stock bajo](./userstories/backlog/high-priority/US-014-alertas-stock-bajo.md) ⭐⭐⭐⭐
+2. [US-015: Lista de compras automática](./userstories/backlog/high-priority/US-015-lista-compras-automatica.md) ⭐⭐⭐⭐⭐
+3. [QW-005: Dashboard con vista de acción](./userstories/backlog/high-priority/QW-005-dashboard-accionable.md) ⭐⭐⭐⭐
 
-**Epic 4 - Remaining Stories** (After UX completion):
-- [US-014: Alertas de stock bajo](./userstories/backlog/high-priority/US-014-alertas-stock-bajo.md) ⭐⭐⭐⭐
-- [US-015: Lista de compras automática](./userstories/backlog/high-priority/US-015-lista-compras-automatica.md) ⭐⭐⭐⭐⭐
-
-**Milestone Progress**: Shopping list UX flow complete ✅
+**Milestone Progress**: Epic 4 Complete! 🎉
 
 ---
 
 ## 📊 Progress
 
 - **Velocity**: ~1-2 stories/sprint
-- **Total Tests**: 497 unit/integration + 21 E2E (all passing)
+- **Total Tests**: 571 unit/integration + 25 E2E (all passing)
 - **Architecture**: Clean Architecture + DDD
 - **Tech Debt**: Minimal (tracked in OpenSpec)
 
 ---
 
 ## 🎉 Recent Achievements
+
+### Sprint 11 (Dec 2025) - 📝 Manual List Management
+- ✅ **Manual Shopping List Management**
+- Feature: Add products to shopping list from catalog
+- Feature: Quick-add button on product cards
+- Feature: Duplicate prevention with visual feedback
+- **Impact**: Proactive shopping planning enabled ✅
+
+### Sprint 10 (Dec 2025) - 🛒 Shopping Mode
+- ✅ **US-024: Modo de Compra con Página Dedicada**
+- Feature: Dedicated active shopping workflow
+- Feature: Seamless planning → execution → recording
+- Feature: Post-purchase list recalculation
+- **Impact**: Complete shopping workflow implemented ✅
 
 ### Sprint 9 (Dec 2025) - 🎯 Shopping List UX
 - ✅ **US-022: Marcar productos en lista de compra (Checkbox)**

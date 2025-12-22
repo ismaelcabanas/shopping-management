@@ -6,6 +6,41 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Sprint 11 - 2025-12-22
+
+### Added
+- **Manual Shopping List Management**: Users can now manually add products to shopping list from product catalog
+  - Feature: Shopping cart button on each product card in catalog
+  - Quick-add products regardless of stock level
+  - Duplicate prevention with visual feedback
+  - Items added with `reason='manual'` tag
+  - Toast notifications for user feedback
+
+### Technical
+- New use case: `AddManualShoppingListItem` - validates and creates manual shopping list items
+- Updated hook: `useShoppingList` - added `addManual()` method
+- Updated components: `ProductListItem`, `ProductList`, `ProductCatalogPage`
+- State management: `Set<string>` for O(1) duplicate checking
+- Button states: disabled/enabled based on shopping list presence
+
+### Tests
+- 571 unit/integration tests passing (7 new tests) ✅
+- Full coverage: use case, hook, components, integration
+- Manual testing completed for UX validation
+
+### Documentation
+- OpenSpec: `add-manual-shopping-list` archived as `2025-12-22-add-manual-shopping-list`
+- Spec updated: `shopping-list` with manual addition requirements
+- JSDoc comments and inline documentation added
+
+### User Experience
+- ✅ Zero-click navigation (add from catalog page directly)
+- ✅ Clear visual feedback (disabled button when already in list)
+- ✅ Proactive shopping planning (add before stock runs low)
+- ✅ Consistent with existing action button patterns
+
+---
+
 ## Sprint 10 - 2025-12-18
 
 ### Added
