@@ -6,6 +6,54 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Sprint 12 - 2025-12-23
+
+### Added
+- **[QW-004](./userstories/backlog/high-priority/QW-004-pwa.md)**: PWA Installable App - Progressive Web App functionality
+  - Feature: Service worker registration with offline support
+  - Feature: Install to home screen (Android, iOS, Desktop)
+  - Feature: Workbox caching strategies (Cache-First for assets, Network-First for pages)
+  - Feature: Auto-update mechanism when new version deployed
+  - Feature: Comprehensive mobile installation guide
+  - Feature: Manual testing checklist (10 test scenarios)
+
+### Technical
+- Service worker registration in `main.tsx` with lifecycle callbacks
+- Conditional registration to avoid MSW conflicts in E2E tests
+- Workbox configuration in `vite.config.ts`:
+  - Cache-First: static assets (JS, CSS, images, fonts) - 30-day expiration
+  - Network-First: HTML pages - 7-day expiration, 3s timeout
+  - Precaching: core app shell (index.html, main JS/CSS, icons)
+- TypeScript declarations for `virtual:pwa-register` module
+- Enhanced manifest: `start_url`, maskable icons for Android
+
+### Tests
+- 571 unit/integration tests passing ✅
+- 25 E2E tests passing (no MSW/PWA conflicts) ✅
+- OpenSpec strict validation passed ✅
+- Build verification: sw.js, manifest.webmanifest, workbox runtime generated
+
+### Documentation
+- OpenSpec: `pwa-installable-app` archived as `2025-12-23-pwa-installable-app`
+- New spec: `openspec/specs/pwa/spec.md` with 7 requirements
+- User guide: `docs/user-guides/mobile-installation.md` (Android, iOS, Desktop)
+- Testing: `docs/testing/pwa-manual-testing-checklist.md` (comprehensive QA)
+
+### User Experience
+- ✅ Native app experience (fullscreen, no browser UI)
+- ✅ Offline access to shopping list and inventory
+- ✅ Instant app launch from home screen/desktop
+- ✅ Auto-updates in background (seamless upgrades)
+- ✅ Works across all platforms (Android, iOS, Windows, Mac, Linux)
+
+### Impact
+- **50% project milestone reached** 🎉
+- Foundation for future mobile-first features
+- Improved accessibility (works in stores with poor connectivity)
+- Reduced friction (no URL navigation required)
+
+---
+
 ## Sprint 11 - 2025-12-22
 
 ### Added
