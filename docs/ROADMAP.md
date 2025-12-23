@@ -1,8 +1,8 @@
 # Roadmap - Shopping Manager
 
-**Last Updated**: 2025-12-22
-**Progress**: 14/30 stories (47%)
-**Current Focus**: Sprint 11 - Shopping List Management Features
+**Last Updated**: 2025-12-23
+**Progress**: 15/30 stories (50%)
+**Current Focus**: Sprint 12 - PWA & User Experience
 
 ---
 
@@ -16,21 +16,21 @@
 | 🔄 **Épica 4: Gestión de Consumo** | 4/4 | ✅ Complete | - |
 | 📊 Épica 5: Inteligencia de Consumo | 0/6 | ⏳ Backlog | 🟡 Medium |
 | 🏪 Épica 6: Gestión de Tiendas | 0/3 | ⏳ Backlog | 🟢 Low |
-| ✨ Quick Wins | 0/4 | ⏳ Backlog | 🟡 Medium |
+| ✨ Quick Wins | 1/4 | 🚧 In Progress | 🟡 Medium |
 
 ---
 
 ## 🔥 Next Up - Intelligence & Analytics
 
-**Completed in Sprint 11** ✅
-- ✅ **Manual Shopping List Management** (OpenSpec feature)
+**Completed in Sprint 12** ✅
+- ✅ **QW-004: PWA Installable App** (OpenSpec feature)
 
 **High Priority - Next Sprint**:
 1. [US-014: Alertas de stock bajo](./userstories/backlog/high-priority/US-014-alertas-stock-bajo.md) ⭐⭐⭐⭐
 2. [US-015: Lista de compras automática](./userstories/backlog/high-priority/US-015-lista-compras-automatica.md) ⭐⭐⭐⭐⭐
 3. [QW-005: Dashboard con vista de acción](./userstories/backlog/high-priority/QW-005-dashboard-accionable.md) ⭐⭐⭐⭐
 
-**Milestone Progress**: Epic 4 Complete! 🎉
+**Milestone Progress**: 50% Complete! PWA Enabled! 🎉
 
 ---
 
@@ -44,6 +44,14 @@
 ---
 
 ## 🎉 Recent Achievements
+
+### Sprint 12 (Dec 2025) - 📱 PWA & Mobile First
+- ✅ **QW-004: PWA Installable App**
+- Feature: Service worker with offline support
+- Feature: Install to home screen (Android, iOS, Desktop)
+- Feature: Cache-First + Network-First strategies
+- Feature: Auto-update mechanism
+- **Impact**: Native app experience, works offline, instant access ✅
 
 ### Sprint 11 (Dec 2025) - 📝 Manual List Management
 - ✅ **Manual Shopping List Management**
