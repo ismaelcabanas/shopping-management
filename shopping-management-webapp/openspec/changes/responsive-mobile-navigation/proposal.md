@@ -161,35 +161,35 @@ Implement **responsive navigation with mobile-first UX patterns**:
 
 **Dependencies**: None (can start immediately)
 
-## Open Questions
+## Design Decisions
 
-Before proceeding to design phase, clarify:
+The following decisions have been made for implementation:
 
-1. **Mobile Menu Style**:
-   - Full-screen overlay (blocks all content)?
-   - Slide-in drawer from left/right (overlay or push content)?
-   - **Recommendation**: Slide-in from left (standard pattern)
+1. **Mobile Menu Style**: ✅ Slide-in drawer from left
+   - Standard mobile app pattern
+   - Drawer overlays content with semi-transparent backdrop
+   - Familiar UX for users
 
-2. **Menu Animation Duration**:
-   - Fast (150ms), Medium (250ms), or Slow (400ms)?
-   - **Recommendation**: 250ms (balanced, not jarring)
+2. **Menu Animation Duration**: ✅ 250ms (Medium speed)
+   - Balanced speed - not too fast or slow
+   - Feels natural and smooth on repeated interactions
+   - GPU-accelerated CSS transforms
 
-3. **Close Menu Behavior**:
-   - Tap outside menu to close?
-   - Swipe to close?
-   - Only explicit close button?
-   - **Recommendation**: All three options
+3. **Close Menu Behavior**: ✅ Explicit close button (X) + auto-close on navigation
+   - Clear X button in top-right corner of drawer
+   - Navigation links auto-close menu when clicked
+   - **Not included**: Tap outside backdrop (too easy to accidentally trigger)
+   - **Not included**: Swipe gestures (out of scope for MVP)
 
-4. **Brand Abbreviation**:
-   - "SM" text?
-   - Just shopping cart icon?
-   - Custom logo?
-   - **Recommendation**: Shopping cart icon only on mobile
+4. **Brand/Logo on Mobile**: ✅ Icon only
+   - Just shopping cart icon, no text
+   - Saves maximum horizontal space
+   - Icon is recognizable without text label
 
-5. **Responsive Typography Priority**:
-   - All pages in this change?
-   - Or separate follow-up change?
-   - **Recommendation**: Navigation only in this change, separate change for global typography
+5. **Responsive Typography**: ✅ Skip for now
+   - This change focuses only on navigation component
+   - No responsive text sizing beyond navigation
+   - Can be addressed in separate future change if needed
 
 ## Next Steps
 

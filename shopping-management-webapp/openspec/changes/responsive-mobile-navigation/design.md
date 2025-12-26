@@ -158,7 +158,7 @@ Using Tailwind's default `md:` breakpoint (768px):
 - **Position**: Fixed, covers entire viewport
 - **Z-Index**: 40 (below drawer which is 50)
 - **Background**: `bg-black bg-opacity-40`
-- **Click Behavior**: Closes menu when clicked
+- **Click Behavior**: NOT clickable (per design decision - only X button and nav links close menu)
 
 ## Accessibility Design
 
@@ -212,10 +212,9 @@ useEffect(() => {
   {/* Menu items */}
 </nav>
 
-{/* Backdrop */}
+{/* Backdrop - Not clickable per design decision */}
 <div
   aria-hidden="true"
-  onClick={closeMobileMenu}
 />
 ```
 
@@ -273,16 +272,14 @@ Use Tailwind's transition utilities + conditional classes:
 ```tsx
 <div className="flex items-center gap-2">
   <ShoppingCart className="w-6 h-6 text-primary" />
-  <span className="md:hidden text-lg font-bold">
-    SM
-  </span>
+  {/* No text on mobile - icon only per design decision */}
 </div>
 ```
 
-**Alternative**: Icon only on mobile (no "SM" text)
-- Saves even more space
-- Icon is recognizable enough
-- **Decision**: Start with icon-only, add "SM" if user feedback requests it
+**Design Decision**: Icon only on mobile (no "SM" text or "Shopping Manager")
+- Saves maximum horizontal space
+- Shopping cart icon is recognizable without text label
+- Keeps mobile navigation bar clean and uncluttered
 
 ## Touch Target Optimization
 
