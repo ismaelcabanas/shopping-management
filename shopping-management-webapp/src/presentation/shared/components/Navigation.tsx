@@ -1,12 +1,18 @@
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Home, Package, LayoutDashboard, ShoppingCart, ShoppingBag } from 'lucide-react'
+import { Home, Package, LayoutDashboard, ShoppingCart, ShoppingBag, Menu } from 'lucide-react'
 
 export function Navigation() {
   const location = useLocation()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const isActive = (path: string) => {
     return location.pathname === path
   }
+
+  const toggleMobileMenu = () => setIsMobileMenuOpen(prev => !prev)
+  // Will be used for closing menu (X button and nav links)
+  // const closeMobileMenu = () => setIsMobileMenuOpen(false)
 
   return (
     <nav className="bg-white shadow-card mb-8" data-testid="navigation">
@@ -22,6 +28,18 @@ export function Navigation() {
               Shopping Manager
             </Link>
           </div>
+
+          {/* Hamburger button - visible only on mobile */}
+          <button
+            onClick={toggleMobileMenu}
+            className="md:hidden p-2 min-h-touch focus:outline-none focus:ring-2 focus:ring-primary rounded-md"
+            aria-label="Abrir menú de navegación"
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-menu"
+            data-testid="hamburger-button"
+          >
+            <Menu className="w-6 h-6 text-gray-700" />
+          </button>
 
           <div className="flex space-x-2">
             <Link
