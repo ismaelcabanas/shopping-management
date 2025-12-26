@@ -41,7 +41,8 @@ export function Navigation() {
             <Menu className="w-6 h-6 text-gray-700" />
           </button>
 
-          <div className="flex space-x-2">
+          {/* Desktop navigation - hidden on mobile */}
+          <div className="hidden md:flex space-x-2" data-testid="desktop-nav">
             <Link
               to="/"
               className={`px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
