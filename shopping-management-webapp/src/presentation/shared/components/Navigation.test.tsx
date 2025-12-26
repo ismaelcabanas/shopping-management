@@ -137,4 +137,118 @@ describe('Navigation - Mobile', () => {
     // Restore initial state for other tests
     document.body.style.overflow = initialOverflow
   })
+
+  it('closes mobile menu when Escape key is pressed', async () => {
+    const user = userEvent.setup()
+    renderNavigation()
+
+    // Open menu
+    await user.click(screen.getByTestId('hamburger-button'))
+    expect(screen.getByTestId('mobile-menu-drawer')).toBeInTheDocument()
+
+    // Press Escape key
+    await user.keyboard('{Escape}')
+
+    // Menu should be closed
+    expect(screen.queryByTestId('mobile-menu-drawer')).not.toBeInTheDocument()
+  })
+
+  it('moves focus to close button when mobile menu opens', async () => {
+    const user = userEvent.setup()
+    renderNavigation()
+
+    const hamburgerButton = screen.getByTestId('hamburger-button')
+
+    // Open menu
+    await user.click(hamburgerButton)
+
+    // Focus should move to close button
+    const closeButton = screen.getByTestId('mobile-menu-close')
+    expect(closeButton).toHaveFocus()
+  })
+
+  it('returns focus to hamburger button when mobile menu closes', async () => {
+    const user = userEvent.setup()
+    renderNavigation()
+
+    const hamburgerButton = screen.getByTestId('hamburger-button')
+
+    // Open menu
+    await user.click(hamburgerButton)
+
+    // Close menu
+    const closeButton = screen.getByTestId('mobile-menu-close')
+    await user.click(closeButton)
+
+    // Focus should return to hamburger button
+    expect(hamburgerButton).toHaveFocus()
+  })
+})
+
+describe('Navigation - Accessibility', () => {
+  it('has correct ARIA attributes on hamburger button', () => {
+    renderNavigation()
+
+    const hamburgerButton = screen.getByTestId('hamburger-button')
+
+    // Check initial ARIA attributes
+    expect(hamburgerButton).toHaveAttribute('aria-label', 'Abrir menú de navegación')
+    expect(hamburgerButton).toHaveAttribute('aria-expanded', 'false')
+    expect(hamburgerButton).toHaveAttribute('aria-controls', 'mobile-menu')
+  })
+
+  it('updates aria-expanded when menu opens', async () => {
+    const user = userEvent.setup()
+    renderNavigation()
+
+    const hamburgerButton = screen.getByTestId('hamburger-button')
+
+    // Initially closed
+    expect(hamburgerButton).toHaveAttribute('aria-expanded', 'false')
+
+    // Open menu
+    await user.click(hamburgerButton)
+    expect(hamburgerButton).toHaveAttribute('aria-expanded', 'true')
+  })
+
+  it('has correct ARIA attributes on mobile menu drawer', async () => {
+    const user = userEvent.setup()
+    renderNavigation()
+
+    // Open menu
+    await user.click(screen.getByTestId('hamburger-button'))
+
+    const mobileMenu = screen.getByTestId('mobile-menu-drawer')
+
+    // Check ARIA attributes
+    expect(mobileMenu).toHaveAttribute('id', 'mobile-menu')
+    expect(mobileMenu).toHaveAttribute('role', 'navigation')
+    expect(mobileMenu).toHaveAttribute('aria-label', 'Navegación principal móvil')
+  })
+
+  it('has correct ARIA attributes on backdrop', async () => {
+    const user = userEvent.setup()
+    renderNavigation()
+
+    // Open menu
+    await user.click(screen.getByTestId('hamburger-button'))
+
+    const backdrop = screen.getByTestId('mobile-menu-backdrop')
+
+    // Backdrop should be hidden from screen readers
+    expect(backdrop).toHaveAttribute('aria-hidden', 'true')
+  })
+
+  it('has correct ARIA label on close button', async () => {
+    const user = userEvent.setup()
+    renderNavigation()
+
+    // Open menu
+    await user.click(screen.getByTestId('hamburger-button'))
+
+    const closeButton = screen.getByTestId('mobile-menu-close')
+
+    // Check ARIA label
+    expect(closeButton).toHaveAttribute('aria-label', 'Cerrar menú')
+  })
 })

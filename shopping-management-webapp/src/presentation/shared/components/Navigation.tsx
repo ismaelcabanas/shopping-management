@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Home, Package, LayoutDashboard, ShoppingCart, ShoppingBag, Menu, X } from 'lucide-react'
 
 export function Navigation() {
   const location = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const hamburgerButtonRef = useRef<HTMLButtonElement>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
 
   const isActive = (path: string) => {
     return location.pathname === path
@@ -27,6 +29,32 @@ export function Navigation() {
     }
   }, [isMobileMenuOpen])
 
+  // Escape key to close mobile menu
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isMobileMenuOpen) {
+        closeMobileMenu()
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [isMobileMenuOpen])
+
+  // Focus management: move focus to close button when menu opens, restore to hamburger when closes
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      // Move focus to close button when menu opens
+      closeButtonRef.current?.focus()
+    } else {
+      // Return focus to hamburger button when menu closes
+      hamburgerButtonRef.current?.focus()
+    }
+  }, [isMobileMenuOpen])
+
   return (
     <>
       <nav className="bg-white shadow-card mb-8" data-testid="navigation">
@@ -45,6 +73,7 @@ export function Navigation() {
 
           {/* Hamburger button - visible only on mobile */}
           <button
+            ref={hamburgerButtonRef}
             onClick={toggleMobileMenu}
             className="md:hidden p-2 min-h-touch focus:outline-none focus:ring-2 focus:ring-primary rounded-md"
             aria-label="Abrir menú de navegación"
@@ -135,6 +164,7 @@ export function Navigation() {
                 <span className="text-lg font-bold text-gray-800">Shopping Manager</span>
               </div>
               <button
+                ref={closeButtonRef}
                 onClick={closeMobileMenu}
                 className="p-2 min-h-touch focus:outline-none focus:ring-2 focus:ring-primary rounded-md"
                 aria-label="Cerrar menú"
