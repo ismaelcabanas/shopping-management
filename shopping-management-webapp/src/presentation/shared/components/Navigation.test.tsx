@@ -117,4 +117,24 @@ describe('Navigation - Mobile', () => {
     await user.click(screen.getByTestId('mobile-menu-close'))
     expect(screen.queryByTestId('mobile-menu-drawer')).not.toBeInTheDocument()
   })
+
+  it('locks body scroll when mobile menu is open', async () => {
+    const user = userEvent.setup()
+
+    // Store initial overflow state
+    const initialOverflow = document.body.style.overflow
+
+    renderNavigation()
+
+    // Open menu - body should be locked
+    await user.click(screen.getByTestId('hamburger-button'))
+    expect(document.body.style.overflow).toBe('hidden')
+
+    // Close menu - body should be scrollable again
+    await user.click(screen.getByTestId('mobile-menu-close'))
+    expect(document.body.style.overflow).toBe('unset')
+
+    // Restore initial state for other tests
+    document.body.style.overflow = initialOverflow
+  })
 })

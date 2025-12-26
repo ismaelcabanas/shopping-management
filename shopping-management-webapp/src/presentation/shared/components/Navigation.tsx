@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Home, Package, LayoutDashboard, ShoppingCart, ShoppingBag, Menu, X } from 'lucide-react'
 
@@ -12,6 +12,20 @@ export function Navigation() {
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(prev => !prev)
   const closeMobileMenu = () => setIsMobileMenuOpen(false)
+
+  // Body scroll lock when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isMobileMenuOpen])
 
   return (
     <>
@@ -99,17 +113,17 @@ export function Navigation() {
       {/* Mobile Menu - only render when open */}
       {isMobileMenuOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop with fade animation */}
           <div
-            className="fixed inset-0 bg-black bg-opacity-40 z-40"
+            className="fixed inset-0 bg-black bg-opacity-40 z-40 transition-opacity duration-250 ease-in-out"
             aria-hidden="true"
             data-testid="mobile-menu-backdrop"
           />
 
-          {/* Mobile Menu Drawer */}
+          {/* Mobile Menu Drawer with slide-in animation */}
           <nav
             id="mobile-menu"
-            className="fixed top-0 left-0 h-full w-4/5 max-w-sm bg-white shadow-2xl z-50"
+            className="fixed top-0 left-0 h-full w-4/5 max-w-sm bg-white shadow-2xl z-50 transition-transform duration-250 ease-in-out"
             role="navigation"
             aria-label="Navegación principal móvil"
             data-testid="mobile-menu-drawer"
