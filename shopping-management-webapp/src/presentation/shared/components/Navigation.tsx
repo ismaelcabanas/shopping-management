@@ -67,7 +67,9 @@ export function Navigation() {
               className="text-xl font-bold text-gray-800 hover:text-primary transition-colors"
               data-testid="nav-home-link"
             >
-              Shopping Manager
+              <span className="hidden md:inline" data-testid="brand-text">
+                Shopping Manager
+              </span>
             </Link>
           </div>
 

@@ -21,7 +21,9 @@ describe('Navigation - Desktop', () => {
 
   it('renders brand with full text on desktop', () => {
     renderNavigation()
-    expect(screen.getByText('Shopping Manager')).toBeInTheDocument()
+    const brandText = screen.getByTestId('brand-text')
+    expect(brandText).toBeInTheDocument()
+    expect(brandText).toHaveTextContent('Shopping Manager')
   })
 
   it('renders all navigation links', () => {
