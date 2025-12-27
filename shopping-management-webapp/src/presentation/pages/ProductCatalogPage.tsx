@@ -49,8 +49,18 @@ export function ProductCatalogPage() {
     return new Set(shoppingListItems.map(item => item.productId.value));
   }, [shoppingListItems]);
 
-  // Initialize services for TicketScanModal
-  const ocrService = OCRServiceFactory.create();
+  // Lazy initialization of OCR service (only when ticket scan is opened)
+  // This prevents errors when API key is missing on page load
+  const getOCRService = () => {
+    try {
+      return OCRServiceFactory.create();
+    } catch (error) {
+      console.error('Failed to initialize OCR service:', error);
+      toast.error('No se pudo inicializar el servicio OCR. Verifica la configuración de la API key.');
+      return null;
+    }
+  };
+
   const productRepository = new LocalStorageProductRepository();
 
   useEffect(() => {
@@ -384,7 +394,7 @@ export function ProductCatalogPage() {
         isOpen={isTicketScanOpen}
         onClose={() => setIsTicketScanOpen(false)}
         onConfirm={handleTicketScanConfirm}
-        ocrService={ocrService}
+        ocrService={getOCRService()}
         productRepository={productRepository}
       />
 

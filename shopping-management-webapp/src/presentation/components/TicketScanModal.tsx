@@ -12,7 +12,7 @@ interface TicketScanModalProps {
   isOpen: boolean
   onClose: () => void
   onConfirm: (items: MatchedDetectedItem[]) => void
-  ocrService: OCRService
+  ocrService: OCRService | null
   productRepository: ProductRepository
   onComplete?: () => void | Promise<void>
 }
@@ -29,8 +29,11 @@ export function TicketScanModal({
 }: TicketScanModalProps) {
   const [currentView, setCurrentView] = useState<ViewState>('upload')
 
+  // Early return if no OCR service is available
+  const ocrServiceError = !ocrService
+
   const { scanResult, isProcessing, error, scanTicket, resetScan } = useTicketScan(
-    ocrService,
+    ocrService!,
     productRepository
   )
 
@@ -78,25 +81,50 @@ export function TicketScanModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Escanear Ticket">
-      {currentView === 'upload' && (
-        <div>
-          <TicketUploadView onFileSelect={handleFileSelect} />
-          {error && (
-            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-800">
-                <strong>Error:</strong> {error.message}
-              </p>
+      {ocrServiceError ? (
+        <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <p className="text-sm text-yellow-800">
+            <strong>Servicio OCR no disponible</strong>
+          </p>
+          <p className="text-sm text-yellow-700 mt-2">
+            El servicio de escaneo de tickets requiere una API key de Gemini configurada.
+            Por favor, configura la variable de entorno VITE_GEMINI_API_KEY.
+          </p>
+          <p className="text-sm text-yellow-700 mt-2">
+            Puedes obtener una API key en:{' '}
+            <a
+              href="https://makersuite.google.com/app/apikey"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-yellow-900"
+            >
+              Google AI Studio
+            </a>
+          </p>
+        </div>
+      ) : (
+        <>
+          {currentView === 'upload' && (
+            <div>
+              <TicketUploadView onFileSelect={handleFileSelect} />
+              {error && (
+                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-sm text-red-800">
+                    <strong>Error:</strong> {error.message}
+                  </p>
+                </div>
+              )}
             </div>
           )}
-        </div>
-      )}
-      {currentView === 'processing' && <TicketProcessingView />}
-      {currentView === 'results' && scanResult && (
-        <TicketResultsView
-          items={scanResult.detectedItems}
-          onConfirm={handleConfirm}
-          onCancel={handleCancel}
-        />
+          {currentView === 'processing' && <TicketProcessingView />}
+          {currentView === 'results' && scanResult && (
+            <TicketResultsView
+              items={scanResult.detectedItems}
+              onConfirm={handleConfirm}
+              onCancel={handleCancel}
+            />
+          )}
+        </>
       )}
     </Modal>
   )
