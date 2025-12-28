@@ -46,4 +46,14 @@ describe('DashboardPage - Integration Tests', () => {
 
     expect(screen.getByTestId('products-grid')).toBeInTheDocument()
   })
+
+  it('should show empty state when no products', () => {
+    render(
+      <MemoryRouter>
+        <DashboardPage products={[]} />
+      </MemoryRouter>
+    )
+
+    expect(screen.getByText(/no hay productos/i)).toBeInTheDocument()
+  })
 })
