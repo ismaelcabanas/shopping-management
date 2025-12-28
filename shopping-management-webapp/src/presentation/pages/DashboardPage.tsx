@@ -1,38 +1,46 @@
 import { useState } from 'react'
+import { LayoutDashboard } from 'lucide-react'
 import { ShoppingList } from '../features/shopping-cart/ShoppingList'
+import { EmptyState } from '../shared/components/EmptyState'
 import type { Product } from '../features/shopping-cart/ShoppingList'
 
-export function DashboardPage() {
-  const [products] = useState<Product[]>([
-    {
-      id: '1',
-      name: 'Leche',
-      price: 1.5,
-      stock: 10,
-      minimumStock: 5,
-    },
-    {
-      id: '2',
-      name: 'Pan',
-      price: 0.8,
-      stock: 3,
-      minimumStock: 5,
-    },
-    {
-      id: '3',
-      name: 'Huevos',
-      price: 2.5,
-      stock: 0,
-      minimumStock: 6,
-    },
-    {
-      id: '4',
-      name: 'Manzanas',
-      price: 2.0,
-      stock: 15,
-      minimumStock: 8,
-    },
-  ])
+const DEFAULT_PRODUCTS: Product[] = [
+  {
+    id: '1',
+    name: 'Leche',
+    price: 1.5,
+    stock: 10,
+    minimumStock: 5,
+  },
+  {
+    id: '2',
+    name: 'Pan',
+    price: 0.8,
+    stock: 3,
+    minimumStock: 5,
+  },
+  {
+    id: '3',
+    name: 'Huevos',
+    price: 2.5,
+    stock: 0,
+    minimumStock: 6,
+  },
+  {
+    id: '4',
+    name: 'Manzanas',
+    price: 2.0,
+    stock: 15,
+    minimumStock: 8,
+  },
+]
+
+interface DashboardPageProps {
+  products?: Product[]
+}
+
+export function DashboardPage({ products: initialProducts }: DashboardPageProps = {}) {
+  const [products] = useState<Product[]>(initialProducts ?? DEFAULT_PRODUCTS)
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -47,7 +55,16 @@ export function DashboardPage() {
         </header>
 
         <section>
-          <ShoppingList products={products} />
+          {products.length === 0 ? (
+            <EmptyState
+              title="No hay productos en tu inventario"
+              description="Comienza agregando productos a tu despensa para gestionar tu inventario personal"
+              icon={<LayoutDashboard className="w-16 h-16" />}
+              size="large"
+            />
+          ) : (
+            <ShoppingList products={products} />
+          )}
         </section>
       </div>
     </div>
