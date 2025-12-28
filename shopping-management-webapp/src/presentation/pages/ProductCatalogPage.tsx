@@ -54,12 +54,12 @@ export function ProductCatalogPage() {
 
   // Lazy initialization of OCR service (only when ticket scan is opened)
   // This prevents errors when API key is missing on page load
+  // Note: Error handling is done via the persistent Alert component, not toast
   const getOCRService = () => {
     try {
       return OCRServiceFactory.create();
     } catch (error) {
       console.error('Failed to initialize OCR service:', error);
-      toast.error('No se pudo inicializar el servicio OCR. Verifica la configuración de la API key.');
       return null;
     }
   };

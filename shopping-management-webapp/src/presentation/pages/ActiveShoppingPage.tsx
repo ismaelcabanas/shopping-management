@@ -5,6 +5,7 @@ import toast from 'react-hot-toast'
 import { ShoppingListView } from '../components/ShoppingListView'
 import { RegisterPurchaseModal } from '../components/RegisterPurchaseModal'
 import { TicketScanModal } from '../components/TicketScanModal'
+import { Alert } from '../shared/components/Alert'
 import { RecalculateShoppingList } from '../../application/use-cases/RecalculateShoppingList'
 import { LocalStorageShoppingListRepository } from '../../infrastructure/repositories/LocalStorageShoppingListRepository'
 import { LocalStorageInventoryRepository } from '../../infrastructure/repositories/LocalStorageInventoryRepository'
@@ -24,15 +25,17 @@ export function ActiveShoppingPage() {
   const [showRegisterPurchaseModal, setShowRegisterPurchaseModal] = useState(false)
   const [allProducts, setAllProducts] = useState<Product[]>([])
   const [initialPurchaseItems, setInitialPurchaseItems] = useState<PurchaseItemInput[] | undefined>(undefined)
+  const [showOCRWarning, setShowOCRWarning] = useState(false)
+  const [ocrWarningMessage, setOcrWarningMessage] = useState('')
 
   // Lazy initialization of OCR service (only when ticket scan is opened)
   // This prevents errors when API key is missing on page load
+  // Note: Error handling is done via the persistent Alert component, not toast
   const getOCRService = () => {
     try {
       return OCRServiceFactory.create()
     } catch (error) {
       console.error('Failed to initialize OCR service:', error)
-      toast.error('No se pudo inicializar el servicio OCR. Verifica la configuración de la API key.')
       return null
     }
   }
@@ -48,6 +51,18 @@ export function ActiveShoppingPage() {
       setAllProducts([])
     }
   }
+
+  // Check OCR configuration on mount
+  useEffect(() => {
+    try {
+      OCRServiceFactory.create()
+      setShowOCRWarning(false)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Error de configuración OCR'
+      setOcrWarningMessage(message)
+      setShowOCRWarning(true)
+    }
+  }, [])
 
   useEffect(() => {
     loadAllProducts()
@@ -140,6 +155,20 @@ export function ActiveShoppingPage() {
           Cancelar
         </button>
       </div>
+
+      {/* OCR Configuration Warning */}
+      {showOCRWarning && (
+        <div className="mb-4">
+          <Alert
+            variant="warning"
+            title="Configuración OCR incompleta"
+            closable
+            onClose={() => setShowOCRWarning(false)}
+          >
+            {ocrWarningMessage}. La función de escanear tickets no estará disponible hasta que se configure correctamente.
+          </Alert>
+        </div>
+      )}
 
       {/* Shopping list with checkboxes enabled */}
       <ShoppingListView items={items} readonly={false} onToggleChecked={toggleChecked} />
