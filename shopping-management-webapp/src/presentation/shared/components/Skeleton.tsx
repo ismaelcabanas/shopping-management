@@ -1,16 +1,46 @@
 import type { HTMLAttributes } from 'react'
 
+/**
+ * Props for Skeleton component
+ */
 export interface SkeletonProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
-  /** Skeleton variant */
+  /** Skeleton variant - predefined shapes for common use cases */
   variant?: 'text' | 'card' | 'avatar' | 'button' | 'custom'
-  /** Custom width */
+  /** Custom width - overrides variant default */
   width?: string
-  /** Custom height */
+  /** Custom height - overrides variant default */
   height?: string
   /** Number of skeleton items to render */
   count?: number
 }
 
+/**
+ * Skeleton component displays loading placeholders during async operations.
+ *
+ * Provides better UX than spinners by showing approximate content layout.
+ * Includes predefined variants for common UI patterns and custom dimensions support.
+ *
+ * @example
+ * ```tsx
+ * // Text skeleton (default)
+ * <Skeleton variant="text" />
+ *
+ * // Multiple card skeletons
+ * <Skeleton variant="card" count={3} />
+ *
+ * // Avatar skeleton
+ * <Skeleton variant="avatar" />
+ *
+ * // Custom dimensions
+ * <Skeleton variant="custom" width="200px" height="60px" />
+ * ```
+ *
+ * @accessibility
+ * - Uses aria-busy="true" during loading state
+ * - Includes aria-label for screen readers
+ * - Pulse animation provides visual feedback
+ * - WCAG 2.1 Level AA compliant
+ */
 export function Skeleton({
   variant = 'text',
   width,

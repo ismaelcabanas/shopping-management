@@ -1,18 +1,49 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 
+/**
+ * Props for Badge component
+ */
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
-  /** Badge variant/color */
+  /** Badge variant/color - determines background and text colors */
   variant?: 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info'
   /** Badge size */
   size?: 'sm' | 'md' | 'lg'
-  /** Optional icon */
+  /** Optional icon - displayed before text */
   icon?: ReactNode
-  /** Pill style (fully rounded) */
+  /** Pill style (fully rounded corners) */
   pill?: boolean
   /** Badge content */
   children: ReactNode
 }
 
+/**
+ * Badge component displays small status indicators and labels.
+ *
+ * Used for tags, status indicators, counts, and category labels.
+ * Provides consistent styling with 6 semantic color variants and 3 sizes.
+ *
+ * @example
+ * ```tsx
+ * // Status badge
+ * <Badge variant="success">Active</Badge>
+ * <Badge variant="warning">Stock bajo</Badge>
+ *
+ * // Badge with icon
+ * <Badge variant="danger" icon={<AlertCircle className="w-3 h-3" />}>
+ *   Sin stock
+ * </Badge>
+ *
+ * // Pill style badge
+ * <Badge variant="info" pill size="sm">
+ *   3 items
+ * </Badge>
+ * ```
+ *
+ * @accessibility
+ * - Semantic color variants with sufficient contrast ratios
+ * - Icons sized appropriately for each badge size
+ * - WCAG 2.1 Level AA compliant
+ */
 export function Badge({
   variant = 'default',
   size = 'md',

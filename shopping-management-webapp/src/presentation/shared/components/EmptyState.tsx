@@ -1,11 +1,19 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 import { Button } from './Button'
 
+/**
+ * Action button configuration for EmptyState component
+ */
 export interface EmptyStateAction {
+  /** Button label text */
   label: string
+  /** Click handler */
   onClick: () => void
 }
 
+/**
+ * Props for EmptyState component
+ */
 export interface EmptyStateProps extends HTMLAttributes<HTMLDivElement> {
   /** Main title text */
   title: string
@@ -15,10 +23,41 @@ export interface EmptyStateProps extends HTMLAttributes<HTMLDivElement> {
   icon?: string | ReactNode
   /** Optional action button */
   action?: EmptyStateAction
-  /** Size variant */
+  /** Size variant - compact for sidebars, default for content areas, large for hero sections */
   size?: 'compact' | 'default' | 'large'
 }
 
+/**
+ * EmptyState component displays a user-friendly message when content is unavailable.
+ *
+ * Used to replace empty lists, missing data, or zero states throughout the application.
+ * Provides consistent styling and accessibility for empty content scenarios.
+ *
+ * @example
+ * ```tsx
+ * // Basic usage with emoji icon
+ * <EmptyState
+ *   title="No products found"
+ *   description="Add your first product to get started"
+ *   icon="📦"
+ * />
+ *
+ * // With Lucide icon and action button
+ * <EmptyState
+ *   title="No items in cart"
+ *   description="Start shopping to add items"
+ *   icon={<ShoppingCart className="w-16 h-16" />}
+ *   action={{ label: "Browse Products", onClick: () => navigate('/products') }}
+ *   size="large"
+ * />
+ * ```
+ *
+ * @accessibility
+ * - Uses role="status" for screen reader announcements
+ * - aria-live="polite" ensures non-intrusive updates
+ * - Icons marked with aria-hidden="true"
+ * - WCAG 2.1 Level AA compliant
+ */
 export function EmptyState({
   title,
   description,

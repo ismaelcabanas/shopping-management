@@ -1,23 +1,62 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 import { Info, CheckCircle, AlertTriangle, XCircle, X } from 'lucide-react'
 
+/**
+ * Props for Alert component
+ */
 export interface AlertProps extends HTMLAttributes<HTMLDivElement> {
-  /** Variant type */
+  /** Variant type - determines color scheme and default icon */
   variant?: 'info' | 'success' | 'warning' | 'error'
   /** Optional title */
   title?: string
   /** Alert content */
   children: ReactNode
-  /** Custom icon - set to null to hide icon, undefined for auto icon */
+  /** Custom icon - set to null to hide icon, undefined for auto icon based on variant */
   icon?: ReactNode | null
   /** Show close button */
   closable?: boolean
-  /** Close handler */
+  /** Close handler - required when closable is true */
   onClose?: () => void
-  /** Full width */
+  /** Full width - spans entire container width */
   fullWidth?: boolean
 }
 
+/**
+ * Alert component displays persistent inline messages for important information.
+ *
+ * Use for persistent feedback that complements temporary toast notifications.
+ * Suitable for warnings, errors, informational messages, and success confirmations
+ * that need to remain visible until user dismisses them.
+ *
+ * @example
+ * ```tsx
+ * // Info alert with auto icon
+ * <Alert variant="info" title="New Feature">
+ *   Check out our new dashboard analytics!
+ * </Alert>
+ *
+ * // Warning alert with close button
+ * <Alert
+ *   variant="warning"
+ *   title="API Key Missing"
+ *   closable
+ *   onClose={() => setShowAlert(false)}
+ * >
+ *   Configure your API key to enable OCR features.
+ * </Alert>
+ *
+ * // Error alert without icon
+ * <Alert variant="error" icon={null}>
+ *   Failed to save changes. Please try again.
+ * </Alert>
+ * ```
+ *
+ * @accessibility
+ * - Uses role="alert" for immediate screen reader announcements
+ * - aria-live="assertive" for high-priority messages
+ * - Close button includes aria-label
+ * - WCAG 2.1 Level AA compliant
+ */
 export function Alert({
   variant = 'info',
   title,
