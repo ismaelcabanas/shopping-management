@@ -77,11 +77,26 @@ The system SHALL support configurable OCR providers through environment variable
 
 #### Scenario: Gemini provider requires API key
 - **GIVEN** environment variable `VITE_OCR_PROVIDER=gemini` is set
-- **AND** environment variable `VITE_GEMINI_API_KEY` is not set
+- **AND** environment variable `VITE_OCR_LLM_API_KEY` is not set
 - **WHEN** the application attempts to initialize OCR service
 - **THEN** the system throws an error indicating missing API key
 - **AND** error message includes link to obtain API key: https://makersuite.google.com/app/apikey
 - **AND** the application fails to start (fail-fast validation)
+
+#### Scenario: Gemini provider uses configurable model
+- **GIVEN** environment variable `VITE_OCR_PROVIDER=gemini` is set
+- **AND** environment variable `VITE_OCR_LLM_API_KEY` is set to a valid API key
+- **AND** environment variable `VITE_OCR_LLM_MODEL` is set to `gemini-1.5-pro`
+- **WHEN** the application initializes OCR service
+- **THEN** the system creates a `GeminiVisionOCRService` instance with model `gemini-1.5-pro`
+- **AND** ticket scanning uses the specified model for text extraction
+
+#### Scenario: Gemini provider uses default model when not specified
+- **GIVEN** environment variable `VITE_OCR_PROVIDER=gemini` is set
+- **AND** environment variable `VITE_OCR_LLM_API_KEY` is set to a valid API key
+- **AND** environment variable `VITE_OCR_LLM_MODEL` is not set
+- **WHEN** the application initializes OCR service
+- **THEN** the system creates a `GeminiVisionOCRService` with default model `gemini-2.0-flash`
 
 #### Scenario: Ollama provider with custom URL
 - **GIVEN** environment variable `VITE_OCR_PROVIDER=ollama` is set
@@ -122,7 +137,7 @@ The system SHALL provide a centralized factory for creating OCR service instance
 
 #### Scenario: Factory validates configuration before instantiation
 - **GIVEN** provider `'gemini'` is selected
-- **AND** `VITE_GEMINI_API_KEY` environment variable is empty
+- **AND** `VITE_OCR_LLM_API_KEY` environment variable is empty
 - **WHEN** `OCRServiceFactory.create('gemini')` is called
 - **THEN** factory throws descriptive error before attempting to create service
 - **AND** error includes remediation steps
