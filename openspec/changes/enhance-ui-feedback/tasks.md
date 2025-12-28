@@ -163,7 +163,7 @@ These tasks follow TDD (Test-Driven Development) and deliver incremental, user-v
 
 ---
 
-#### Task 2.3: Add EmptyState to DashboardPage [ ]
+#### Task 2.3: Add EmptyState to DashboardPage [x]
 **Goal**: Enhance dashboard with empty state guidance
 
 **Steps**:
@@ -184,7 +184,7 @@ These tasks follow TDD (Test-Driven Development) and deliver incremental, user-v
 
 ---
 
-#### Task 2.4: Add Alert to ProductCatalogPage for warnings [ ]
+#### Task 2.4: Add Alert to ProductCatalogPage for warnings [x]
 **Goal**: Show persistent alerts for important information
 
 **Steps**:
