@@ -35,8 +35,8 @@ export default defineConfig({
     env: {
       // Mock environment variables for e2e tests to avoid requiring real API keys
       VITE_OCR_PROVIDER: 'gemini',
-      VITE_GEMINI_API_KEY: 'mock-api-key-for-e2e-tests',
-      VITE_GEMINI_MODEL: 'gemini-2.0-flash',
+      VITE_OCR_LLM_API_KEY: 'mock-api-key-for-e2e-tests',
+      VITE_OCR_LLM_MODEL: 'gemini-2.0-flash',
       // Enable MSW for E2E tests
       VITE_ENABLE_MSW: 'true',
     },

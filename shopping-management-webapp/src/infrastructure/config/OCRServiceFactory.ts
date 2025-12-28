@@ -56,19 +56,19 @@ export class OCRServiceFactory {
    * Creates a Gemini Vision OCR service instance.
    *
    * @private
-   * @throws {Error} If VITE_GEMINI_API_KEY is not set
+   * @throws {Error} If VITE_OCR_LLM_API_KEY is not set
    */
   private static createGeminiService(): OCRService {
-    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    const apiKey = import.meta.env.VITE_OCR_LLM_API_KEY;
 
     if (!apiKey) {
       throw new Error(
-        'VITE_GEMINI_API_KEY is required when VITE_OCR_PROVIDER=gemini. ' +
+        'VITE_OCR_LLM_API_KEY is required when VITE_OCR_PROVIDER=gemini. ' +
           'Get your API key at: https://makersuite.google.com/app/apikey'
       );
     }
 
-    const model = import.meta.env.VITE_GEMINI_MODEL || 'gemini-2.0-flash';
+    const model = import.meta.env.VITE_OCR_LLM_MODEL || 'gemini-2.0-flash';
 
     return new GeminiVisionOCRService(apiKey, model);
   }
