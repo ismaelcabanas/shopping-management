@@ -277,7 +277,7 @@ These tasks follow TDD (Test-Driven Development) and deliver incremental, user-v
 
 ---
 
-#### Task 3.4: Add ErrorBoundary to App.tsx and pages [ ]
+#### Task 3.4: Add ErrorBoundary to App.tsx and pages [x]
 **Goal**: Wrap components with error boundaries
 
 **Steps**:
