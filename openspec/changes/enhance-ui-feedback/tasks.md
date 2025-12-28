@@ -118,7 +118,7 @@ These tasks follow TDD (Test-Driven Development) and deliver incremental, user-v
 
 ### Phase 2: Integration & Refactoring (1 day / ~8 hours)
 
-#### Task 2.1: Refactor ProductList to use EmptyState and Skeleton [ ]
+#### Task 2.1: Refactor ProductList to use EmptyState and Skeleton [x]
 **Goal**: Replace inline implementations with reusable components
 
 **Steps**:
@@ -140,7 +140,7 @@ These tasks follow TDD (Test-Driven Development) and deliver incremental, user-v
 
 ---
 
-#### Task 2.2: Refactor ShoppingListView to use Badge and EmptyState [ ]
+#### Task 2.2: Refactor ShoppingListView to use Badge and EmptyState [x]
 **Goal**: Replace inline badge divs and empty state with reusable components
 
 **Steps**:
