@@ -85,6 +85,203 @@ Para asegurar un desarrollo desacoplado, mantenible y centrado en el negocio, la
 
 ---
 
+## 4.1. UI Feedback Components (Componentes de Retroalimentación)
+
+El proyecto incluye un conjunto estandarizado de componentes de retroalimentación UI para proporcionar experiencias de usuario consistentes y accesibles:
+
+### Componentes Principales
+
+#### EmptyState
+Muestra estados vacíos de forma amigable cuando no hay contenido disponible.
+
+**Cuándo usar:**
+- Listas vacías (productos, shopping list, etc.)
+- Páginas sin datos iniciales
+- Resultados de búsqueda sin coincidencias
+
+**Variantes de tamaño:**
+- `compact`: Para áreas laterales o espacios reducidos
+- `default`: Para áreas de contenido principal
+- `large`: Para secciones hero o páginas completas
+
+**Ejemplo:**
+```tsx
+<EmptyState
+  title="No hay productos en tu despensa"
+  description="Añade tu primer producto pulsando el botón +"
+  icon="📦"
+  size="default"
+/>
+```
+
+#### Alert
+Mensajes persistentes para información importante, advertencias y errores.
+
+**Cuándo usar vs Toast:**
+- **Alert**: Mensajes persistentes que requieren atención (configuración incompleta, avisos importantes)
+- **Toast**: Notificaciones temporales (confirmación de acciones, éxito/error transitorio)
+
+**Variantes:**
+- `info`: Información general (azul)
+- `success`: Acciones exitosas (verde)
+- `warning`: Advertencias (amarillo)
+- `error`: Errores (rojo)
+
+**Ejemplo:**
+```tsx
+<Alert
+  variant="warning"
+  title="Configuración OCR incompleta"
+  closable
+  onClose={() => setShowAlert(false)}
+>
+  Configure su API key para habilitar el escaneo de tickets.
+</Alert>
+```
+
+#### Badge
+Indicadores de estado pequeños y concisos.
+
+**Cuándo usar:**
+- Estados de stock (`high`, `medium`, `low`, `empty`)
+- Categorías y etiquetas
+- Contadores (número de items)
+- Estados de proceso
+
+**Variantes de color:**
+- `default`: Gris neutral
+- `primary`: Color primario de la app
+- `success`: Estados positivos (verde)
+- `warning`: Alertas (amarillo)
+- `danger`: Estados críticos (rojo)
+- `info`: Información (azul)
+
+**Ejemplo:**
+```tsx
+<Badge variant="warning" size="sm">
+  Stock bajo
+</Badge>
+```
+
+#### Skeleton
+Placeholders de carga que mejoran la percepción de rendimiento.
+
+**Cuándo usar:**
+- Carga de listas (productos, items)
+- Carga de tarjetas
+- Carga de avatares/imágenes
+- Cualquier contenido asíncrono
+
+**Variantes:**
+- `text`: Líneas de texto
+- `card`: Tarjetas completas
+- `avatar`: Círculos para avatares
+- `button`: Botones
+- `custom`: Dimensiones personalizadas
+
+**Ejemplo:**
+```tsx
+<Skeleton variant="card" count={3} />
+```
+
+#### ErrorBoundary & ErrorState
+Manejo de errores React con recuperación graceful.
+
+**ErrorBoundary:**
+- Envuelve componentes que pueden fallar
+- Captura errores de renderizado
+- Previene pantallas blancas
+- Permite recuperación con reset
+
+**ErrorState:**
+- UI de fallback para errores
+- Muestra mensajes amigables
+- Botón de retry
+- Integración con ErrorBoundary
+
+**Ejemplo:**
+```tsx
+// Envolver rutas con ErrorBoundary
+<ErrorBoundary onError={(error) => console.error(error)}>
+  <Routes>
+    <Route path="/" element={<HomePage />} />
+  </Routes>
+</ErrorBoundary>
+
+// ErrorState standalone
+<ErrorState
+  title="Error de conexión"
+  message="No se pudo cargar los datos"
+  onReset={() => refetch()}
+/>
+```
+
+#### useErrorHandler Hook
+Hook centralizado para manejo de errores con integración a toasts.
+
+**Funciones:**
+- `handleError(error, message)`: Muestra toast de error
+- `handleErrorWithRetry(error, retryFn, message)`: Retorna estado con función retry
+
+**Ejemplo:**
+```tsx
+const { handleError, handleErrorWithRetry } = useErrorHandler()
+
+try {
+  await saveData()
+} catch (error) {
+  handleError(error, 'Error al guardar')
+}
+```
+
+### Principios de Uso
+
+1. **Consistencia**: Usar siempre los componentes compartidos en lugar de crear inline
+2. **Accesibilidad**: Todos los componentes incluyen ARIA attributes (WCAG 2.1 Level AA)
+3. **Feedback progresivo**: Skeleton → Content o EmptyState
+4. **Manejo de errores**: ErrorBoundary en puntos críticos, ErrorState para recuperación
+
+### Árbol de Decisión: ¿Qué componente usar?
+
+```
+¿Es un error?
+├─ Sí → ErrorBoundary + ErrorState (con retry)
+│
+¿Es contenido vacío?
+├─ Sí → EmptyState (con acción opcional)
+│
+¿Es estado de carga?
+├─ Sí → Skeleton (variante apropiada)
+│
+¿Es un mensaje temporal?
+├─ Sí → Toast (react-hot-toast)
+│
+¿Es un mensaje persistente?
+├─ Sí → Alert (con variante apropiada)
+│
+¿Es un indicador de estado?
+└─ Sí → Badge (con color semántico)
+```
+
+### Ubicación de Componentes
+
+Todos los componentes de feedback están en:
+```
+src/presentation/shared/components/
+├── EmptyState.tsx
+├── Alert.tsx
+├── Badge.tsx
+├── Skeleton.tsx
+├── ErrorBoundary.tsx
+├── ErrorState.tsx
+└── ...
+
+src/presentation/hooks/
+└── useErrorHandler.ts
+```
+
+---
+
 ## 5. Modelo de Datos del Dominio (Domain Data Model)
 
 1.  **Entidad `Product`:** `id`, `name`, `unit_type`.
