@@ -13,8 +13,8 @@ describe('OCRServiceFactory', () => {
   describe('create with explicit provider', () => {
     it('should create GeminiVisionOCRService when provider is gemini', () => {
       // Arrange
-      vi.stubEnv('VITE_GEMINI_API_KEY', 'test-api-key');
-      vi.stubEnv('VITE_GEMINI_MODEL', 'gemini-2.0-flash');
+      vi.stubEnv('VITE_OCR_LLM_API_KEY', 'test-api-key');
+      vi.stubEnv('VITE_OCR_LLM_MODEL', 'gemini-2.0-flash');
 
       // Act
       const service = OCRServiceFactory.create('gemini');
@@ -52,11 +52,11 @@ describe('OCRServiceFactory', () => {
 
     it('should throw error when Gemini API key is missing', () => {
       // Arrange
-      vi.stubEnv('VITE_GEMINI_API_KEY', '');
+      vi.stubEnv('VITE_OCR_LLM_API_KEY', '');
 
       // Act & Assert
       expect(() => OCRServiceFactory.create('gemini')).toThrow(
-        /VITE_GEMINI_API_KEY is required/
+        /VITE_OCR_LLM_API_KEY is required/
       );
       expect(() => OCRServiceFactory.create('gemini')).toThrow(
         /https:\/\/makersuite\.google\.com/
@@ -78,7 +78,7 @@ describe('OCRServiceFactory', () => {
 
     it('should default to gemini when VITE_OCR_PROVIDER is not set', () => {
       // Arrange
-      vi.stubEnv('VITE_GEMINI_API_KEY', 'test-api-key');
+      vi.stubEnv('VITE_OCR_LLM_API_KEY', 'test-api-key');
       // VITE_OCR_PROVIDER not set
 
       // Act
@@ -91,7 +91,7 @@ describe('OCRServiceFactory', () => {
     it('should use explicit provider parameter over environment variable', () => {
       // Arrange
       vi.stubEnv('VITE_OCR_PROVIDER', 'gemini');
-      vi.stubEnv('VITE_GEMINI_API_KEY', 'test-api-key');
+      vi.stubEnv('VITE_OCR_LLM_API_KEY', 'test-api-key');
 
       // Act
       const service = OCRServiceFactory.create('mock'); // Explicit override
@@ -104,8 +104,8 @@ describe('OCRServiceFactory', () => {
   describe('provider-specific configuration', () => {
     it('should pass API key and model to GeminiVisionOCRService', () => {
       // Arrange
-      vi.stubEnv('VITE_GEMINI_API_KEY', 'my-api-key');
-      vi.stubEnv('VITE_GEMINI_MODEL', 'gemini-pro');
+      vi.stubEnv('VITE_OCR_LLM_API_KEY', 'my-api-key');
+      vi.stubEnv('VITE_OCR_LLM_MODEL', 'gemini-pro');
 
       // Act
       const service = OCRServiceFactory.create('gemini');
@@ -116,10 +116,10 @@ describe('OCRServiceFactory', () => {
       // If we get here, it was passed correctly
     });
 
-    it('should use default model when VITE_GEMINI_MODEL not set', () => {
+    it('should use default model when VITE_OCR_LLM_MODEL not set', () => {
       // Arrange
-      vi.stubEnv('VITE_GEMINI_API_KEY', 'my-api-key');
-      // VITE_GEMINI_MODEL not set
+      vi.stubEnv('VITE_OCR_LLM_API_KEY', 'my-api-key');
+      // VITE_OCR_LLM_MODEL not set
 
       // Act
       const service = OCRServiceFactory.create('gemini');
