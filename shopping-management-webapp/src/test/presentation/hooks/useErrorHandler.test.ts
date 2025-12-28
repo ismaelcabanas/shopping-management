@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { toast } from 'react-hot-toast'
-import { useErrorHandler } from './useErrorHandler'
+import { useErrorHandler } from '../../../presentation/hooks/useErrorHandler'
 
 // Mock react-hot-toast
 vi.mock('react-hot-toast', () => ({

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { Skeleton } from './Skeleton'
+import { Skeleton } from '../../../../presentation/shared/components/Skeleton'
 
 describe('Skeleton', () => {
   describe('Basic rendering', () => {

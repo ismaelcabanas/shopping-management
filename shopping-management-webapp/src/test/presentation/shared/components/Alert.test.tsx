@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import { AlertTriangle } from 'lucide-react'
-import { Alert } from './Alert'
+import { Alert } from '../../../../presentation/shared/components/Alert'
 
 describe('Alert', () => {
   describe('Basic rendering', () => {
