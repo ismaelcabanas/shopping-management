@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import './App.css'
 import { Navigation } from './presentation/shared/components/Navigation'
+import { ErrorBoundary } from './presentation/shared/components/ErrorBoundary'
 import { HomePage } from './presentation/pages/HomePage'
 import { DashboardPage } from './presentation/pages/DashboardPage'
 import { ProductCatalogPage } from './presentation/pages/ProductCatalogPage'
@@ -10,6 +11,11 @@ import { ShoppingListPage } from './presentation/pages/ShoppingListPage'
 import { ActiveShoppingPage } from './presentation/pages/ActiveShoppingPage'
 
 function App() {
+  const handleError = (error: Error) => {
+    // Log errors to console (could be extended to send to monitoring service)
+    console.error('Application error caught by ErrorBoundary:', error)
+  }
+
   return (
     <BrowserRouter>
       <Navigation />
@@ -32,14 +38,16 @@ function App() {
           },
         }}
       />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/catalog" element={<ProductCatalogPage />} />
-        <Route path="/catalog/add" element={<AddProductPage />} />
-        <Route path="/shopping-list" element={<ShoppingListPage />} />
-        <Route path="/shopping/start" element={<ActiveShoppingPage />} />
-      </Routes>
+      <ErrorBoundary onError={handleError}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/catalog" element={<ProductCatalogPage />} />
+          <Route path="/catalog/add" element={<AddProductPage />} />
+          <Route path="/shopping-list" element={<ShoppingListPage />} />
+          <Route path="/shopping/start" element={<ActiveShoppingPage />} />
+        </Routes>
+      </ErrorBoundary>
     </BrowserRouter>
   )
 }
