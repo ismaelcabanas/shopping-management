@@ -8,6 +8,7 @@ import { RegisterPurchaseModal } from '../components/RegisterPurchaseModal';
 import { TicketScanModal } from '../components/TicketScanModal';
 import { UpdateStockModal } from '../components/UpdateStockModal';
 import { ConfirmDialog } from '../shared/components/ConfirmDialog';
+import { Alert } from '../shared/components/Alert';
 import { GetProductsWithInventory } from '../../application/use-cases/GetProductsWithInventory';
 import { LocalStorageProductRepository } from '../../infrastructure/repositories/LocalStorageProductRepository';
 import { LocalStorageInventoryRepository } from '../../infrastructure/repositories/LocalStorageInventoryRepository';
@@ -38,6 +39,8 @@ export function ProductCatalogPage() {
   const [initialPurchaseItems, setInitialPurchaseItems] = useState<PurchaseItemInput[] | undefined>(undefined);
   const [isUpdateStockModalOpen, setIsUpdateStockModalOpen] = useState(false);
   const [productToUpdateStock, setProductToUpdateStock] = useState<{ product: Product; currentLevel: StockLevel } | null>(null);
+  const [showOCRWarning, setShowOCRWarning] = useState(false);
+  const [ocrWarningMessage, setOcrWarningMessage] = useState('');
 
   const { updateProduct, deleteProduct } = useProducts();
   const { addProduct, registerPurchase } = useInventory();
@@ -62,6 +65,18 @@ export function ProductCatalogPage() {
   };
 
   const productRepository = new LocalStorageProductRepository();
+
+  // Check OCR configuration on mount
+  useEffect(() => {
+    try {
+      OCRServiceFactory.create();
+      setShowOCRWarning(false);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Error de configuración OCR';
+      setOcrWarningMessage(message);
+      setShowOCRWarning(true);
+    }
+  }, []);
 
   useEffect(() => {
     loadProducts();
@@ -300,6 +315,20 @@ export function ProductCatalogPage() {
           </div>
         </div>
       </div>
+
+      {/* OCR Configuration Warning */}
+      {showOCRWarning && (
+        <div className="max-w-2xl mx-auto px-4 pt-4">
+          <Alert
+            variant="warning"
+            title="Configuración OCR incompleta"
+            closable
+            onClose={() => setShowOCRWarning(false)}
+          >
+            {ocrWarningMessage}. La función de escanear tickets no estará disponible hasta que se configure correctamente.
+          </Alert>
+        </div>
+      )}
 
       {/* Content */}
       <div className="max-w-2xl mx-auto px-4 py-6">
