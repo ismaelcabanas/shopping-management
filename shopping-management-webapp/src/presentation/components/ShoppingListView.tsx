@@ -1,4 +1,6 @@
 import { cn } from '../../lib/utils'
+import { Badge } from '../shared/components/Badge'
+import { EmptyState } from '../shared/components/EmptyState'
 import type { ProductId } from '../../domain/model/ProductId'
 import type { ShoppingListItemWithDetails } from '../hooks/useShoppingList'
 
@@ -12,29 +14,29 @@ export function ShoppingListView({ items, readonly, onToggleChecked }: ShoppingL
   const getStockLevelBadge = (stockLevel?: string) => {
     if (!stockLevel) return null
 
-    const badges = {
-      low: { text: 'Stock bajo', color: 'bg-yellow-100 text-yellow-800' },
-      empty: { text: 'Sin stock', color: 'bg-red-100 text-red-800' }
+    const badgeConfig = {
+      low: { text: 'Stock bajo', variant: 'warning' as const },
+      empty: { text: 'Sin stock', variant: 'danger' as const }
     }
 
-    const badge = badges[stockLevel as keyof typeof badges]
-    if (!badge) return null
+    const config = badgeConfig[stockLevel as keyof typeof badgeConfig]
+    if (!config) return null
 
     return (
-      <span className={`text-xs px-2 py-1 rounded-full ${badge.color}`}>
-        {badge.text}
-      </span>
+      <Badge variant={config.variant} size="sm">
+        {config.text}
+      </Badge>
     )
   }
 
   if (items.length === 0) {
     return (
-      <div className="text-center py-12">
-        <p className="text-gray-500 text-lg">No hay productos en la lista de compras</p>
-        <p className="text-gray-400 text-sm mt-2">
-          Los productos con stock bajo se agregarán automáticamente
-        </p>
-      </div>
+      <EmptyState
+        title="No hay productos en la lista de compras"
+        description="Los productos con stock bajo se agregarán automáticamente"
+        icon="🛒"
+        size="compact"
+      />
     )
   }
 
